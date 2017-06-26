@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Recettes</string>
+    <string name="title_activity_recette">RecetteActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="bienvenue_dans_mes_recettes">Bienvenu dans mes recettes</string>
+</resources>
