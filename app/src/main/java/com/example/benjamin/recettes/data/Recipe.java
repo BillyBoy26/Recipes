@@ -1,9 +1,10 @@
 package com.example.benjamin.recettes.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Recipe {
+public class Recipe implements Serializable{
     private String urlImage;
     private String description;
     private String name;

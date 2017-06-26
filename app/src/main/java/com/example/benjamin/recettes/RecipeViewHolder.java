@@ -22,6 +22,8 @@ class RecipeViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(Recipe recipe) {
         textView.setText(recipe.getName());
-        Picasso.with(imageView.getContext()).load(recipe.getUrlImage()).centerCrop().fit().into(imageView);
+        if (recipe.getUrlImage() != null && !recipe.getUrlImage().isEmpty()) {
+            Picasso.with(imageView.getContext()).load(recipe.getUrlImage()).centerCrop().fit().into(imageView);
+        }
     }
 }

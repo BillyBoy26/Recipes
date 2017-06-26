@@ -1,9 +1,11 @@
 package com.example.benjamin.recettes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.example.benjamin.recettes.data.Recipe;
@@ -14,6 +16,7 @@ import java.util.List;
 public class RecipesActivity extends DrawerActivity{
 
 
+    private List<Recipe> recipes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,13 +29,27 @@ public class RecipesActivity extends DrawerActivity{
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<Recipe> recipes = new ArrayList<>();
+        if (recipes == null) {
+            recipes = new ArrayList<>();
+        }
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            Object recipe = getIntent().getExtras().get(RecipeCreate.NEW_RECIPE);
+            if (recipe != null) {
+                recipes.add((Recipe) recipe);
+            }
+        }
+
         addRecipes(recipes);
         recyclerView.setAdapter(new RecipeAdapter(recipes));
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener();
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RecipesActivity.this, RecipeCreate.class));
+            }
+        });
     }
 
     private void addRecipes(List<Recipe> recipes) {
