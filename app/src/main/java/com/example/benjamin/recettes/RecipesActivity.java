@@ -1,22 +1,23 @@
 package com.example.benjamin.recettes;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 
-import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.db.RecipeContentProvider;
+import com.example.benjamin.recettes.db.table.TRecipe;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class RecipesActivity extends DrawerActivity{
+public class RecipesActivity extends DrawerActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
 
-    private List<Recipe> recipes;
+    private RecipeAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,22 +27,13 @@ public class RecipesActivity extends DrawerActivity{
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.recipes_list_layout, contentFrameLayout);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        if (recipes == null) {
-            recipes = new ArrayList<>();
-        }
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            Object recipe = getIntent().getExtras().get(RecipeCreate.NEW_RECIPE);
-            if (recipe != null) {
-                recipes.add((Recipe) recipe);
-            }
-        }
 
-        addRecipes(recipes);
-        recyclerView.setAdapter(new RecipeAdapter(recipes));
+        getSupportLoaderManager().initLoader(1, null, this);
 
+        adapter = new RecipeAdapter(this, null, 0);
+        ListView recyclerView = (ListView) findViewById(R.id.listView);
+        recyclerView.setAdapter(adapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -52,9 +44,20 @@ public class RecipesActivity extends DrawerActivity{
         });
     }
 
-    private void addRecipes(List<Recipe> recipes) {
-        recipes.add(new Recipe("One-Pot Ham & Potato Soup", "https://img.buzzfeed.com/buzzfeed-static/static/2017-01/26/13/asset/buzzfeed-prod-fastlane-03/sub-buzz-27993-1485454420-2.jpg"));
+    @Override
+    public Loader onCreateLoader(int id, Bundle args) {
+        String[] projection = {TRecipe._ID, TRecipe.C_NAME,TRecipe.C_URL_IMAGE};
+        CursorLoader cursorLoader = new CursorLoader(this, RecipeContentProvider.CONTENT_URI, projection, null, null, null);
+        return cursorLoader;
     }
 
+    @Override
+    public void onLoadFinished(Loader loader, Cursor data) {
+        adapter.swapCursor(data);
+    }
 
+    @Override
+    public void onLoaderReset(Loader loader) {
+        adapter.swapCursor(null);
+    }
 }

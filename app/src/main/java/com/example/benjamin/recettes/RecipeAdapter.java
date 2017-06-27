@@ -1,37 +1,43 @@
 package com.example.benjamin.recettes;
 
-import android.support.v7.widget.RecyclerView;
+import android.content.Context;
+import android.database.Cursor;
+import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.db.table.TRecipe;
+import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
-class RecipeAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
+class RecipeAdapter extends CursorAdapter {
 
 
-    private final List<Recipe> recipes;
+    private final LayoutInflater cursorInflater;
 
-    public RecipeAdapter(List<Recipe> recipes) {
-        this.recipes = recipes;
+    public RecipeAdapter(Context context,Cursor cursor,int flags) {
+        super(context,cursor,flags);
+        cursorInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
-    public RecipeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_card, parent, false);
-        return new RecipeViewHolder(view);
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        return cursorInflater.inflate(R.layout.recipe_card,parent,false);
     }
 
     @Override
-    public void onBindViewHolder(RecipeViewHolder holder, int position) {
-        Recipe recipe = recipes.get(position);
-        holder.bind(recipe);
-    }
+    public void bindView(View view, Context context, Cursor cursor) {
 
-    @Override
-    public int getItemCount() {
-        return recipes.size();
+        String name = cursor.getString(cursor.getColumnIndex(TRecipe.C_NAME));
+        TextView textView = (TextView) view.findViewById(R.id.text);
+        textView.setText(name);
+
+        String urlImage = cursor.getString(cursor.getColumnIndex(TRecipe.C_URL_IMAGE));
+        if (urlImage != null && !urlImage.isEmpty()) {
+            ImageView imageView = (ImageView) view.findViewById(R.id.image);
+            Picasso.with(imageView.getContext()).load(urlImage).centerCrop().fit().into(imageView);
+        }
     }
 }

@@ -24,6 +24,11 @@
         </activity>
         <activity android:name=".RecipeCreate" />
 
+        <provider
+            android:name=".db.RecipeContentProvider"
+            android:authorities="com.example.benjamin.recettes.db" >
+        </provider>
+
     </application>
 
 </manifest>

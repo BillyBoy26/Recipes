@@ -1,5 +1,6 @@
 package com.example.benjamin.recettes;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.db.RecipeContentProvider;
+import com.example.benjamin.recettes.db.table.TRecipe;
 
 public class RecipeCreate extends DrawerActivity {
 
@@ -32,10 +34,19 @@ public class RecipeCreate extends DrawerActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RecipeCreate.this, RecipesActivity.class);
-                intent.putExtra(NEW_RECIPE, new Recipe(txtName.getText().toString(), txtUrl.getText().toString()));
-                startActivity(intent);
+                createRecipe();
+                startActivity(new Intent(RecipeCreate.this, RecipesActivity.class));
             }
         });
+    }
+
+    private void createRecipe() {
+        String name = txtName.getText().toString();
+        String imageUrl = txtUrl.getText().toString();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TRecipe.C_NAME,name);
+        contentValues.put(TRecipe.C_URL_IMAGE,imageUrl);
+        getContentResolver().insert(RecipeContentProvider.CONTENT_URI,contentValues);
     }
 }
