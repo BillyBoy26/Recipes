@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -73,5 +75,29 @@ public class RecipeCreate extends DrawerActivity {
         } else {
             getContentResolver().insert(RecipeContentProvider.CONTENT_URI,contentValues);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (recipe != null) {
+            getMenuInflater().inflate(R.menu.menu_toolbar,menu);
+            return true;
+        }
+        return false;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_delete && recipe != null) {
+            deleteRecipe();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteRecipe() {
+        Uri uri = Uri.parse(RecipeContentProvider.CONTENT_URI + "/" + recipe.getId());
+        getContentResolver().delete(uri, null, null);
+        startActivity(new Intent(RecipeCreate.this, RecipesActivity.class));
     }
 }

@@ -9,4 +9,5 @@
     <string name="bienvenue_dans_mes_recettes">Bienvenu dans mes recettes</string>
     <string name="name">Name</string>
     <string name="imageUrl">Image url</string>
+    <string name="delete">Supprimer</string>
 </resources>
