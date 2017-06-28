@@ -60,12 +60,23 @@ public class RecipeContentProvider extends ContentProvider {
      */
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        SQLiteDatabase db = recipeDbHelper.getWritableDatabase();
+
+        String recipeId = uri.getLastPathSegment();
+        int rowDeleted = db.delete(TRecipe.T_RECIPE, TRecipe._ID + "=" + recipeId, null);
+        getContext().getContentResolver().notifyChange(uri, null);
+        return rowDeleted;
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+    public int update(@NonNull Uri uri, @Nullable ContentValues values,
+                      @Nullable String selection, @Nullable String[] selectionArgs) {
+        SQLiteDatabase db = recipeDbHelper.getWritableDatabase();
+
+        String recipeId = uri.getLastPathSegment();
+        int rowUpdated = db.update(TRecipe.T_RECIPE, values, TRecipe._ID + "=" + recipeId, null);
+        getContext().getContentResolver().notifyChange(uri, null);
+        return rowUpdated;
     }
 
 }

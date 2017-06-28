@@ -2,6 +2,7 @@ package com.example.benjamin.recettes;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -30,8 +31,9 @@ public class RecipeCreate extends DrawerActivity {
         txtName = (EditText) findViewById(R.id.name);
         txtUrl = (EditText) findViewById(R.id.image);
 
-        if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().get(CURRENT_RECIPE) != null) {
-            recipe = (Recipe) getIntent().getExtras().get(CURRENT_RECIPE);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.get(CURRENT_RECIPE) != null) {
+            recipe = (Recipe) extras.get(CURRENT_RECIPE);
             if (recipe != null) {
                 fillRecipe();
             }
@@ -45,7 +47,7 @@ public class RecipeCreate extends DrawerActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createRecipe();
+                createOrUpdateRecipe();
                 startActivity(new Intent(RecipeCreate.this, RecipesActivity.class));
             }
         });
@@ -56,13 +58,20 @@ public class RecipeCreate extends DrawerActivity {
         txtUrl.setText(recipe.getUrlImage());
     }
 
-    private void createRecipe() {
+    private void createOrUpdateRecipe() {
         String name = txtName.getText().toString();
         String imageUrl = txtUrl.getText().toString();
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(TRecipe.C_NAME,name);
         contentValues.put(TRecipe.C_URL_IMAGE,imageUrl);
-        getContentResolver().insert(RecipeContentProvider.CONTENT_URI,contentValues);
+
+        if (recipe != null) {
+            contentValues.put(TRecipe._ID, recipe.getId());
+            Uri uri = Uri.parse(RecipeContentProvider.CONTENT_URI + "/" + recipe.getId());
+            getContentResolver().update(uri,contentValues,null,null);
+        } else {
+            getContentResolver().insert(RecipeContentProvider.CONTENT_URI,contentValues);
+        }
     }
 }
