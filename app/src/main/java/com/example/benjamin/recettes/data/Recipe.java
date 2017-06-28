@@ -9,6 +9,10 @@ public class Recipe implements Serializable{
     private String description;
     private String name;
     private List<Ingredient> ingredients = new ArrayList<>();
+    private Long id;
+
+    public Recipe() {
+    }
 
     public Recipe(String name, String urlImage) {
         this.name = name;
@@ -46,5 +50,13 @@ public class Recipe implements Serializable{
 
     public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

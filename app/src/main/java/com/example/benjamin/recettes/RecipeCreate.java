@@ -10,14 +10,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.RecipeContentProvider;
 import com.example.benjamin.recettes.db.table.TRecipe;
 
 public class RecipeCreate extends DrawerActivity {
 
-    public static final String NEW_RECIPE = "NEW_RECIPE";
+    public static final String CURRENT_RECIPE = "NEW_RECIPE";
     private EditText txtName;
     private EditText txtUrl;
+    private Recipe recipe;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,6 +29,15 @@ public class RecipeCreate extends DrawerActivity {
 
         txtName = (EditText) findViewById(R.id.name);
         txtUrl = (EditText) findViewById(R.id.image);
+
+        if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().get(CURRENT_RECIPE) != null) {
+            recipe = (Recipe) getIntent().getExtras().get(CURRENT_RECIPE);
+            if (recipe != null) {
+                fillRecipe();
+            }
+        } else {
+            recipe = null;
+        }
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -38,6 +49,11 @@ public class RecipeCreate extends DrawerActivity {
                 startActivity(new Intent(RecipeCreate.this, RecipesActivity.class));
             }
         });
+    }
+
+    private void fillRecipe() {
+        txtName.setText(recipe.getName());
+        txtUrl.setText(recipe.getUrlImage());
     }
 
     private void createRecipe() {

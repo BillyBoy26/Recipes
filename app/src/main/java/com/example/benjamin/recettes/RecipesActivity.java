@@ -8,9 +8,11 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.RecipeContentProvider;
 import com.example.benjamin.recettes.db.table.TRecipe;
 
@@ -32,8 +34,17 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
         getSupportLoaderManager().initLoader(1, null, this);
 
         adapter = new RecipeAdapter(this, null, 0);
-        ListView recyclerView = (ListView) findViewById(R.id.listView);
-        recyclerView.setAdapter(adapter);
+        final ListView listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursor = (Cursor) listView.getItemAtPosition(position);
+                Intent intent = new Intent(RecipesActivity.this, RecipeCreate.class);
+                intent.putExtra(RecipeCreate.CURRENT_RECIPE, getRecipeFromCursor(cursor));
+                startActivity(intent);
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -42,6 +53,14 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
                 startActivity(new Intent(RecipesActivity.this, RecipeCreate.class));
             }
         });
+    }
+
+    private Recipe getRecipeFromCursor(Cursor cursor) {
+        Recipe recipe = new Recipe();
+        recipe.setId(cursor.getLong(cursor.getColumnIndex(TRecipe._ID)));
+        recipe.setUrlImage(cursor.getString(cursor.getColumnIndex(TRecipe.C_URL_IMAGE)));
+        recipe.setName(cursor.getString(cursor.getColumnIndex(TRecipe.C_NAME)));
+        return recipe;
     }
 
     @Override
