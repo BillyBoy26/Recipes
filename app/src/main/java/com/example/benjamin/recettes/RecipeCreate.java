@@ -16,12 +16,14 @@ import android.widget.FrameLayout;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.RecipeContentProvider;
 import com.example.benjamin.recettes.db.table.TRecipe;
+import com.example.benjamin.recettes.task.DownloadImageTask;
+import com.example.benjamin.recettes.views.ImageInputView;
 
 public class RecipeCreate extends DrawerActivity {
 
     public static final String CURRENT_RECIPE = "NEW_RECIPE";
     private EditText txtName;
-    private EditText txtUrl;
+    private ImageInputView imageView;
     private Recipe recipe;
 
     @Override
@@ -31,7 +33,7 @@ public class RecipeCreate extends DrawerActivity {
         getLayoutInflater().inflate(R.layout.recipe_create_form, contentFrameLayout);
 
         txtName = (EditText) findViewById(R.id.name);
-        txtUrl = (EditText) findViewById(R.id.image);
+        imageView = (ImageInputView) findViewById(R.id.image);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.get(CURRENT_RECIPE) != null) {
@@ -57,12 +59,12 @@ public class RecipeCreate extends DrawerActivity {
 
     private void fillRecipe() {
         txtName.setText(recipe.getName());
-        txtUrl.setText(recipe.getUrlImage());
+        new DownloadImageTask(imageView).execute(recipe.getUrlImage());
     }
 
     private void createOrUpdateRecipe() {
         String name = txtName.getText().toString();
-        String imageUrl = txtUrl.getText().toString();
+        String imageUrl = imageView.getUrlImage();
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(TRecipe.C_NAME,name);

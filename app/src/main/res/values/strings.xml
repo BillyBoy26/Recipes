@@ -12,4 +12,8 @@
     <string name="delete">Supprimer</string>
     <string name="recipes">Recettes</string>
     <string name="recipeImport">Importer une recette</string>
+    <string name="importByUrl">Importer par url</string>
+    <string name="importBySdcard">Imporer via la sdcard</string>
+    <string name="cancel">Annuler</string>
+    <string name="ok">OK</string>
 </resources>

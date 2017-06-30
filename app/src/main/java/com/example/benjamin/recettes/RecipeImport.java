@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import com.example.benjamin.recettes.task.HttpRequest;
+import com.example.benjamin.recettes.task.HttpRequestTask;
 
 public class RecipeImport extends DrawerActivity {
 
@@ -31,7 +31,7 @@ public class RecipeImport extends DrawerActivity {
             @Override
             public void onClick(View v) {
                 if (txtUrl.getText() != null) {
-                    new HttpRequest(RecipeImport.this).execute(txtUrl.getText().toString());
+                    new HttpRequestTask(RecipeImport.this).execute(txtUrl.getText().toString());
                 }
             }
         });

@@ -19,12 +19,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class HttpRequest extends AsyncTask<String,Void,Recipe> {
+public class HttpRequestTask extends AsyncTask<String,Void,Recipe> {
 
 
     private final Context context;
 
-    public HttpRequest(Context context) {
+    public HttpRequestTask(Context context) {
         super();
         this.context = context;
     }
