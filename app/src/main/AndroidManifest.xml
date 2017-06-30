@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".RecipeCreate" />
+        <activity android:name=".RecipeImport" />
 
         <provider
             android:name=".db.RecipeContentProvider"

@@ -68,7 +68,7 @@ public class RecipeCreate extends DrawerActivity {
         contentValues.put(TRecipe.C_NAME,name);
         contentValues.put(TRecipe.C_URL_IMAGE,imageUrl);
 
-        if (recipe != null) {
+        if (recipe != null && recipe.getId() != null) {
             contentValues.put(TRecipe._ID, recipe.getId());
             Uri uri = Uri.parse(RecipeContentProvider.CONTENT_URI + "/" + recipe.getId());
             getContentResolver().update(uri,contentValues,null,null);

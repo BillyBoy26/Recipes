@@ -25,7 +25,7 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getNavigationView().setCheckedItem(R.id.nav_camera);
+        getNavigationView().setCheckedItem(R.id.nav_recipes);
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.recipes_list_layout, contentFrameLayout);
 
@@ -69,6 +69,8 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
         CursorLoader cursorLoader = new CursorLoader(this, RecipeContentProvider.CONTENT_URI, projection, null, null, null);
         return cursorLoader;
     }
+
+
 
     @Override
     public void onLoadFinished(Loader loader, Cursor data) {

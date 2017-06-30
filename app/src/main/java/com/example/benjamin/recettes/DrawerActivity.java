@@ -1,5 +1,6 @@
 package com.example.benjamin.recettes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
@@ -46,12 +47,15 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.nav_camera:{
-                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawerLayout.closeDrawer(GravityCompat.START);
+            case R.id.nav_recipes :
+                startActivity(new Intent(this, RecipesActivity.class));
                 break;
-            }
+            case R.id.nav_import :
+                startActivity(new Intent(this, RecipeImport.class));
+                break;
         }
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 

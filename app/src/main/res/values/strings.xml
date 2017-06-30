@@ -10,4 +10,6 @@
     <string name="name">Name</string>
     <string name="imageUrl">Image url</string>
     <string name="delete">Supprimer</string>
+    <string name="recipes">Recettes</string>
+    <string name="recipeImport">Importer une recette</string>
 </resources>
