@@ -16,4 +16,7 @@
     <string name="importBySdcard">Imporer via la sdcard</string>
     <string name="cancel">Annuler</string>
     <string name="ok">OK</string>
+    <string name="general">Général</string>
+    <string name="ingredients">Ingrédients</string>
+    <string name="steps">étapes</string>
 </resources>

@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,12 +27,21 @@ public class RecipeCreate extends DrawerActivity {
     private EditText txtName;
     private ImageInputView imageView;
     private Recipe recipe;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        enableTabs();
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.recipe_create_form, contentFrameLayout);
+
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
 
         txtName = (EditText) findViewById(R.id.name);
         imageView = (ImageInputView) findViewById(R.id.image);
@@ -55,6 +66,14 @@ public class RecipeCreate extends DrawerActivity {
                 startActivity(new Intent(RecipeCreate.this, RecipesActivity.class));
             }
         });
+    }
+    private void setupViewPager(ViewPager viewPager) {
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new FragmentGeneral(),getString(R.string.general));
+        adapter.addFragment(new FragmentIngredients(),getString(R.string.ingredients));
+        adapter.addFragment(new FragmentSteps(),getString(R.string.steps));
+        viewPager.setAdapter(adapter);
     }
 
     private void fillRecipe() {
