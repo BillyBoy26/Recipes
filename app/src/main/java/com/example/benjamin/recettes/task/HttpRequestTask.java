@@ -3,6 +3,7 @@ package com.example.benjamin.recettes.task;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.benjamin.recettes.RecipeCreate;
 import com.example.benjamin.recettes.data.Recipe;
@@ -16,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class HttpRequestTask extends AsyncTask<String,Void,Recipe> {
@@ -66,9 +66,8 @@ public class HttpRequestTask extends AsyncTask<String,Void,Recipe> {
 
             }
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
+            Log.e("Error", e.getMessage());
             e.printStackTrace();
         }
         return null;
