@@ -35,7 +35,7 @@ public class FragmentIngredients extends Fragment {
         recyclerView.setAdapter(adapter);
 
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),3));
         SearchView searchView = (SearchView) layout.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
