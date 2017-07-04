@@ -1,4 +1,4 @@
-package com.example.benjamin.recettes;
+package com.example.benjamin.recettes.createForm;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -15,6 +15,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import com.example.benjamin.recettes.DrawerActivity;
+import com.example.benjamin.recettes.R;
+import com.example.benjamin.recettes.RecipesActivity;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.RecipeContentProvider;
 import com.example.benjamin.recettes.db.table.TRecipe;

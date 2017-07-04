@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.benjamin.recettes.RecipeCreate;
+import com.example.benjamin.recettes.createForm.RecipeCreate;
 import com.example.benjamin.recettes.data.Recipe;
 
 import org.jsoup.Jsoup;
