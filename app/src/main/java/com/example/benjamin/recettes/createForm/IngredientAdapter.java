@@ -22,7 +22,15 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientViewHolder
     @Override
     public IngredientViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.ingredient_card, parent,false);
-        return new IngredientViewHolder(cardView);
+        final IngredientViewHolder viewHolder = new IngredientViewHolder(cardView);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeItem(viewHolder.getAdapterPosition());
+            }
+        });
+
+        return viewHolder;
     }
 
     @Override
@@ -41,5 +49,11 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientViewHolder
             notifyItemInserted(ingredientList.size() - 1);
 
         }
+    }
+
+    private void removeItem(int position) {
+        ingredientList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position,ingredientList.size());
     }
 }
