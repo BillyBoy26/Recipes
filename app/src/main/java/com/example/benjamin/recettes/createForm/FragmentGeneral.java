@@ -13,7 +13,7 @@ import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.task.DownloadImageTask;
 import com.example.benjamin.recettes.views.ImageInputView;
 
-public class FragmentGeneral  extends Fragment{
+public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFiller{
 
 
     private EditText txtName;
@@ -37,6 +37,7 @@ public class FragmentGeneral  extends Fragment{
         }
     }
 
+    @Override
     public void getRecipe() {
         String name = txtName.getText().toString();
         String imageUrl = imageView.getUrlImage();
@@ -45,6 +46,7 @@ public class FragmentGeneral  extends Fragment{
     }
 
 
+    @Override
     public void setRecipe(Recipe recipe) {
         this.recipe = recipe;
     }

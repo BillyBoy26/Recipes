@@ -21,13 +21,22 @@ import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.RecipeContentProvider;
 import com.example.benjamin.recettes.db.table.TRecipe;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RecipeCreate extends DrawerActivity {
+
+    public interface RecipeFiller{
+        void setRecipe(Recipe recipe);
+
+        void getRecipe();
+    }
 
     public static final String CURRENT_RECIPE = "NEW_RECIPE";
     private Recipe recipe;
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private FragmentGeneral fragmentGen;
+    private List<RecipeFiller> fragments = new ArrayList<>();
 
 
     @Override
@@ -66,21 +75,34 @@ public class RecipeCreate extends DrawerActivity {
     }
 
     private void setRecipe() {
-        fragmentGen.setRecipe(recipe);
+        for (RecipeFiller fragment : fragments) {
+            fragment.setRecipe(recipe);
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        fragmentGen = new FragmentGeneral();
+
+        FragmentGeneral fragmentGen = new FragmentGeneral();
         adapter.addFragment(fragmentGen,getString(R.string.general));
-        adapter.addFragment(new FragmentIngredients(),getString(R.string.ingredients));
-        adapter.addFragment(new FragmentSteps(),getString(R.string.steps));
+        fragments.add(fragmentGen);
+
+        FragmentIngredients fragmentIng = new FragmentIngredients();
+        adapter.addFragment(fragmentIng,getString(R.string.ingredients));
+        fragments.add(fragmentIng);
+
+        FragmentSteps fragmentSteps = new FragmentSteps();
+        adapter.addFragment(fragmentSteps,getString(R.string.steps));
+        fragments.add(fragmentSteps);
+
         viewPager.setAdapter(adapter);
     }
 
     private void createOrUpdateRecipe() {
-        fragmentGen.getRecipe();
+        for (RecipeFiller fragment : fragments) {
+            fragment.getRecipe();
+        }
         ContentValues contentValues = new ContentValues();
         contentValues.put(TRecipe.C_NAME,recipe.getName());
         contentValues.put(TRecipe.C_URL_IMAGE,recipe.getUrlImage());
