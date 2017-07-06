@@ -61,12 +61,13 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
         recipe.setId(cursor.getLong(cursor.getColumnIndex(TRecipe._ID)));
         recipe.setUrlImage(cursor.getString(cursor.getColumnIndex(TRecipe.C_URL_IMAGE)));
         recipe.setName(cursor.getString(cursor.getColumnIndex(TRecipe.C_NAME)));
+        recipe.setIngredients(cursor.getString(cursor.getColumnIndex(TRecipe.C_INGREDIENTS)));
         return recipe;
     }
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
-        String[] projection = {TRecipe._ID, TRecipe.C_NAME,TRecipe.C_URL_IMAGE};
+        String[] projection = {TRecipe._ID, TRecipe.C_NAME,TRecipe.C_URL_IMAGE,TRecipe.C_INGREDIENTS};
         CursorLoader cursorLoader = new CursorLoader(this, RecipeContentProvider.CONTENT_URI, projection, null, null, null);
         return cursorLoader;
     }

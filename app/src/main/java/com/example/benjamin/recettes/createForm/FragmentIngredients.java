@@ -77,10 +77,11 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
 
     public void setRecipe(Recipe recipe) {
         this.recipe = recipe;
+        this.ingredients = recipe.getIngredients();
     }
 
     @Override
     public void getRecipe() {
-
+        recipe.setIngredients(ingredients);
     }
 }

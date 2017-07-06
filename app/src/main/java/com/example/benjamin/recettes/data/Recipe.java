@@ -1,5 +1,7 @@
 package com.example.benjamin.recettes.data;
 
+import com.example.benjamin.recettes.utils.SUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,5 +60,28 @@ public class Recipe implements Serializable{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+
+    public String getIngredientsAsString() {
+        StringBuilder builder = new StringBuilder();
+
+        if (ingredients != null) {
+            for (Ingredient ingredient : ingredients) {
+                builder.append(ingredient.toString());
+            }
+        }
+        return builder.toString();
+    }
+
+    public void setIngredients(String ingredientsAsStr) {
+        ingredients = new ArrayList<>();
+        if (SUtils.notNullOrEmpty(ingredientsAsStr)) {
+            String[] split = ingredientsAsStr.split(Ingredient.SEP_END);
+            for (String ingre : split) {
+                String[] attr = ingre.split(Ingredient.SEP_ATTRIBUTE);
+                ingredients.add(new Ingredient(attr[0], Integer.parseInt(attr[1]), Integer.parseInt(attr[2])));
+            }
+        }
     }
 }

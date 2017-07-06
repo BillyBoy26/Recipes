@@ -1,9 +1,14 @@
 package com.example.benjamin.recettes.data;
 
-public class Ingredient {
+import java.io.Serializable;
 
+public class Ingredient implements Serializable{
+
+    public static final String SEP_ATTRIBUTE = ";";
+    public static final String SEP_END = "§";
     private String name;
     private int image = -1;
+    private int quantity = 1;
 
     public Ingredient(String name) {
         this.name = name;
@@ -12,6 +17,12 @@ public class Ingredient {
     public Ingredient(String name, int image) {
         this.name = name;
         this.image = image;
+    }
+
+    public Ingredient(String name, int image, int quantity) {
+        this.name = name;
+        this.image = image;
+        this.quantity = quantity;
     }
 
     public String getName() {
@@ -44,5 +55,15 @@ public class Ingredient {
     @Override
     public int hashCode() {
         return name != null ? name.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(name + SEP_ATTRIBUTE);
+        builder.append(image + SEP_ATTRIBUTE);
+        builder.append(quantity);
+        builder.append(SEP_END);
+        return builder.toString();
     }
 }

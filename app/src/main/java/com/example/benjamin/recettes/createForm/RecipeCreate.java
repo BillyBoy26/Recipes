@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
@@ -20,6 +21,7 @@ import com.example.benjamin.recettes.RecipesActivity;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.RecipeContentProvider;
 import com.example.benjamin.recettes.db.table.TRecipe;
+import com.example.benjamin.recettes.utils.SUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,8 +70,10 @@ public class RecipeCreate extends DrawerActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createOrUpdateRecipe();
-                startActivity(new Intent(RecipeCreate.this, RecipesActivity.class));
+                boolean ok = createOrUpdateRecipe();
+                if (ok) {
+                    startActivity(new Intent(RecipeCreate.this, RecipesActivity.class));
+                }
             }
         });
     }
@@ -99,21 +103,28 @@ public class RecipeCreate extends DrawerActivity {
         viewPager.setAdapter(adapter);
     }
 
-    private void createOrUpdateRecipe() {
+    private boolean createOrUpdateRecipe() {
         for (RecipeFiller fragment : fragments) {
             fragment.getRecipe();
+        }
+        if (SUtils.nullOrEmpty(recipe.getName())) {
+            Toast.makeText(this, "Votre recette n'a pas de nom", Toast.LENGTH_SHORT).show();
+            return false;
         }
         ContentValues contentValues = new ContentValues();
         contentValues.put(TRecipe.C_NAME,recipe.getName());
         contentValues.put(TRecipe.C_URL_IMAGE,recipe.getUrlImage());
+        contentValues.put(TRecipe.C_INGREDIENTS,recipe.getIngredientsAsString());
 
         if (recipe != null && recipe.getId() != null) {
             contentValues.put(TRecipe._ID, recipe.getId());
             Uri uri = Uri.parse(RecipeContentProvider.CONTENT_URI + "/" + recipe.getId());
             getContentResolver().update(uri,contentValues,null,null);
         } else {
-            getContentResolver().insert(RecipeContentProvider.CONTENT_URI,contentValues);
+            getContentResolver().insert(RecipeContentProvider.CONTENT_URI, contentValues);
+
         }
+        return true;
     }
 
     @Override
