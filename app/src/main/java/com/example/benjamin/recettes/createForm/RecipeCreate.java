@@ -12,7 +12,6 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.example.benjamin.recettes.DrawerActivity;
@@ -21,17 +20,15 @@ import com.example.benjamin.recettes.RecipesActivity;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.RecipeContentProvider;
 import com.example.benjamin.recettes.db.table.TRecipe;
-import com.example.benjamin.recettes.task.DownloadImageTask;
-import com.example.benjamin.recettes.views.ImageInputView;
 
 public class RecipeCreate extends DrawerActivity {
 
     public static final String CURRENT_RECIPE = "NEW_RECIPE";
-    private EditText txtName;
-    private ImageInputView imageView;
     private Recipe recipe;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private FragmentGeneral fragmentGen;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,18 +43,15 @@ public class RecipeCreate extends DrawerActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
-        txtName = (EditText) findViewById(R.id.name);
-        imageView = (ImageInputView) findViewById(R.id.image);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.get(CURRENT_RECIPE) != null) {
             recipe = (Recipe) extras.get(CURRENT_RECIPE);
-            if (recipe != null) {
-                fillRecipe();
-            }
-        } else {
-            recipe = null;
         }
+        if (recipe == null) {
+            recipe = new Recipe();
+        }
+        setRecipe();
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -70,27 +64,26 @@ public class RecipeCreate extends DrawerActivity {
             }
         });
     }
+
+    private void setRecipe() {
+        fragmentGen.setRecipe(recipe);
+    }
+
     private void setupViewPager(ViewPager viewPager) {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new FragmentGeneral(),getString(R.string.general));
+        fragmentGen = new FragmentGeneral();
+        adapter.addFragment(fragmentGen,getString(R.string.general));
         adapter.addFragment(new FragmentIngredients(),getString(R.string.ingredients));
         adapter.addFragment(new FragmentSteps(),getString(R.string.steps));
         viewPager.setAdapter(adapter);
     }
 
-    private void fillRecipe() {
-        txtName.setText(recipe.getName());
-        new DownloadImageTask(imageView).execute(recipe.getUrlImage());
-    }
-
     private void createOrUpdateRecipe() {
-        String name = txtName.getText().toString();
-        String imageUrl = imageView.getUrlImage();
-
+        fragmentGen.getRecipe();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(TRecipe.C_NAME,name);
-        contentValues.put(TRecipe.C_URL_IMAGE,imageUrl);
+        contentValues.put(TRecipe.C_NAME,recipe.getName());
+        contentValues.put(TRecipe.C_URL_IMAGE,recipe.getUrlImage());
 
         if (recipe != null && recipe.getId() != null) {
             contentValues.put(TRecipe._ID, recipe.getId());
