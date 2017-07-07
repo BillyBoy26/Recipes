@@ -24,4 +24,5 @@
     <string name="enterQuantity">Entrez la quantité</string>
     <string name="quantity">quantité</string>
     <string name="unit">unité</string>
+    <string name="addStep">Ajouter une étape</string>
 </resources>

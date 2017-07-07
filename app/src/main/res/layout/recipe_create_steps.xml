@@ -4,5 +4,39 @@
     android:layout_height="wrap_content"
     android:paddingTop="58dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+            <EditText
+                android:layout_width="318dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/editTxtStep"
+                android:hint="@string/addStep"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.92" />
+
+        <ImageView
+            android:id="@+id/iconAddStep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_circle_pink_24dp"
             />
+    </LinearLayout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp">
+
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recyclerSteps">
+
+    </android.support.v7.widget.RecyclerView>
+
 </LinearLayout>

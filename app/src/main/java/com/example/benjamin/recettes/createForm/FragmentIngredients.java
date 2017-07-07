@@ -32,11 +32,6 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
     private String currentIngName;
 
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
 
     @Nullable
     @Override
