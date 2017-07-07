@@ -63,7 +63,8 @@ public class Ingredient implements Serializable{
         StringBuilder builder = new StringBuilder();
         builder.append(name + SEP_ATTRIBUTE);
         builder.append(image + SEP_ATTRIBUTE);
-        builder.append(quantity);
+        builder.append(quantity+ SEP_ATTRIBUTE);
+        builder.append(quantityUnit);
         builder.append(SEP_END);
         return builder.toString();
     }
