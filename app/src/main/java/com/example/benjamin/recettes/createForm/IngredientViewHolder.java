@@ -10,20 +10,25 @@ import com.example.benjamin.recettes.data.Ingredient;
 
 public class IngredientViewHolder extends RecyclerView.ViewHolder {
 
-    private final TextView textView;
+    private final TextView textViewName;
+    private final TextView textViewQuantity;
     private final ImageView imageView;
 
     public IngredientViewHolder(View itemView) {
         super(itemView);
-        textView = (TextView) itemView.findViewById(R.id.textView);
+        textViewName = (TextView) itemView.findViewById(R.id.textViewName);
+        textViewQuantity = (TextView) itemView.findViewById(R.id.textViewQuant);
         imageView = (ImageView) itemView.findViewById(R.id.imageView);
 
     }
 
     public void bind(Ingredient ingredient) {
-        textView.setText(ingredient.getName());
+        textViewName.setText(ingredient.getName());
         if (ingredient.getImage() > 0) {
 //            imageView.setImageResource(R.drawable.ic_cake_white_24dp);
+        }
+        if (ingredient.getQuantity() > 0) {
+            textViewQuantity.setText(String.valueOf(ingredient.getQuantity()));
         }
     }
 

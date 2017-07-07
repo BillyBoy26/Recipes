@@ -1,18 +1,24 @@
 package com.example.benjamin.recettes.createForm;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.utils.SUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +30,8 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
     private List<Ingredient> ingredients = new ArrayList<>();
     private IngredientAdapter adapter;
     private Recipe recipe;
+    private String currentIngName;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,7 +49,7 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
 
 
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),3));
-        SearchView searchView = (SearchView) layout.findViewById(R.id.searchView);
+        final SearchView searchView = (SearchView) layout.findViewById(R.id.searchView);
 
 //        searchView.setSuggestionsAdapter(new CursorAdapter(getActivity(),cursor,0) {
 //            @Override
@@ -55,15 +63,19 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
 //                    TextView name = (TextView) view.findViewById(R.id.textView);
 //                    name.setText(cursor.getString(0));
 //                }
-//            }
 //        });
+//            }
+        final AlertDialog dialogQte = createDialogBox(searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(final String query) {
+                currentIngName = query;
                 if (query.isEmpty()) {
                     return false;
                 }
-                adapter.addIngredient(new Ingredient(query));
+                if (!dialogQte.isShowing()) {
+                    dialogQte.show();
+                }
                 return true;
             }
 
@@ -73,6 +85,40 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
             }
         });
         return layout;
+    }
+
+    public AlertDialog createDialogBox(SearchView searchView) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(searchView.getContext());
+        final EditText editText = new EditText(searchView.getContext());
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(editText);
+        builder.setTitle(R.string.enterQuantity);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String quant = editText.getText().toString();
+                int quantity = 1;
+                if (SUtils.notNullOrEmpty(quant)) {
+                    try {
+                        quantity = Integer.valueOf(quant);
+                    } catch (NumberFormatException e) {
+                        Log.e("INGR_QUANTITY", e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+                adapter.addIngredient(new Ingredient(currentIngName,-1,quantity));
+                editText.setText("");
+                dialog.cancel();
+            }
+        });
+        builder.setNegativeButton(R.string.notNow, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                adapter.addIngredient(new Ingredient(currentIngName));
+                dialog.cancel();
+            }
+        });
+        return builder.create();
     }
 
     public void setRecipe(Recipe recipe) {

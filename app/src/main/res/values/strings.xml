@@ -20,4 +20,6 @@
     <string name="ingredients">Ingrédients</string>
     <string name="steps">étapes</string>
     <string name="ingredient">ingredient</string>
+    <string name="notNow">Pas maintenant</string>
+    <string name="enterQuantity">Entrez la quantité</string>
 </resources>

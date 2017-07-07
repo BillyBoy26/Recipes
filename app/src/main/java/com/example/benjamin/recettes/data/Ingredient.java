@@ -66,4 +66,12 @@ public class Ingredient implements Serializable{
         builder.append(SEP_END);
         return builder.toString();
     }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }
