@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +29,31 @@ public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller
         View layout = inflater.inflate(R.layout.recipe_create_steps, container, false);
         final RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerSteps);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
+
         adapter = new StepAdapter(new ArrayList<String>());
         recyclerView.setAdapter(adapter);
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
+                        ItemTouchHelper.DOWN | ItemTouchHelper.UP );
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                adapter.moveItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int i = 1;
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         final EditText editTxtStep = (EditText) layout.findViewById(R.id.editTxtStep);
         final ImageView iconAddStep = (ImageView) layout.findViewById(R.id.iconAddStep);

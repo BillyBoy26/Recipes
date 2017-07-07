@@ -8,10 +8,11 @@ import android.view.ViewGroup;
 import com.example.benjamin.recettes.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
-public class StepAdapter extends RecyclerView.Adapter<StepViewHolder> {
+public class StepAdapter extends RecyclerView.Adapter<StepViewHolder>{
 
     private List<String> steps = new ArrayList<>();
 
@@ -38,5 +39,12 @@ public class StepAdapter extends RecyclerView.Adapter<StepViewHolder> {
     public void addStep(String step) {
         steps.add(step);
         notifyItemInserted(steps.size() - 1);
+    }
+
+    public void moveItem(int oldPosition, int targetPosition) {
+        Collections.swap(steps, oldPosition, targetPosition);
+        notifyItemMoved(oldPosition,targetPosition);
+        notifyItemChanged(oldPosition);
+        notifyItemChanged(targetPosition);
     }
 }
