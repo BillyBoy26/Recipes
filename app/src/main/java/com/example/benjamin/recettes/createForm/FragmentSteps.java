@@ -51,7 +51,6 @@ public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int i = 1;
             }
         });
         itemTouchHelper.attachToRecyclerView(recyclerView);
