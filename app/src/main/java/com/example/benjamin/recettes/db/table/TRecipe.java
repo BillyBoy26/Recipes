@@ -10,6 +10,7 @@ public final class TRecipe implements BaseColumns{
     public static final String C_URL_IMAGE = "URL_IMAGE";
     public static final String C_DESCRIPTION= "DESCRIPTION";
     public static final String C_INGREDIENTS = "INGREDIENTS";
+    public static final String C_STEPS = "STEPS";
 
 
     private static final String CREATE_TABLE_RECIPE =
@@ -18,6 +19,7 @@ public final class TRecipe implements BaseColumns{
                     TRecipe.C_NAME + " TEXT, " +
                     TRecipe.C_URL_IMAGE + " TEXT, " +
                     TRecipe.C_DESCRIPTION + " TEXT, " +
+                    TRecipe.C_STEPS + " TEXT, " +
                     TRecipe.C_INGREDIENTS + " TEXT " +
                     ")";
 

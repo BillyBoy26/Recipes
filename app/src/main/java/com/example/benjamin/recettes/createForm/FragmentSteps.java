@@ -16,12 +16,14 @@ import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.utils.SUtils;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller{
 
 
     private StepAdapter adapter;
+    private Recipe recipe;
+    private List<String> steps;
 
     @Nullable
     @Override
@@ -31,8 +33,7 @@ public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-
-        adapter = new StepAdapter(new ArrayList<String>());
+        adapter = new StepAdapter(steps);
         recyclerView.setAdapter(adapter);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
@@ -71,11 +72,12 @@ public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller
 
     @Override
     public void setRecipe(Recipe recipe) {
-
+        this.recipe = recipe;
+        this.steps = recipe.getSteps();
     }
 
     @Override
     public void getRecipe() {
-
+        recipe.setSteps(steps);
     }
 }

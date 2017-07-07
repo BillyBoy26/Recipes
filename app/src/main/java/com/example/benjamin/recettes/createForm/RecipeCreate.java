@@ -104,6 +104,7 @@ public class RecipeCreate extends DrawerActivity {
     }
 
     private boolean createOrUpdateRecipe() {
+
         for (RecipeFiller fragment : fragments) {
             fragment.getRecipe();
         }
@@ -115,6 +116,7 @@ public class RecipeCreate extends DrawerActivity {
         contentValues.put(TRecipe.C_NAME,recipe.getName());
         contentValues.put(TRecipe.C_URL_IMAGE,recipe.getUrlImage());
         contentValues.put(TRecipe.C_INGREDIENTS,recipe.getIngredientsAsString());
+        contentValues.put(TRecipe.C_STEPS,recipe.getStepsAsString());
 
         if (recipe != null && recipe.getId() != null) {
             contentValues.put(TRecipe._ID, recipe.getId());

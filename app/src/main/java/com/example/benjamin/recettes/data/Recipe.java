@@ -11,6 +11,7 @@ public class Recipe implements Serializable{
     private String description;
     private String name;
     private List<Ingredient> ingredients = new ArrayList<>();
+    private List<String> steps = new ArrayList<>();
     private Long id;
 
     public Recipe() {
@@ -85,6 +86,35 @@ public class Recipe implements Serializable{
                     ingr.setQuantityUnit(attr[3]);
                 }
                 ingredients.add(ingr);
+            }
+        }
+    }
+
+    public List<String> getSteps() {
+        return steps;
+    }
+
+    public void setSteps(List<String> steps) {
+        this.steps = steps;
+    }
+
+    public String getStepsAsString() {
+        StringBuilder builder = new StringBuilder();
+        for (String step : steps) {
+            builder.append(step + Ingredient.SEP_ATTRIBUTE);
+        }
+
+        return builder.toString();
+    }
+
+    public void setSteps(String stepsAsStr) {
+        steps = new ArrayList<>();
+        if (SUtils.notNullOrEmpty(stepsAsStr)) {
+            String[] split = stepsAsStr.split(Ingredient.SEP_ATTRIBUTE);
+            for (String step : split) {
+                if (SUtils.notNullOrEmpty(step)) {
+                    steps.add(step);
+                }
             }
         }
     }
