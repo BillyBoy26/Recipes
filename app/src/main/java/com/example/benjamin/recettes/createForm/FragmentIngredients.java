@@ -8,7 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +64,7 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
 //                }
 //        });
 //            }
-        final AlertDialog dialogQte = createDialogBox(searchView);
+        final AlertDialog dialogQte = createDialogBox(searchView,inflater.inflate(R.layout.ingredient_dialog_quantity, null));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(final String query) {
@@ -87,16 +86,19 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
         return layout;
     }
 
-    public AlertDialog createDialogBox(SearchView searchView) {
+    public AlertDialog createDialogBox(SearchView searchView, View dialogView) {
+
+        final EditText editTextQte = (EditText) dialogView.findViewById(R.id.editTextQte);
+        final EditText editTextUnit = (EditText) dialogView.findViewById(R.id.editTextUnit);
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(searchView.getContext());
-        final EditText editText = new EditText(searchView.getContext());
-        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        builder.setView(editText);
+
+        builder.setView(dialogView);
         builder.setTitle(R.string.enterQuantity);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String quant = editText.getText().toString();
+                String quant = editTextQte.getText().toString();
                 int quantity = 1;
                 if (SUtils.notNullOrEmpty(quant)) {
                     try {
@@ -106,8 +108,10 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
                         e.printStackTrace();
                     }
                 }
-                adapter.addIngredient(new Ingredient(currentIngName,-1,quantity));
-                editText.setText("");
+                Ingredient ingredient = new Ingredient(currentIngName, -1, quantity);
+                ingredient.setQuantityUnit(editTextUnit.getText().toString());
+                adapter.addIngredient(ingredient);
+                editTextQte.setText("");
                 dialog.cancel();
             }
         });

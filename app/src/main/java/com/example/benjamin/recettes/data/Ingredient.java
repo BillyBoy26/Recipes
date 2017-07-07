@@ -7,6 +7,7 @@ public class Ingredient implements Serializable{
     public static final String SEP_ATTRIBUTE = ";";
     public static final String SEP_END = "§";
     private String name;
+    private String quantityUnit;
     private int image = -1;
     private int quantity = 1;
 
@@ -73,5 +74,13 @@ public class Ingredient implements Serializable{
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getQuantityUnit() {
+        return quantityUnit;
+    }
+
+    public void setQuantityUnit(String quantityUnit) {
+        this.quantityUnit = quantityUnit;
     }
 }

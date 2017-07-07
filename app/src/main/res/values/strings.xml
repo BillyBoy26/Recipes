@@ -22,4 +22,6 @@
     <string name="ingredient">ingredient</string>
     <string name="notNow">Pas maintenant</string>
     <string name="enterQuantity">Entrez la quantité</string>
+    <string name="quantity">quantité</string>
+    <string name="unit">unité</string>
 </resources>

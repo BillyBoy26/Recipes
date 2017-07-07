@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Ingredient;
+import com.example.benjamin.recettes.utils.SUtils;
 
 public class IngredientViewHolder extends RecyclerView.ViewHolder {
 
@@ -28,7 +29,11 @@ public class IngredientViewHolder extends RecyclerView.ViewHolder {
 //            imageView.setImageResource(R.drawable.ic_cake_white_24dp);
         }
         if (ingredient.getQuantity() > 0) {
-            textViewQuantity.setText(String.valueOf(ingredient.getQuantity()));
+            String quantity = String.valueOf(ingredient.getQuantity());
+            if (SUtils.notNullOrEmpty(ingredient.getQuantityUnit())) {
+                quantity += " " + ingredient.getQuantityUnit();
+            }
+            textViewQuantity.setText(quantity);
         }
     }
 
