@@ -68,8 +68,8 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
-        String[] projection = {TRecipe._ID, TRecipe.C_NAME,TRecipe.C_URL_IMAGE,TRecipe.C_INGREDIENTS,TRecipe.C_STEPS};
-        CursorLoader cursorLoader = new CursorLoader(this, RecipeContentProvider.CONTENT_URI, projection, null, null, null);
+        String[] projection = {TRecipe._ID, TRecipe.C_NAME,TRecipe.C_URL_IMAGE,TRecipe.C_INGREDIENTS,TRecipe.C_STEPS,TRecipe.C_UPDATE_DATE};
+        CursorLoader cursorLoader = new CursorLoader(this, RecipeContentProvider.CONTENT_URI, projection, null, null, TRecipe.C_UPDATE_DATE + " DESC");
         return cursorLoader;
     }
 

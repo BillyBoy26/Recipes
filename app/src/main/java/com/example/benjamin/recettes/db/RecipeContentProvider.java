@@ -1,5 +1,6 @@
 package com.example.benjamin.recettes.db;
 
+import android.annotation.SuppressLint;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -10,6 +11,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.example.benjamin.recettes.db.table.TRecipe;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class RecipeContentProvider extends ContentProvider {
 
@@ -50,6 +54,10 @@ public class RecipeContentProvider extends ContentProvider {
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
         SQLiteDatabase db = recipeDbHelper.getWritableDatabase();
         getContext().getContentResolver().notifyChange(uri,null);
+        if (values != null) {
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            values.put(TRecipe.C_UPDATE_DATE, format.format(new Date()));
+        }
 
         long id = db.insert(TRecipe.T_RECIPE, null, values);
         return Uri.parse(BASE_PATH + "/" + id);
@@ -72,7 +80,10 @@ public class RecipeContentProvider extends ContentProvider {
     public int update(@NonNull Uri uri, @Nullable ContentValues values,
                       @Nullable String selection, @Nullable String[] selectionArgs) {
         SQLiteDatabase db = recipeDbHelper.getWritableDatabase();
-
+        if (values != null) {
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            values.put(TRecipe.C_UPDATE_DATE, format.format(new Date()));
+        }
         String recipeId = uri.getLastPathSegment();
         int rowUpdated = db.update(TRecipe.T_RECIPE, values, TRecipe._ID + "=" + recipeId, null);
         getContext().getContentResolver().notifyChange(uri, null);

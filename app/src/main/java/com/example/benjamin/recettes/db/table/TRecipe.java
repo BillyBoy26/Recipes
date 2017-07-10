@@ -11,6 +11,7 @@ public final class TRecipe implements BaseColumns{
     public static final String C_DESCRIPTION= "DESCRIPTION";
     public static final String C_INGREDIENTS = "INGREDIENTS";
     public static final String C_STEPS = "STEPS";
+    public static final String C_UPDATE_DATE = "UPDATE_DATE";
 
 
     private static final String CREATE_TABLE_RECIPE =
@@ -20,7 +21,8 @@ public final class TRecipe implements BaseColumns{
                     TRecipe.C_URL_IMAGE + " TEXT, " +
                     TRecipe.C_DESCRIPTION + " TEXT, " +
                     TRecipe.C_STEPS + " TEXT, " +
-                    TRecipe.C_INGREDIENTS + " TEXT " +
+                    TRecipe.C_INGREDIENTS + " TEXT, " +
+                    TRecipe.C_UPDATE_DATE + " DATE " +
                     ")";
 
     private static final String DELETE_TABLE_RECIPE =
