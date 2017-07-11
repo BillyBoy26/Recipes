@@ -7,9 +7,9 @@ public class Ingredient implements Serializable{
     public static final String SEP_ATTRIBUTE = ";";
     public static final String SEP_END = "§";
     private String name;
-    private String quantityUnit;
+    private String quantityUnit = "";
     private int image = -1;
-    private int quantity = 1;
+    private float quantity = -1;
 
     public Ingredient(String name) {
         this.name = name;
@@ -20,7 +20,7 @@ public class Ingredient implements Serializable{
         this.image = image;
     }
 
-    public Ingredient(String name, int image, int quantity) {
+    public Ingredient(String name, int image, float quantity) {
         this.name = name;
         this.image = image;
         this.quantity = quantity;
@@ -69,11 +69,11 @@ public class Ingredient implements Serializable{
         return builder.toString();
     }
 
-    public int getQuantity() {
+    public float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(float quantity) {
         this.quantity = quantity;
     }
 

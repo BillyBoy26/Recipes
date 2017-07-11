@@ -7,10 +7,7 @@ import android.util.Log;
 
 import com.example.benjamin.recettes.createForm.RecipeCreate;
 import com.example.benjamin.recettes.data.Recipe;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import com.example.benjamin.recettes.parser.BuzzFeedParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,25 +41,13 @@ public class HttpRequestTask extends AsyncTask<String,Void,Recipe> {
                 inputStream = connection.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                 StringBuilder builder = new StringBuilder();
-                String line = null;
+                String line;
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
                 }
                 inputStream.close();
                 String html = builder.toString();
-
-                Document document = Jsoup.parse(html);
-                Element h1Element = document.body().select("h1.buzz-title").first();
-                String name = h1Element.text();
-
-                Element imageBalise = document.body().select("img.subbuzz__media-image").first();
-                String urlImage = imageBalise.attr("data-src");
-
-                Recipe recipe = new Recipe();
-                recipe.setName(name);
-                recipe.setUrlImage(urlImage);
-
-                return recipe;
+                return BuzzFeedParser.parse(html);
 
             }
 

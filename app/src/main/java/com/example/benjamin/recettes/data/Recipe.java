@@ -81,7 +81,7 @@ public class Recipe implements Serializable{
             String[] split = ingredientsAsStr.split(Ingredient.SEP_END);
             for (String ingre : split) {
                 String[] attr = ingre.split(Ingredient.SEP_ATTRIBUTE);
-                Ingredient ingr = new Ingredient(attr[0], Integer.parseInt(attr[1]), Integer.parseInt(attr[2]));
+                Ingredient ingr = new Ingredient(attr[0], Integer.parseInt(attr[1]), Float.parseFloat(attr[2]));
                 if (attr.length > 3) {
                     ingr.setQuantityUnit(attr[3]);
                 }

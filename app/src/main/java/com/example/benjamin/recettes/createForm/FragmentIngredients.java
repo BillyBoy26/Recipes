@@ -94,10 +94,10 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String quant = editTextQte.getText().toString();
-                int quantity = 1;
+                float quantity = 1;
                 if (SUtils.notNullOrEmpty(quant)) {
                     try {
-                        quantity = Integer.valueOf(quant);
+                        quantity = Float.valueOf(quant);
                     } catch (NumberFormatException e) {
                         Log.e("INGR_QUANTITY", e.getMessage());
                         e.printStackTrace();
