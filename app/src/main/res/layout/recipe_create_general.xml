@@ -2,23 +2,148 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="58dp">
+    android:paddingTop="58dp"
+    android:paddingStart="5dp"
+    android:paddingEnd="5dp"
+    android:focusableInTouchMode="true"
+    android:textSize="15sp"
+    >
 
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/name"
+            android:hint="@string/name"
+
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.example.benjamin.recettes.views.ImageInputView
+                android:id="@+id/image1"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="1dp" />
+
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                android:useDefaultMargins="false">
+
+                <com.example.benjamin.recettes.views.ImageInputView
+                    android:id="@+id/image2"
+                    android:layout_width="100dp"
+                    android:layout_height="99dp"
+                    android:layout_margin="1dp" />
+
+                <com.example.benjamin.recettes.views.ImageInputView
+                    android:id="@+id/image3"
+                    android:layout_width="100dp"
+                    android:layout_height="99dp"
+                    android:layout_margin="1dp" />
+
+                <com.example.benjamin.recettes.views.ImageInputView
+                    android:id="@+id/image4"
+                    android:layout_width="100dp"
+                    android:layout_height="99dp"
+                    android:layout_margin="1dp"
+                    android:layout_marginBottom="0dp"/>
+
+                <com.example.benjamin.recettes.views.ImageInputView
+                    android:id="@+id/image5"
+                    android:layout_width="100dp"
+                    android:layout_height="99dp"
+                    android:layout_margin="1dp" />
+
+            </GridLayout>
+        </LinearLayout>
+
+
+    </HorizontalScrollView>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/category"
+            android:hint="Catégorie"/>
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tags"
+            android:hint="Tags"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="2">
 
         <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <EditText
-                android:layout_width="match_parent"
+                android:id="@+id/time_prepare"
+                android:layout_width="175dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/name"
-                android:hint="@string/name"/>
-
+                android:layout_gravity="center"
+                android:hint="Temps de préparation"/>
         </android.support.design.widget.TextInputLayout>
 
-        <com.example.benjamin.recettes.views.ImageInputView
-            android:id="@+id/image"
-            android:layout_width="250dp"
-            android:layout_height="200dp"
-            />
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/time_cook"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+            android:hint="Temps de cuisson" />
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/time_total"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:hint="Temps total" />
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/nb_covers"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:hint="Nombre de couverts" />
+        </android.support.design.widget.TextInputLayout>
+
+    </GridLayout>
 </LinearLayout>

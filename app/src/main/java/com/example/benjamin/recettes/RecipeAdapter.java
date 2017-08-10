@@ -36,7 +36,7 @@ class RecipeAdapter extends CursorAdapter {
 
         String urlImage = cursor.getString(cursor.getColumnIndex(TRecipe.C_URL_IMAGE));
         if (urlImage != null && !urlImage.isEmpty()) {
-            ImageView imageView = (ImageView) view.findViewById(R.id.image);
+            ImageView imageView = (ImageView) view.findViewById(R.id.image1);
             Picasso.with(imageView.getContext()).load(urlImage).centerCrop().fit().into(imageView);
         }
     }

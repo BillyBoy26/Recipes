@@ -25,7 +25,7 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View generalView = inflater.inflate(R.layout.recipe_create_general, container, false);
         txtName = (EditText) generalView.findViewById(R.id.name);
-        imageView = (ImageInputView) generalView.findViewById(R.id.image);
+        imageView = (ImageInputView) generalView.findViewById(R.id.image1);
         fillRecipeView();
         return generalView;
     }
