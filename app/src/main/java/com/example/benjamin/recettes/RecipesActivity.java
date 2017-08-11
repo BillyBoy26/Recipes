@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,23 +12,24 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.example.benjamin.recettes.createForm.RecipeCreate;
-import com.example.benjamin.recettes.data.Recipe;
-import com.example.benjamin.recettes.db.RecipeContentProvider;
-import com.example.benjamin.recettes.db.table.TRecipe;
+import com.example.benjamin.recettes.cursor.SimpleCursorLoader;
+import com.example.benjamin.recettes.db.RecipeDao;
 
 public class RecipesActivity extends DrawerActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
 
     private RecipeAdapter adapter;
+    private RecipeDao recipeDao;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getNavigationView().setCheckedItem(R.id.nav_recipes);
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.recipes_list_layout, contentFrameLayout);
 
+        recipeDao = new RecipeDao(this);
+        recipeDao.open();
 
 
         getSupportLoaderManager().initLoader(1, null, this);
@@ -42,7 +42,7 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cursor = (Cursor) listView.getItemAtPosition(position);
                 Intent intent = new Intent(RecipesActivity.this, RecipeCreate.class);
-                intent.putExtra(RecipeCreate.CURRENT_RECIPE, getRecipeFromCursor(cursor));
+                intent.putExtra(RecipeCreate.CURRENT_RECIPE, RecipeDao.getRecipeFromCursor(cursor));
                 startActivity(intent);
             }
         });
@@ -56,21 +56,17 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
         });
     }
 
-    private Recipe getRecipeFromCursor(Cursor cursor) {
-        Recipe recipe = new Recipe();
-        recipe.setId(cursor.getLong(cursor.getColumnIndex(TRecipe._ID)));
-        recipe.setUrlImage(cursor.getString(cursor.getColumnIndex(TRecipe.C_URL_IMAGE)));
-        recipe.setName(cursor.getString(cursor.getColumnIndex(TRecipe.C_NAME)));
-        recipe.setIngredients(cursor.getString(cursor.getColumnIndex(TRecipe.C_INGREDIENTS)));
-        recipe.setSteps(cursor.getString(cursor.getColumnIndex(TRecipe.C_STEPS)));
-        return recipe;
-    }
+
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
-        String[] projection = {TRecipe._ID, TRecipe.C_NAME,TRecipe.C_URL_IMAGE,TRecipe.C_INGREDIENTS,TRecipe.C_STEPS,TRecipe.C_UPDATE_DATE};
-        CursorLoader cursorLoader = new CursorLoader(this, RecipeContentProvider.CONTENT_URI, projection, null, null, TRecipe.C_UPDATE_DATE + " DESC");
-        return cursorLoader;
+        return new SimpleCursorLoader(this) {
+            @Override
+            public Cursor loadInBackground() {
+                Cursor allRecipes = recipeDao.getAllRecipes();
+                return allRecipes;
+            }
+        };
     }
 
 
@@ -83,5 +79,17 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader loader) {
         adapter.swapCursor(null);
+    }
+
+    @Override
+    protected void onResume() {
+        recipeDao.open();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        recipeDao.close();
+        super.onPause();
     }
 }

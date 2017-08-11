@@ -28,11 +28,6 @@
             />
         <activity android:name=".RecipeImport" />
 
-        <provider
-            android:name=".db.RecipeContentProvider"
-            android:authorities="com.example.benjamin.recettes.db" >
-        </provider>
-
     </application>
 
 </manifest>

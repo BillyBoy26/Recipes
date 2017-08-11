@@ -1,8 +1,6 @@
 package com.example.benjamin.recettes.createForm;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -19,8 +17,7 @@ import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.RecipesActivity;
 import com.example.benjamin.recettes.data.Recipe;
-import com.example.benjamin.recettes.db.RecipeContentProvider;
-import com.example.benjamin.recettes.db.table.TRecipe;
+import com.example.benjamin.recettes.db.RecipeDao;
 import com.example.benjamin.recettes.utils.SUtils;
 
 import java.util.ArrayList;
@@ -39,6 +36,7 @@ public class RecipeCreate extends DrawerActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private List<RecipeFiller> fragments = new ArrayList<>();
+    private RecipeDao recipeDao;
 
 
     @Override
@@ -53,6 +51,9 @@ public class RecipeCreate extends DrawerActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+
+        recipeDao = new RecipeDao(this);
+        recipeDao.open();
 
 
         Bundle extras = getIntent().getExtras();
@@ -112,20 +113,8 @@ public class RecipeCreate extends DrawerActivity {
             Toast.makeText(this, "Votre recette n'a pas de nom", Toast.LENGTH_SHORT).show();
             return false;
         }
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(TRecipe.C_NAME,recipe.getName());
-        contentValues.put(TRecipe.C_URL_IMAGE,recipe.getUrlImage());
-        contentValues.put(TRecipe.C_INGREDIENTS,recipe.getIngredientsAsString());
-        contentValues.put(TRecipe.C_STEPS,recipe.getStepsAsString());
 
-        if (recipe != null && recipe.getId() != null) {
-            contentValues.put(TRecipe._ID, recipe.getId());
-            Uri uri = Uri.parse(RecipeContentProvider.CONTENT_URI + "/" + recipe.getId());
-            getContentResolver().update(uri,contentValues,null,null);
-        } else {
-            getContentResolver().insert(RecipeContentProvider.CONTENT_URI, contentValues);
-
-        }
+        recipeDao.createOrUpdate(recipe);
         return true;
     }
 
@@ -148,8 +137,19 @@ public class RecipeCreate extends DrawerActivity {
     }
 
     private void deleteRecipe() {
-        Uri uri = Uri.parse(RecipeContentProvider.CONTENT_URI + "/" + recipe.getId());
-        getContentResolver().delete(uri, null, null);
+        recipeDao.delete(recipe);
         startActivity(new Intent(RecipeCreate.this, RecipesActivity.class));
+    }
+
+    @Override
+    protected void onResume() {
+        recipeDao.open();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        recipeDao.close();
+        super.onPause();
     }
 }
