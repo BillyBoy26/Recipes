@@ -13,6 +13,7 @@ public class Recipe implements Serializable{
     private List<Ingredient> ingredients = new ArrayList<>();
     private List<String> steps = new ArrayList<>();
     private Long id;
+    private List<Category> categories = new ArrayList<>();
 
     public Recipe() {
     }
@@ -117,5 +118,13 @@ public class Recipe implements Serializable{
                 }
             }
         }
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 }

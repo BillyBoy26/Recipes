@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Ingredient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientViewHolder> {
@@ -16,7 +17,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientViewHolder
 
 
     public IngredientAdapter(List<Ingredient> ingredientList) {
-        this.ingredientList = ingredientList;
+        setIngredient(ingredientList,false);
     }
 
     @Override
@@ -55,5 +56,15 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientViewHolder
         ingredientList.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position,ingredientList.size());
+    }
+
+    public void setIngredient(List<Ingredient> ingredients,boolean notify) {
+        this.ingredientList = ingredients;
+        if (this.ingredientList == null) {
+            this.ingredientList = new ArrayList<>();
+        }
+        if (notify) {
+            notifyDataSetChanged();
+        }
     }
 }

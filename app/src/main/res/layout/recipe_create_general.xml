@@ -3,16 +3,17 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="58dp"
-    android:paddingStart="5dp"
-    android:paddingEnd="5dp"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
     android:focusableInTouchMode="true"
-    android:textSize="15sp"
+    android:background="#E0E0E0"
     >
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
+        android:background="#FFFFFF"
         >
         <EditText
             android:layout_width="match_parent"
@@ -26,6 +27,7 @@
     <HorizontalScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_layout"
         android:fillViewport="true">
 
         <LinearLayout
@@ -79,7 +81,10 @@
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_layout"
+        android:background="#FFFFFF"
+        >
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -88,7 +93,9 @@
     </android.support.design.widget.TextInputLayout>
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_layout"
+        android:background="#FFFFFF">
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -97,14 +104,19 @@
     </android.support.design.widget.TextInputLayout>
 
     <GridLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_layout"
         android:layout_gravity="center"
-        android:columnCount="2">
+        android:columnCount="2"
+        >
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="#FFFFFF">
             <EditText
                 android:id="@+id/time_prepare"
                 android:layout_width="175dp"
@@ -115,7 +127,10 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="end"
+            android:background="#FFFFFF">
             <EditText
                 android:id="@+id/time_cook"
                 android:layout_width="175dp"
@@ -125,7 +140,10 @@
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="#FFFFFF">
 
             <EditText
                 android:id="@+id/time_total"
@@ -136,7 +154,9 @@
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="#FFFFFF">
             <EditText
                 android:id="@+id/nb_covers"
                 android:layout_width="175dp"

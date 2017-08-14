@@ -17,7 +17,7 @@ public class StepAdapter extends RecyclerView.Adapter<StepViewHolder>{
     private List<String> steps = new ArrayList<>();
 
     public StepAdapter(List<String> steps) {
-        this.steps = steps;
+        setSteps(steps,false);
     }
 
     @Override
@@ -48,5 +48,15 @@ public class StepAdapter extends RecyclerView.Adapter<StepViewHolder>{
     public void addStep(String step) {
         steps.add(step);
         notifyItemInserted(steps.size() - 1);
+    }
+
+    public void setSteps(List<String> steps, boolean notify) {
+        this.steps = steps;
+        if (steps == null) {
+            this.steps = new ArrayList<>();
+        }
+        if (notify) {
+            notifyDataSetChanged();
+        }
     }
 }

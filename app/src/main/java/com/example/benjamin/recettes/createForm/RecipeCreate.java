@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,13 +20,34 @@ import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.RecipesActivity;
 import com.example.benjamin.recettes.data.Recipe;
-import com.example.benjamin.recettes.db.RecipeDao;
+import com.example.benjamin.recettes.db.dao.RecipeDao;
 import com.example.benjamin.recettes.utils.SUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeCreate extends DrawerActivity {
+public class RecipeCreate extends DrawerActivity implements LoaderManager.LoaderCallbacks<Recipe> {
+
+    @Override
+    public Loader<Recipe> onCreateLoader(int id, Bundle args) {
+        return new AsyncTaskLoader<Recipe>(this) {
+            @Override
+            public Recipe loadInBackground() {
+                return recipeDao.findById(recipe.getId());
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Recipe> loader, Recipe data) {
+        this.recipe = data;
+        setRecipe();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Recipe> loader) {
+        this.recipe = null;
+    }
 
     public interface RecipeFiller{
         void setRecipe(Recipe recipe);
@@ -59,11 +83,10 @@ public class RecipeCreate extends DrawerActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.get(CURRENT_RECIPE) != null) {
             recipe = (Recipe) extras.get(CURRENT_RECIPE);
+            getSupportLoaderManager().initLoader(2, null, this).forceLoad();
+        } else {
+            setRecipe();
         }
-        if (recipe == null) {
-            recipe = new Recipe();
-        }
-        setRecipe();
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -80,6 +103,9 @@ public class RecipeCreate extends DrawerActivity {
     }
 
     private void setRecipe() {
+        if (recipe == null) {
+            recipe = new Recipe();
+        }
         for (RecipeFiller fragment : fragments) {
             fragment.setRecipe(recipe);
         }
@@ -105,7 +131,6 @@ public class RecipeCreate extends DrawerActivity {
     }
 
     private boolean createOrUpdateRecipe() {
-
         for (RecipeFiller fragment : fragments) {
             fragment.getRecipe();
         }

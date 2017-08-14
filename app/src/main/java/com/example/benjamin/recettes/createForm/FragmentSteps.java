@@ -33,7 +33,7 @@ public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        adapter = new StepAdapter(steps);
+        fillView();
         recyclerView.setAdapter(adapter);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
@@ -69,10 +69,18 @@ public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller
         return layout;
     }
 
+    private void fillView() {
+        if (adapter == null) {
+            adapter = new StepAdapter(steps);
+        } else {
+            adapter.setSteps(steps, true);
+        }
+    }
+
     @Override
     public void setRecipe(Recipe recipe) {
         this.recipe = recipe;
-        this.steps = recipe.getSteps();
+        this.steps = recipe != null ? recipe.getSteps() : null;
     }
 
     @Override

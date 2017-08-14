@@ -13,7 +13,7 @@ import android.widget.ListView;
 
 import com.example.benjamin.recettes.createForm.RecipeCreate;
 import com.example.benjamin.recettes.cursor.SimpleCursorLoader;
-import com.example.benjamin.recettes.db.RecipeDao;
+import com.example.benjamin.recettes.db.dao.RecipeDao;
 
 public class RecipesActivity extends DrawerActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -32,7 +32,7 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
         recipeDao.open();
 
 
-        getSupportLoaderManager().initLoader(1, null, this);
+        getSupportLoaderManager().initLoader(3, null, this);
 
         adapter = new RecipeAdapter(this, null, 0);
         final ListView listView = (ListView) findViewById(R.id.listView);
@@ -63,8 +63,7 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
         return new SimpleCursorLoader(this) {
             @Override
             public Cursor loadInBackground() {
-                Cursor allRecipes = recipeDao.getAllRecipes();
-                return allRecipes;
+                return recipeDao.getAllRecipes();
             }
         };
     }

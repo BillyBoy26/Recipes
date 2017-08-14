@@ -38,7 +38,7 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.recipe_create_ingredients, container, false);
         final RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerIngredient);
-        adapter = new IngredientAdapter(ingredients);
+        fillView();
         recyclerView.setAdapter(adapter);
 
 
@@ -79,6 +79,14 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
             }
         });
         return layout;
+    }
+
+    private void fillView() {
+        if (adapter == null) {
+            adapter = new IngredientAdapter(ingredients);
+        } else {
+            adapter.setIngredient(ingredients,true);
+        }
     }
 
     public AlertDialog createDialogBox(SearchView searchView, View dialogView) {
@@ -122,7 +130,9 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
 
     public void setRecipe(Recipe recipe) {
         this.recipe = recipe;
-        this.ingredients = recipe.getIngredients();
+        this.ingredients = recipe != null ? recipe.getIngredients() : null;
+        fillView();
+
     }
 
     @Override
