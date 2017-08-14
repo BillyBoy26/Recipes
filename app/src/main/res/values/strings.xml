@@ -25,4 +25,10 @@
     <string name="quantity">quantité</string>
     <string name="unit">unité</string>
     <string name="addStep">Ajouter une étape</string>
+    <string name="category">Catégorie</string>
+    <string name="tags">Tags</string>
+    <string name="preparation_time">Temps de préparation</string>
+    <string name="cooking_time">Temps de cuisson</string>
+    <string name="total_time">Temps total</string>
+    <string name="nb_couverts">Nombre de couverts</string>
 </resources>

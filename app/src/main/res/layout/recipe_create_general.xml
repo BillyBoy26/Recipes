@@ -89,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/category"
-            android:hint="Catégorie"/>
+            android:hint="@string/category"/>
     </android.support.design.widget.TextInputLayout>
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -100,7 +100,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tags"
-            android:hint="Tags"/>
+            android:hint="@string/tags"/>
     </android.support.design.widget.TextInputLayout>
 
     <GridLayout
@@ -122,7 +122,7 @@
                 android:layout_width="175dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:hint="Temps de préparation"/>
+                android:hint="@string/preparation_time"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -136,7 +136,7 @@
                 android:layout_width="175dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-            android:hint="Temps de cuisson" />
+            android:hint="@string/cooking_time" />
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="wrap_content"
@@ -150,7 +150,7 @@
                 android:layout_width="175dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:hint="Temps total" />
+                android:hint="@string/total_time" />
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="wrap_content"
@@ -162,7 +162,7 @@
                 android:layout_width="175dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:hint="Nombre de couverts" />
+                android:hint="@string/nb_couverts" />
         </android.support.design.widget.TextInputLayout>
 
     </GridLayout>
