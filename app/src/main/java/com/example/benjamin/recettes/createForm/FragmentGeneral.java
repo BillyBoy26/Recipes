@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Category;
@@ -14,8 +16,7 @@ import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.task.DownloadImageTask;
 import com.example.benjamin.recettes.utils.SUtils;
 import com.example.benjamin.recettes.views.ImageInputView;
-
-import java.util.ArrayList;
+import com.google.android.flexbox.FlexboxLayout;
 
 public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFiller{
 
@@ -24,16 +25,49 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
     private ImageInputView imageView;
     private Recipe recipe;
     private EditText txtCategory;
+    private FlexboxLayout pnlCategories;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View generalView = inflater.inflate(R.layout.recipe_create_general, container, false);
         txtName = (EditText) generalView.findViewById(R.id.name);
         imageView = (ImageInputView) generalView.findViewById(R.id.image1);
         txtCategory = (EditText) generalView.findViewById(R.id.category);
+        pnlCategories = (FlexboxLayout) generalView.findViewById(R.id.pnlCategories);
+        ImageView btnAddCat = (ImageView) generalView.findViewById(R.id.iconAddCat);
+        btnAddCat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String catName = txtCategory.getText().toString();
+                if (SUtils.nullOrEmpty(catName)) {
+                    return;
+                }
+                addCatToView(catName, inflater);
+                txtCategory.setText("");
+                recipe.getCategories().add(new Category(catName));
+            }
+        });
         fillRecipeView();
         return generalView;
+    }
+
+    private void addCatToView(final String catName, LayoutInflater inflater) {
+        final Button btn = (Button) inflater.inflate(R.layout.btn_tag, null);
+        btn.setText(catName);
+        pnlCategories.addView(btn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (Category category : recipe.getCategories()) {
+                    if (catName.equalsIgnoreCase(category.getName())) {
+                        recipe.getCategories().remove(category);
+                        break;
+                    }
+                }
+                pnlCategories.removeView(btn);
+            }
+        });
     }
 
     public void fillRecipeView() {
@@ -42,9 +76,10 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
             if (recipe.getUrlImage() != null) {
                 new DownloadImageTask(imageView).execute(recipe.getUrlImage());
             }
-            //TODO
+
+
             for (Category category : recipe.getCategories()) {
-                txtCategory.setText(category.getName());
+                addCatToView(category.getName(),getActivity().getLayoutInflater());
             }
         }
 
@@ -56,11 +91,7 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
         String imageUrl = imageView.getUrlImage();
         recipe.setName(name);
         recipe.setUrlImage(imageUrl);
-        if (SUtils.notNullOrEmpty(txtCategory.getText().toString())) {
-            recipe.getCategories().add(new Category(txtCategory.getText().toString()));
-        } else {
-            recipe.setCategories(new ArrayList<Category>());
-        }
+        //les catégories sont gérés automatiquement
     }
 
 

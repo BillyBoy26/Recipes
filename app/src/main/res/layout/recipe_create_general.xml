@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="58dp"
     android:paddingStart="10dp"
     android:paddingEnd="10dp"
     android:focusableInTouchMode="true"
-    android:background="#E0E0E0"
-    >
+    android:background="#E0E0E0">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -78,19 +79,40 @@
 
     </HorizontalScrollView>
 
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pnlCategories"
+        app:flexWrap="wrap" />
 
-    <android.support.design.widget.TextInputLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="@dimen/spacing_layout"
-        android:background="#FFFFFF"
         >
-        <EditText
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/category"
-            android:hint="@string/category"/>
-    </android.support.design.widget.TextInputLayout>
+            android:background="#FFFFFF"
+            android:layout_weight="0.92"
+            android:layout_gravity="center_vertical"
+            >
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/category"
+                android:hint="@string/category"/>
+        </android.support.design.widget.TextInputLayout>
+        <ImageView
+            android:id="@+id/iconAddCat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_add_circle_pink_24dp"
+            />
+    </LinearLayout>
+
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
