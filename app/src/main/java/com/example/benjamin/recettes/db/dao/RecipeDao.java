@@ -7,6 +7,8 @@ import android.database.Cursor;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.table.TRecipe;
 
+import static com.example.benjamin.recettes.utils.CursorUtils.getStringColumnOrEmpty;
+
 public class RecipeDao extends GenericDao{
 
     private CategoryDao categoryDao;
@@ -52,6 +54,10 @@ public class RecipeDao extends GenericDao{
         contentValues.put(TRecipe.C_URL_IMAGE,recipe.getUrlImage());
         contentValues.put(TRecipe.C_INGREDIENTS,recipe.getIngredientsAsString());
         contentValues.put(TRecipe.C_STEPS,recipe.getStepsAsString());
+        contentValues.put(TRecipe.C_NB_COVERS,recipe.getNbCovers());
+        contentValues.put(TRecipe.C_COOK_TIME,recipe.getCookTime());
+        contentValues.put(TRecipe.C_TOTAL_TIME,recipe.getTotalTime());
+        contentValues.put(TRecipe.C_PREPARE_TIME,recipe.getPrepareTime());
         fillUpdatedate(contentValues);
 
 
@@ -94,8 +100,15 @@ public class RecipeDao extends GenericDao{
         recipe.setName(cursor.getString(cursor.getColumnIndex(TRecipe.C_NAME)));
         recipe.setIngredients(cursor.getString(cursor.getColumnIndex(TRecipe.C_INGREDIENTS)));
         recipe.setSteps(cursor.getString(cursor.getColumnIndex(TRecipe.C_STEPS)));
+        recipe.setCookTime(getStringColumnOrEmpty(cursor, TRecipe.C_COOK_TIME));
+        recipe.setNbCovers(getStringColumnOrEmpty(cursor, TRecipe.C_NB_COVERS));
+        recipe.setPrepareTime(getStringColumnOrEmpty(cursor, TRecipe.C_PREPARE_TIME));
+        recipe.setTotalTime(getStringColumnOrEmpty(cursor, TRecipe.C_TOTAL_TIME));
+
         return recipe;
     }
+
+
 
     @Override
     public void open() {

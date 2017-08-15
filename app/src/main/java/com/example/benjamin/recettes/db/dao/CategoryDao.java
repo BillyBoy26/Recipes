@@ -10,7 +10,7 @@ import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.table.TCategory;
 import com.example.benjamin.recettes.db.table.TJCatRecipe;
 import com.example.benjamin.recettes.db.table.TRecipe;
-import com.example.benjamin.recettes.utils.CUtils;
+import com.example.benjamin.recettes.utils.CollectionUtils;
 import com.example.benjamin.recettes.utils.SUtils;
 
 import java.util.ArrayList;
@@ -130,7 +130,7 @@ public class CategoryDao extends GenericDao{
     }
 
     public void createLinkRecipeCat(Recipe recipe) {
-        if (recipe == null || CUtils.nullOrEmpty(recipe.getCategories())) {
+        if (recipe == null || CollectionUtils.nullOrEmpty(recipe.getCategories())) {
             return;
         }
 
@@ -141,7 +141,7 @@ public class CategoryDao extends GenericDao{
                 catIds.add(category.getId());
             }
         }
-        if (CUtils.nullOrEmpty(catIds)) {
+        if (CollectionUtils.nullOrEmpty(catIds)) {
             return;
         }
         ContentValues contentValues = new ContentValues();

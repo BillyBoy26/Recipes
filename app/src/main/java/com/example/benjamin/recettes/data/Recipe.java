@@ -14,6 +14,10 @@ public class Recipe implements Serializable{
     private List<String> steps = new ArrayList<>();
     private Long id;
     private List<Category> categories = new ArrayList<>();
+    private String prepareTime;
+    private String cookTime;
+    private String totalTime;
+    private String nbCovers;
 
     public Recipe() {
     }
@@ -126,5 +130,37 @@ public class Recipe implements Serializable{
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
+    }
+
+    public String getPrepareTime() {
+        return prepareTime;
+    }
+
+    public void setPrepareTime(String prepareTime) {
+        this.prepareTime = prepareTime;
+    }
+
+    public String getCookTime() {
+        return cookTime;
+    }
+
+    public void setCookTime(String cookTime) {
+        this.cookTime = cookTime;
+    }
+
+    public String getTotalTime() {
+        return totalTime;
+    }
+
+    public void setTotalTime(String totalTime) {
+        this.totalTime = totalTime;
+    }
+
+    public String getNbCovers() {
+        return nbCovers;
+    }
+
+    public void setNbCovers(String nbCovers) {
+        this.nbCovers = nbCovers;
     }
 }

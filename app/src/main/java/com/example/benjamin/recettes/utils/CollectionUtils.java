@@ -3,7 +3,7 @@ package com.example.benjamin.recettes.utils;
 import java.util.Collection;
 import java.util.List;
 
-public class CUtils {
+public class CollectionUtils {
 
     public static boolean notNullOrEmpty(Collection collection) {
         return collection != null && !collection.isEmpty();
@@ -14,7 +14,7 @@ public class CUtils {
     }
 
     public static String toWhereClause(List<String> strings) {
-        if (CUtils.nullOrEmpty(strings)) {
+        if (CollectionUtils.nullOrEmpty(strings)) {
             return "";
         }
         StringBuilder builder = new StringBuilder();

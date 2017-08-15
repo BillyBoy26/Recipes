@@ -22,6 +22,10 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
 
 
     private EditText txtName;
+    private EditText txtTimePrepare;
+    private EditText txtTimeCook;
+    private EditText txtTotalTime;
+    private EditText txtNbCovers;
     private ImageInputView imageView;
     private Recipe recipe;
     private EditText txtCategory;
@@ -34,6 +38,10 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
         txtName = (EditText) generalView.findViewById(R.id.name);
         imageView = (ImageInputView) generalView.findViewById(R.id.image1);
         txtCategory = (EditText) generalView.findViewById(R.id.category);
+        txtNbCovers = (EditText) generalView.findViewById(R.id.nb_covers);
+        txtTimeCook = (EditText) generalView.findViewById(R.id.time_cook);
+        txtTimePrepare = (EditText) generalView.findViewById(R.id.time_prepare);
+        txtTotalTime = (EditText) generalView.findViewById(R.id.time_total);
         pnlCategories = (FlexboxLayout) generalView.findViewById(R.id.pnlCategories);
         ImageView btnAddCat = (ImageView) generalView.findViewById(R.id.iconAddCat);
         btnAddCat.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +81,10 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
     public void fillRecipeView() {
         if (recipe != null && txtName != null) {
             txtName.setText(recipe.getName());
+            txtTimeCook.setText(recipe.getCookTime());
+            txtNbCovers.setText(recipe.getNbCovers());
+            txtTotalTime.setText(recipe.getTotalTime());
+            txtTimePrepare.setText(recipe.getPrepareTime());
             if (recipe.getUrlImage() != null) {
                 new DownloadImageTask(imageView).execute(recipe.getUrlImage());
             }
@@ -91,6 +103,10 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
         String imageUrl = imageView.getUrlImage();
         recipe.setName(name);
         recipe.setUrlImage(imageUrl);
+        recipe.setPrepareTime(txtTimePrepare.getText().toString());
+        recipe.setCookTime(txtTimeCook.getText().toString());
+        recipe.setTotalTime(txtTotalTime.getText().toString());
+        recipe.setNbCovers(txtNbCovers.getText().toString());
         //les catégories sont gérés automatiquement
     }
 
