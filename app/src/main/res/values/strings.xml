@@ -31,4 +31,5 @@
     <string name="cooking_time">Temps de cuisson</string>
     <string name="total_time">Temps total</string>
     <string name="nb_couverts">Nombre de couverts</string>
+    <string name="handle_category">Gérer les catégories</string>
 </resources>

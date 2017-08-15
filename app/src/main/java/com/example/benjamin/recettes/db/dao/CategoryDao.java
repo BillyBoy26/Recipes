@@ -168,7 +168,7 @@ public class CategoryDao extends GenericDao{
         List<Category> categories = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
-                categories.add(getCategoryFromCursor(cursor));
+                categories.add(getCategoryFromCursor(cursor,"catId"));
             } while (cursor.moveToNext());
         }
         return categories;
@@ -177,10 +177,23 @@ public class CategoryDao extends GenericDao{
 
 
     public static Category getCategoryFromCursor(Cursor cursor) {
+        return getCategoryFromCursor(cursor, TCategory._ID);
+    }
+    public static Category getCategoryFromCursor(Cursor cursor,String columnId) {
         Category category = new Category();
-        category.setId(cursor.getLong(cursor.getColumnIndex("catId")));
+        category.setId(cursor.getLong(cursor.getColumnIndex(columnId)));
         category.setName(cursor.getString(cursor.getColumnIndex(TCategory.C_NAME)));
         return category;
     }
 
+    public List<Category> getAllCategory() {
+        Cursor cursor = db.rawQuery("select * from " + TCategory.T_CATEGORY + " order by " + TCategory.C_NAME, null);
+        List<Category> categories = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                categories.add(getCategoryFromCursor(cursor));
+            } while (cursor.moveToNext());
+        }
+        return categories;
+    }
 }

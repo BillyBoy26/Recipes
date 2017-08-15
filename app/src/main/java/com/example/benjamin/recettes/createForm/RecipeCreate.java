@@ -13,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.example.benjamin.recettes.DrawerActivity;
@@ -67,8 +66,7 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         enableTabs();
-        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        getLayoutInflater().inflate(R.layout.recipe_create_form, contentFrameLayout);
+        setContent(R.layout.recipe_create_form);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);

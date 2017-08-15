@@ -13,6 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+
+import com.example.benjamin.recettes.category.CategoryList;
 
 public class DrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -59,6 +62,9 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             case R.id.nav_import :
                 startActivity(new Intent(this, RecipeImport.class));
                 break;
+            case R.id.nav_category :
+                startActivity(new Intent(this, CategoryList.class));
+                break;
         }
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -67,5 +73,10 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
 
     public NavigationView getNavigationView() {
         return navigationView;
+    }
+
+    protected void setContent(int layoutId) {
+        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
+        getLayoutInflater().inflate(layoutId, contentFrameLayout);
     }
 }

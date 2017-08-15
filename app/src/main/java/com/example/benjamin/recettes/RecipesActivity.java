@@ -8,7 +8,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.example.benjamin.recettes.createForm.RecipeCreate;
@@ -25,8 +24,7 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getNavigationView().setCheckedItem(R.id.nav_recipes);
-        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        getLayoutInflater().inflate(R.layout.recipes_list_layout, contentFrameLayout);
+        setContent(R.layout.recipes_list_layout);
 
         recipeDao = new RecipeDao(this);
         recipeDao.open();
@@ -55,7 +53,6 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
             }
         });
     }
-
 
 
     @Override

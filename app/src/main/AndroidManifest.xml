@@ -27,6 +27,7 @@
             android:windowSoftInputMode="adjustPan"
             />
         <activity android:name=".RecipeImport" />
+        <activity android:name=".category.CategoryList" />
 
     </application>
 

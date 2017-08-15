@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 
 import com.example.benjamin.recettes.task.HttpRequestTask;
 
@@ -19,9 +18,7 @@ public class RecipeImport extends DrawerActivity {
         super.onCreate(savedInstanceState);
 
         getNavigationView().setCheckedItem(R.id.nav_import);
-        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        getLayoutInflater().inflate(R.layout.import_recipe_layout, contentFrameLayout);
-
+        setContent(R.layout.import_recipe_layout);
         txtUrl = (EditText) findViewById(R.id.importUrl);
 
 
