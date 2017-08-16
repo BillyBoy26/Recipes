@@ -93,6 +93,9 @@ public class CategoryDao extends GenericDao{
     }
 
     private Map<String, Long> searchCatIdsByNames(List<Category> categories) {
+        if (CollectionUtils.nullOrEmpty(categories)) {
+            return null;
+        }
         List<String> names = new ArrayList<>();
         for (Category category : categories) {
             names.add(category.getName().toUpperCase());
@@ -126,7 +129,7 @@ public class CategoryDao extends GenericDao{
         if (recipe == null) {
             return;
         }
-        db.delete(TJCatRecipe.TJ_CAT_RECIPE, TJCatRecipe.C_ID_RECIPE + "=" + recipe.getId(), null);
+        db.delete(TJCatRecipe.TJ_CAT_RECIPE, TJCatRecipe.C_ID_RECIPE + "= ?", new String[]{recipe.getId().toString()});
     }
 
     public void createLinkRecipeCat(Recipe recipe) {
@@ -135,19 +138,10 @@ public class CategoryDao extends GenericDao{
         }
 
         Long recipeId = recipe.getId();
-        List<Long> catIds = new ArrayList<>();
-        for (Category category : recipe.getCategories()) {
-            if (category.getId() != null) {
-                catIds.add(category.getId());
-            }
-        }
-        if (CollectionUtils.nullOrEmpty(catIds)) {
-            return;
-        }
         ContentValues contentValues = new ContentValues();
         contentValues.put(TJCatRecipe.C_ID_RECIPE,recipeId);
-        for (Long catId : catIds) {
-            contentValues.put(TJCatRecipe.C_ID_CAT, catId);
+        for (Category category : recipe.getCategories()) {
+            contentValues.put(TJCatRecipe.C_ID_CAT, category.getId());
             db.insert(TJCatRecipe.TJ_CAT_RECIPE, null, contentValues);
         }
     }

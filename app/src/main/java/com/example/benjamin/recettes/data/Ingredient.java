@@ -6,10 +6,16 @@ public class Ingredient implements Serializable{
 
     public static final String SEP_ATTRIBUTE = ";";
     public static final String SEP_END = "§";
+    public Long id;
     private String name;
     private String quantityUnit = "";
     private int image = -1;
-    private float quantity = -1;
+    private Float quantity = null;
+
+
+
+    public Ingredient() {
+    }
 
     public Ingredient(String name) {
         this.name = name;
@@ -58,22 +64,11 @@ public class Ingredient implements Serializable{
         return name != null ? name.hashCode() : 0;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(name + SEP_ATTRIBUTE);
-        builder.append(image + SEP_ATTRIBUTE);
-        builder.append(quantity+ SEP_ATTRIBUTE);
-        builder.append(quantityUnit);
-        builder.append(SEP_END);
-        return builder.toString();
-    }
-
-    public float getQuantity() {
+    public Float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(float quantity) {
+    public void setQuantity(Float quantity) {
         this.quantity = quantity;
     }
 
@@ -83,5 +78,13 @@ public class Ingredient implements Serializable{
 
     public void setQuantityUnit(String quantityUnit) {
         this.quantityUnit = quantityUnit;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

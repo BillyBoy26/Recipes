@@ -8,7 +8,6 @@ public final class TRecipe implements TCommon{
     public static final String C_NAME = "REC_NAME";
     public static final String C_URL_IMAGE = "REC_URL_IMAGE";
     public static final String C_DESCRIPTION= "REC_DESCRIPTION";
-    public static final String C_INGREDIENTS = "REC_INGREDIENTS";
     public static final String C_STEPS = "REC_STEPS";
     public static final String C_PREPARE_TIME = "REC_PREPARE_TIME";
     public static final String C_COOK_TIME = "REC_COOK_TIME";
@@ -23,7 +22,6 @@ public final class TRecipe implements TCommon{
                     C_URL_IMAGE + " TEXT, " +
                     C_DESCRIPTION + " TEXT, " +
                     C_STEPS + " TEXT, " +
-                    C_INGREDIENTS + " TEXT, " +
                     C_PREPARE_TIME + " TEXT, " +
                     C_COOK_TIME + " TEXT, " +
                     C_TOTAL_TIME + " TEXT, " +

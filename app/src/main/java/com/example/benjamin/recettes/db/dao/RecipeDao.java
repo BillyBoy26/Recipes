@@ -12,6 +12,7 @@ import static com.example.benjamin.recettes.utils.CursorUtils.getStringColumnOrE
 public class RecipeDao extends GenericDao{
 
     private CategoryDao categoryDao;
+    private IngredientDao ingredientDao;
 
     public RecipeDao(Context context) {
         super(context);
@@ -19,31 +20,9 @@ public class RecipeDao extends GenericDao{
 
     public Cursor getAllRecipes() {
         String[] columns = new String[]{TRecipe.C_NAME, TRecipe._ID,
-                TRecipe.C_URL_IMAGE, TRecipe.C_INGREDIENTS, TRecipe.C_STEPS, TRecipe.C_UPDATE_DATE};
+                TRecipe.C_URL_IMAGE, TRecipe.C_STEPS, TRecipe.C_UPDATE_DATE};
         return db.query(TRecipe.T_RECIPE, columns, null, null, null, null, TRecipe.C_UPDATE_DATE + " DESC");
     }
-
-//    public Cursor getAllRecipes() {
-//        String[] columns = new String[]{TRecipe.C_NAME, TRecipe._ID,
-//                TRecipe.C_URL_IMAGE, TRecipe.C_INGREDIENTS, TRecipe.C_STEPS, TRecipe.C_UPDATE_DATE};
-//
-//
-//        String select_statement = "select " +
-//                "recipe._id recId, " +
-//                "category._id catId, " +
-//                TRecipe.C_NAME + ", " +
-//                TRecipe.C_URL_IMAGE + ", " +
-//                TRecipe.C_INGREDIENTS + ", " +
-//                TRecipe.C_STEPS + ", " +
-//                "recipe.update_date recUpdateDate," +
-//                TCategory.C_NAME +
-//                " FROM " + TRecipe.T_RECIPE + " recipe" +
-//                " LEFT OUTER JOIN " + TJCatRecipe.TJ_CAT_RECIPE + " linkRecCat ON " + TJCatRecipe.C_ID_RECIPE + " = recId " +
-//                " LEFT OUTER JOIN " + TCategory.T_CATEGORY + " category ON " + TJCatRecipe.C_ID_CAT + " = catId " +
-//                " ORDER BY recUpdateDate DESC" ;
-//
-//        return db.rawQuery(select_statement,null);
-//    }
 
     public Recipe createOrUpdate(Recipe recipe) {
         if (recipe == null) {
@@ -52,7 +31,6 @@ public class RecipeDao extends GenericDao{
         ContentValues contentValues = new ContentValues();
         contentValues.put(TRecipe.C_NAME,recipe.getName());
         contentValues.put(TRecipe.C_URL_IMAGE,recipe.getUrlImage());
-        contentValues.put(TRecipe.C_INGREDIENTS,recipe.getIngredientsAsString());
         contentValues.put(TRecipe.C_STEPS,recipe.getStepsAsString());
         contentValues.put(TRecipe.C_NB_COVERS,recipe.getNbCovers());
         contentValues.put(TRecipe.C_COOK_TIME,recipe.getCookTime());
@@ -71,7 +49,14 @@ public class RecipeDao extends GenericDao{
 
 
         linkRecipeToCategories(recipe);
+        linkRecipeToIngredients(recipe);
         return recipe;
+    }
+
+    private void linkRecipeToIngredients(Recipe recipe) {
+        recipe.setIngredients(ingredientDao.createIngredientsIfNeeded(recipe.getIngredients()));
+        ingredientDao.deleteLinkRecipeIng(recipe);
+        ingredientDao.createLinkRecipeIng(recipe);
     }
 
     private void linkRecipeToCategories(Recipe recipe) {
@@ -98,7 +83,6 @@ public class RecipeDao extends GenericDao{
         recipe.setId(cursor.getLong(cursor.getColumnIndex(TRecipe._ID)));
         recipe.setUrlImage(cursor.getString(cursor.getColumnIndex(TRecipe.C_URL_IMAGE)));
         recipe.setName(cursor.getString(cursor.getColumnIndex(TRecipe.C_NAME)));
-        recipe.setIngredients(cursor.getString(cursor.getColumnIndex(TRecipe.C_INGREDIENTS)));
         recipe.setSteps(cursor.getString(cursor.getColumnIndex(TRecipe.C_STEPS)));
         recipe.setCookTime(getStringColumnOrEmpty(cursor, TRecipe.C_COOK_TIME));
         recipe.setNbCovers(getStringColumnOrEmpty(cursor, TRecipe.C_NB_COVERS));
@@ -114,6 +98,7 @@ public class RecipeDao extends GenericDao{
     public void open() {
         super.open();
         categoryDao = new CategoryDao(db);
+        ingredientDao = new IngredientDao(db);
     }
 
     public Recipe findById(Long recipeId) {
@@ -127,6 +112,7 @@ public class RecipeDao extends GenericDao{
             return null;
         }
         recipe.setCategories(categoryDao.fetchCategoriesByRecId(recIdStr));
+        recipe.setIngredients(ingredientDao.fetchIngredientsByRecId(recIdStr));
         return recipe;
     }
 }

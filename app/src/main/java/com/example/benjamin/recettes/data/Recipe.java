@@ -69,32 +69,6 @@ public class Recipe implements Serializable{
     }
 
 
-    public String getIngredientsAsString() {
-        StringBuilder builder = new StringBuilder();
-
-        if (ingredients != null) {
-            for (Ingredient ingredient : ingredients) {
-                builder.append(ingredient.toString());
-            }
-        }
-        return builder.toString();
-    }
-
-    public void setIngredients(String ingredientsAsStr) {
-        ingredients = new ArrayList<>();
-        if (SUtils.notNullOrEmpty(ingredientsAsStr)) {
-            String[] split = ingredientsAsStr.split(Ingredient.SEP_END);
-            for (String ingre : split) {
-                String[] attr = ingre.split(Ingredient.SEP_ATTRIBUTE);
-                Ingredient ingr = new Ingredient(attr[0], Integer.parseInt(attr[1]), Float.parseFloat(attr[2]));
-                if (attr.length > 3) {
-                    ingr.setQuantityUnit(attr[3]);
-                }
-                ingredients.add(ingr);
-            }
-        }
-    }
-
     public List<String> getSteps() {
         return steps;
     }

@@ -89,7 +89,7 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
         }
     }
 
-    public AlertDialog createDialogBox(SearchView searchView, View dialogView) {
+    public AlertDialog createDialogBox(final SearchView searchView, View dialogView) {
 
         final EditText editTextQte = (EditText) dialogView.findViewById(R.id.editTextQte);
         final EditText editTextUnit = (EditText) dialogView.findViewById(R.id.editTextUnit);
@@ -115,6 +115,7 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
                 ingredient.setQuantityUnit(editTextUnit.getText().toString());
                 adapter.addIngredient(ingredient);
                 editTextQte.setText("");
+                searchView.setQuery("",false);
                 dialog.cancel();
             }
         });
