@@ -13,11 +13,11 @@ import java.util.List;
 
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientViewHolder> {
 
-    private List<Ingredient> ingredientList;
+    private List<Ingredient> ingredientList = new ArrayList<>();
 
 
-    public IngredientAdapter(List<Ingredient> ingredientList) {
-        setIngredient(ingredientList,false);
+
+    public IngredientAdapter() {
     }
 
     @Override
@@ -58,13 +58,11 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientViewHolder
         notifyItemRangeChanged(position,ingredientList.size());
     }
 
-    public void setIngredient(List<Ingredient> ingredients,boolean notify) {
+    public void setIngredient(List<Ingredient> ingredients) {
         this.ingredientList = ingredients;
         if (this.ingredientList == null) {
             this.ingredientList = new ArrayList<>();
         }
-        if (notify) {
-            notifyDataSetChanged();
-        }
+        notifyDataSetChanged();
     }
 }

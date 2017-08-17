@@ -28,6 +28,7 @@
             />
         <activity android:name=".RecipeImport" />
         <activity android:name=".category.CategoryList" />
+        <activity android:name=".shoppingList.ShoppingList" />
 
     </application>
 

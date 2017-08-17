@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.example.benjamin.recettes.category.CategoryList;
+import com.example.benjamin.recettes.shoppingList.ShoppingList;
 
 public class DrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -61,6 +62,9 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 break;
             case R.id.nav_import :
                 startActivity(new Intent(this, RecipeImport.class));
+                break;
+            case R.id.nav_shopping_list :
+                startActivity(new Intent(this, ShoppingList.class));
                 break;
             case R.id.nav_category :
                 startActivity(new Intent(this, CategoryList.class));

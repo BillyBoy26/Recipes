@@ -32,4 +32,6 @@
     <string name="total_time">Temps total</string>
     <string name="nb_couverts">Nombre de couverts</string>
     <string name="handle_category">Gérer les catégories</string>
+    <string name="shopping_list">Liste de courses</string>
+    <string name="enter_ingredient_name">Entrez un nom d\'ingrédient</string>
 </resources>

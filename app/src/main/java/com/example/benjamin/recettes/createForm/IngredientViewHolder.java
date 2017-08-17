@@ -30,7 +30,7 @@ public class IngredientViewHolder extends RecyclerView.ViewHolder {
         if (ingredient.getImage() > 0) {
 //            imageView.setImageResource(R.drawable.ic_cake_white_24dp);
         }
-        if (ingredient.getQuantity() > 0) {
+        if (ingredient.getQuantity() != null && ingredient.getQuantity() > 0) {
             String quantity = NumberFormat.getInstance().format((ingredient.getQuantity()));
             if (SUtils.notNullOrEmpty(ingredient.getQuantityUnit())) {
                 quantity += " " + ingredient.getQuantityUnit();
