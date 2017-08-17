@@ -41,7 +41,7 @@ public class ShoppingList extends DrawerActivity implements LoaderManager.Loader
         ingredientDao.open();
         getSupportLoaderManager().initLoader(0, null, this).forceLoad();
 
-        adapter = new IngredientAdapter();
+        adapter = new IngredientAdapter(getDeleteCommand());
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerIngredient);
         recyclerView.setLayoutManager(new GridLayoutManager(this,3));
@@ -51,6 +51,17 @@ public class ShoppingList extends DrawerActivity implements LoaderManager.Loader
         View dialogView = getLayoutInflater().inflate(R.layout.ingredient_dialog_quantity, null);
         IngredientWidgetBuilder ingBuilder = new IngredientWidgetBuilder(searchView,dialogView,adapter,buildCommandeAddIngredient());
         searchView.setOnQueryTextListener(ingBuilder.createQueryTextListener());
+    }
+
+    private CommandWithParam<Ingredient> getDeleteCommand() {
+        return new CommandWithParam<Ingredient>() {
+            @Override
+            public void execute(Ingredient ingRemoved) {
+                if (ingRemoved != null) {
+                    shoppingDao.delete(ingRemoved);
+                }
+            }
+        };
     }
 
     private CommandWithParam<Ingredient> buildCommandeAddIngredient() {

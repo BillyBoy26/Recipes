@@ -72,4 +72,10 @@ public class ShoppingDao extends GenericDao{
     }
 
 
+    public void delete(Ingredient ingredient) {
+        if (ingredient.getId() == null) {
+            return;
+        }
+        db.delete(TShoppingIngredient.T_SHOPPING_INGREDIENT, TShoppingIngredient.C_ID_ING + "= ?", new String[]{ingredient.getId().toString()});
+    }
 }

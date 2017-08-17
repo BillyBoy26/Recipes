@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Ingredient;
+import com.example.benjamin.recettes.utils.CommandWithParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,15 @@ import java.util.List;
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientViewHolder> {
 
     private List<Ingredient> ingredientList = new ArrayList<>();
-
+    private CommandWithParam<Ingredient> deleteCommande;
 
 
     public IngredientAdapter() {
+        this(null);
+    }
+
+    public IngredientAdapter(CommandWithParam<Ingredient> deleteCommande) {
+        this.deleteCommande = deleteCommande;
     }
 
     @Override
@@ -27,7 +33,10 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientViewHolder
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeItem(viewHolder.getAdapterPosition());
+                Ingredient ingRemoved = removeItem(viewHolder.getAdapterPosition());
+                if (deleteCommande != null) {
+                    deleteCommande.execute(ingRemoved);
+                }
             }
         });
 
@@ -52,10 +61,11 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientViewHolder
         }
     }
 
-    private void removeItem(int position) {
-        ingredientList.remove(position);
+    private Ingredient removeItem(int position) {
+        Ingredient ingRemoved = ingredientList.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position,ingredientList.size());
+        return ingRemoved;
     }
 
     public void setIngredient(List<Ingredient> ingredients) {
