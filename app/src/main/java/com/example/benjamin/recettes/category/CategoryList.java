@@ -28,7 +28,7 @@ public class CategoryList extends DrawerActivity implements LoaderManager.Loader
         setContent(R.layout.category_list);
 
         categoryDao = new CategoryDao(this);
-        categoryDao.open();
+        initDaos(categoryDao);
         getSupportLoaderManager().initLoader(5, null, this).forceLoad();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerCategory);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -54,17 +54,5 @@ public class CategoryList extends DrawerActivity implements LoaderManager.Loader
     @Override
     public void onLoaderReset(Loader<List<Category>> loader) {
         categoryAdapter.setCategories(null);
-    }
-
-    @Override
-    protected void onResume() {
-        categoryDao.open();
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        categoryDao.close();
-        super.onPause();
     }
 }

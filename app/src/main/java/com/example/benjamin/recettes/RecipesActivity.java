@@ -27,7 +27,7 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
         setContent(R.layout.recipes_list_layout);
 
         recipeDao = new RecipeDao(this);
-        recipeDao.open();
+        initDaos(recipeDao);
 
 
         getSupportLoaderManager().initLoader(3, null, this);
@@ -77,15 +77,4 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
         adapter.swapCursor(null);
     }
 
-    @Override
-    protected void onResume() {
-        recipeDao.open();
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        recipeDao.close();
-        super.onPause();
-    }
 }

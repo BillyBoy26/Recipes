@@ -16,12 +16,18 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.example.benjamin.recettes.category.CategoryList;
+import com.example.benjamin.recettes.db.dao.GenericDao;
 import com.example.benjamin.recettes.shoppingList.ShoppingList;
+import com.example.benjamin.recettes.utils.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private NavigationView navigationView;
     private ActionBarDrawerToggle drawerToggle;
+    private List<GenericDao> daos = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,5 +88,42 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
     protected void setContent(int layoutId) {
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(layoutId, contentFrameLayout);
+    }
+
+    protected void initDaos(GenericDao... activityDaos) {
+        if (activityDaos != null) {
+            for (GenericDao dao : activityDaos) {
+                daos.add(dao);
+            }
+            openAllDaos();
+        }
+    }
+
+    protected void openAllDaos() {
+        if (CollectionUtils.notNullOrEmpty(daos)) {
+            for (GenericDao dao : daos) {
+                dao.open();
+            }
+        }
+    }
+
+    protected void closeAllDaos() {
+        if (CollectionUtils.notNullOrEmpty(daos)) {
+            for (GenericDao dao : daos) {
+                dao.close();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        openAllDaos();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        closeAllDaos();
+        super.onPause();
     }
 }

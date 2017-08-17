@@ -75,7 +75,7 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
         tabLayout.setupWithViewPager(viewPager);
 
         recipeDao = new RecipeDao(this);
-        recipeDao.open();
+        initDaos(recipeDao);
 
 
         Bundle extras = getIntent().getExtras();
@@ -164,15 +164,4 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
         startActivity(new Intent(RecipeCreate.this, RecipesActivity.class));
     }
 
-    @Override
-    protected void onResume() {
-        recipeDao.open();
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        recipeDao.close();
-        super.onPause();
-    }
 }

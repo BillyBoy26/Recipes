@@ -19,7 +19,7 @@ import com.example.benjamin.recettes.db.dao.IngredientDao;
 import com.example.benjamin.recettes.db.dao.ShoppingDao;
 import com.example.benjamin.recettes.utils.CommandWithParam;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ShoppingList extends DrawerActivity implements LoaderManager.LoaderCallbacks<List<Ingredient>>{
@@ -36,12 +36,11 @@ public class ShoppingList extends DrawerActivity implements LoaderManager.Loader
         setContent(R.layout.shopping_list);
 
         shoppingDao = new ShoppingDao(this);
-        shoppingDao.open();
         ingredientDao = new IngredientDao(this);
-        ingredientDao.open();
+        initDaos(shoppingDao,ingredientDao);
         getSupportLoaderManager().initLoader(0, null, this).forceLoad();
 
-        adapter = new IngredientAdapter(getDeleteCommand());
+        adapter = new IngredientAdapter(buildDeleteCommand());
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerIngredient);
         recyclerView.setLayoutManager(new GridLayoutManager(this,3));
@@ -53,7 +52,7 @@ public class ShoppingList extends DrawerActivity implements LoaderManager.Loader
         searchView.setOnQueryTextListener(ingBuilder.createQueryTextListener());
     }
 
-    private CommandWithParam<Ingredient> getDeleteCommand() {
+    private CommandWithParam<Ingredient> buildDeleteCommand() {
         return new CommandWithParam<Ingredient>() {
             @Override
             public void execute(Ingredient ingRemoved) {
@@ -69,7 +68,7 @@ public class ShoppingList extends DrawerActivity implements LoaderManager.Loader
             @Override
             public void execute(Ingredient ingredient) {
                 if (ingredient != null) {
-                    ingredientDao.createIngredientsIfNeeded(Arrays.asList(ingredient));
+                    ingredientDao.createIngredientsIfNeeded(Collections.singletonList(ingredient));
                     shoppingDao.createOrUpdate(ingredient);
                 }
             }
@@ -94,19 +93,5 @@ public class ShoppingList extends DrawerActivity implements LoaderManager.Loader
     @Override
     public void onLoaderReset(Loader<List<Ingredient>> loader) {
         adapter.setIngredient(null);
-    }
-
-    @Override
-    protected void onResume() {
-        shoppingDao.open();
-        ingredientDao.open();
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        shoppingDao.close();
-        ingredientDao.close();
-        super.onPause();
     }
 }
