@@ -34,4 +34,5 @@
     <string name="handle_category">Gérer les catégories</string>
     <string name="shopping_list">Liste de courses</string>
     <string name="enter_ingredient_name">Entrez un nom d\'ingrédient</string>
+    <string name="create_a_recipe">Créer une recette</string>
 </resources>

@@ -25,10 +25,17 @@
         <activity
             android:name=".createForm.RecipeCreate"
             android:windowSoftInputMode="adjustPan"
+            android:label="@string/create_a_recipe"
             />
-        <activity android:name=".RecipeImport" />
-        <activity android:name=".category.CategoryList" />
-        <activity android:name=".shoppingList.ShoppingList" />
+        <activity android:name=".RecipeImport"
+            android:label="@string/recipeImport"
+            />
+        <activity android:name=".category.CategoryList"
+            android:label="@string/handle_category"
+            />
+        <activity android:name=".shoppingList.ShoppingList"
+            android:label="@string/shopping_list"
+            />
 
     </application>
 
