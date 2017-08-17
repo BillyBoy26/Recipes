@@ -27,26 +27,6 @@ import java.util.List;
 
 public class RecipeCreate extends DrawerActivity implements LoaderManager.LoaderCallbacks<Recipe> {
 
-    @Override
-    public Loader<Recipe> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<Recipe>(this) {
-            @Override
-            public Recipe loadInBackground() {
-                return recipeDao.findById(recipe.getId());
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Recipe> loader, Recipe data) {
-        this.recipe = data;
-        setRecipe();
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Recipe> loader) {
-        this.recipe = null;
-    }
 
     public interface RecipeFiller{
         void setRecipe(Recipe recipe);
@@ -76,7 +56,6 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
 
         recipeDao = new RecipeDao(this);
         initDaos(recipeDao);
-
 
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.get(CURRENT_RECIPE) != null) {
@@ -142,8 +121,30 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
     }
 
     @Override
+    public Loader<Recipe> onCreateLoader(int id, Bundle args) {
+        return new AsyncTaskLoader<Recipe>(this) {
+            @Override
+            public Recipe loadInBackground() {
+                return recipeDao.findById(recipe.getId());
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Recipe> loader, Recipe data) {
+        this.recipe = data;
+        setRecipe();
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Recipe> loader) {
+        this.recipe = null;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (recipe != null) {
+        if (recipe != null && recipe.getId() != null) {
             getMenuInflater().inflate(R.menu.menu_toolbar,menu);
             return true;
         }
