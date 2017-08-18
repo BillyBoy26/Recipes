@@ -27,7 +27,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
 
     private NavigationView navigationView;
     private ActionBarDrawerToggle drawerToggle;
-    private List<GenericDao> daos = new ArrayList<>();
+    private List<GenericDao> daos;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,6 +92,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
 
     protected void initDaos(GenericDao... activityDaos) {
         if (activityDaos != null) {
+            daos = new ArrayList<>();
             for (GenericDao dao : activityDaos) {
                 daos.add(dao);
             }

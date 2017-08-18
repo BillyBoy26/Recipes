@@ -20,6 +20,7 @@ import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.RecipesActivity;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
+import com.example.benjamin.recettes.db.dao.ShoppingDao;
 import com.example.benjamin.recettes.utils.SUtils;
 
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ import java.util.List;
 
 public class RecipeCreate extends DrawerActivity implements LoaderManager.LoaderCallbacks<Recipe> {
 
+
+    private ShoppingDao shoppingDao;
 
     public interface RecipeFiller{
         void setRecipe(Recipe recipe);
@@ -55,7 +58,8 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
         tabLayout.setupWithViewPager(viewPager);
 
         recipeDao = new RecipeDao(this);
-        initDaos(recipeDao);
+        shoppingDao = new ShoppingDao(this);
+        initDaos(recipeDao,shoppingDao);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.get(CURRENT_RECIPE) != null) {
@@ -112,7 +116,7 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
             fragment.getRecipe();
         }
         if (SUtils.nullOrEmpty(recipe.getName())) {
-            Toast.makeText(this, "Votre recette n'a pas de nom", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.your_recipe_has_no_name, Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -154,10 +158,24 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_delete && recipe != null) {
-            deleteRecipe();
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                deleteRecipe();
+                break;
+            case R.id.action_add_shoppping_list:
+                addToShoppingList();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void addToShoppingList() {
+        boolean created = shoppingDao.createFromRecipe(recipe);
+        if (created) {
+            Toast.makeText(this, R.string.ingredients_from_recipe_added_to_shopping_list, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, R.string.none_ingredient_to_add_shopping_list, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void deleteRecipe() {

@@ -35,4 +35,8 @@
     <string name="shopping_list">Liste de courses</string>
     <string name="enter_ingredient_name">Entrez un nom d\'ingrédient</string>
     <string name="create_a_recipe">Créer une recette</string>
+    <string name="add_to_shopping_list">Ajouter à la liste de courses</string>
+    <string name="none_ingredient_to_add_shopping_list">Aucun ingrédient à ajouter à la liste de course</string>
+    <string name="ingredients_from_recipe_added_to_shopping_list">Les ingrédients de la recette ont été ajouté à la liste de course</string>
+    <string name="your_recipe_has_no_name">Votre recette n\'a pas de nom</string>
 </resources>
