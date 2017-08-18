@@ -36,6 +36,9 @@
         <activity android:name=".shoppingList.ShoppingList"
             android:label="@string/shopping_list"
             />
+        <activity android:name=".recipeGroup.RecipeGroup"
+            android:label="@string/application_name"
+            />
 
     </application>
 
