@@ -94,4 +94,8 @@ public class ShoppingDao extends GenericDao{
         }
         return ingAdded;
     }
+
+    public void deleteAll() {
+        db.delete(TShoppingIngredient.T_SHOPPING_INGREDIENT,null, null);
+    }
 }

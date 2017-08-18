@@ -8,7 +8,10 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
@@ -17,6 +20,7 @@ import com.example.benjamin.recettes.createForm.IngredientWidgetBuilder;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.db.dao.IngredientDao;
 import com.example.benjamin.recettes.db.dao.ShoppingDao;
+import com.example.benjamin.recettes.utils.CollectionUtils;
 import com.example.benjamin.recettes.utils.CommandWithParam;
 
 import java.util.Collections;
@@ -28,6 +32,7 @@ public class ShoppingList extends DrawerActivity implements LoaderManager.Loader
     private ShoppingDao shoppingDao;
     private IngredientDao ingredientDao;
     private IngredientAdapter adapter;
+    private List<Ingredient> ingredients;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,11 +92,39 @@ public class ShoppingList extends DrawerActivity implements LoaderManager.Loader
 
     @Override
     public void onLoadFinished(Loader<List<Ingredient>> loader, List<Ingredient> data) {
-        adapter.setIngredient(data);
+        this.ingredients = data;
+        adapter.setIngredient(this.ingredients);
     }
 
     @Override
     public void onLoaderReset(Loader<List<Ingredient>> loader) {
         adapter.setIngredient(null);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar_shopping,menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                clearShoppingList();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void clearShoppingList() {
+        if (CollectionUtils.nullOrEmpty(ingredients)) {
+            Toast.makeText(this, R.string.shopping_list_already_clear, Toast.LENGTH_SHORT).show();
+        }
+        shoppingDao.deleteAll();
+        ingredients.clear();
+        adapter.setIngredient(ingredients);
+        Toast.makeText(this, R.string.shopping_list_cleared, Toast.LENGTH_SHORT).show();
     }
 }

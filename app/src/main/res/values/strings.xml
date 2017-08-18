@@ -44,4 +44,7 @@
     <string name="delete_recipe">Supprimer la recette</string>
     <string name="delete_selected_category">Supprimer les catégories sélectionnées</string>
     <string name="no_category_selected">Aucune catégorie n\'est selectionnée</string>
+    <string name="clear_shopping_list">Vider la liste de course</string>
+    <string name="shopping_list_already_clear">La liste de courses est déja vide</string>
+    <string name="shopping_list_cleared">Liste de course vidée</string>
 </resources>
