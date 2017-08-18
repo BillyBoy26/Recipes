@@ -34,10 +34,12 @@ class RecipeAdapter extends CursorAdapter {
         TextView textView = (TextView) view.findViewById(R.id.text);
         textView.setText(name);
 
+        ImageView imageView = (ImageView) view.findViewById(R.id.image1);
         String urlImage = cursor.getString(cursor.getColumnIndex(TRecipe.C_URL_IMAGE));
         if (urlImage != null && !urlImage.isEmpty()) {
-            ImageView imageView = (ImageView) view.findViewById(R.id.image1);
             Picasso.with(imageView.getContext()).load(urlImage).centerCrop().fit().into(imageView);
+        } else {
+            imageView.setImageResource(R.drawable.defaut_recipe);
         }
     }
 }
