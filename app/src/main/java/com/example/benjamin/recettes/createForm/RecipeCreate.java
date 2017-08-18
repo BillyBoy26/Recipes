@@ -18,9 +18,11 @@ import android.widget.Toast;
 import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.RecipesActivity;
+import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
 import com.example.benjamin.recettes.db.dao.ShoppingDao;
+import com.example.benjamin.recettes.utils.CollectionUtils;
 import com.example.benjamin.recettes.utils.SUtils;
 
 import java.util.ArrayList;
@@ -149,7 +151,7 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (recipe != null && recipe.getId() != null) {
-            getMenuInflater().inflate(R.menu.menu_toolbar,menu);
+            getMenuInflater().inflate(R.menu.menu_toolbar_recipe_create,menu);
             return true;
         }
         return false;
@@ -170,11 +172,19 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
     }
 
     private void addToShoppingList() {
+        if (CollectionUtils.nullOrEmpty(recipe.getIngredients())) {
+            Toast.makeText(this, R.string.none_ingredient_to_add_shopping_list, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        for (Ingredient ingredient : recipe.getIngredients()) {
+            if (ingredient.getId() == null) {
+                Toast.makeText(this, R.string.update_in_ingredient_list_not_saved, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
         boolean created = shoppingDao.createFromRecipe(recipe);
         if (created) {
             Toast.makeText(this, R.string.ingredients_from_recipe_added_to_shopping_list, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, R.string.none_ingredient_to_add_shopping_list, Toast.LENGTH_SHORT).show();
         }
     }
 

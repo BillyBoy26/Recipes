@@ -14,16 +14,33 @@ import java.util.List;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
 
     private List<Category> categories = new ArrayList<>();
+    private List<Integer> selectedPos = new ArrayList<>();
 
     @Override
-    public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CategoryViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
         View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_card, parent, false);
-        return new CategoryViewHolder(cardView);
+        final CategoryViewHolder viewHolder = new CategoryViewHolder(cardView);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentPos = viewHolder.getAdapterPosition();
+                if (currentPos == RecyclerView.NO_POSITION) {
+                    return;
+                }
+                if (selectedPos.contains(currentPos)) {
+                    selectedPos.remove(selectedPos.indexOf(currentPos));
+                } else {
+                    selectedPos.add(currentPos);
+                }
+                notifyItemChanged(currentPos);
+            }
+        });
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(CategoryViewHolder holder, int position) {
-        holder.bind(categories.get(position));
+        holder.bind(categories.get(position),selectedPos.contains(position));
     }
 
     @Override
@@ -36,6 +53,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
             categories = new ArrayList<>();
         }
         this.categories = categories;
+        selectedPos.clear();
         notifyDataSetChanged();
+    }
+
+    public List<Category> getSelectedCategories() {
+        List<Category> selectedCat = new ArrayList<>();
+        for (Integer pos : selectedPos) {
+            selectedCat.add(categories.get(pos));
+        }
+        return selectedCat;
     }
 }
