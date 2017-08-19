@@ -7,7 +7,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="welcome_to_application_name">Bienvenue dans Batch Cooking</string>
-    <string name="name">Name</string>
+    <string name="name">Nom</string>
     <string name="imageUrl">Image url</string>
     <string name="delete">Supprimer</string>
     <string name="recipes">Recettes</string>

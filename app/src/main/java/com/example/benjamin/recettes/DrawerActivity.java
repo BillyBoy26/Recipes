@@ -17,7 +17,7 @@ import android.widget.FrameLayout;
 
 import com.example.benjamin.recettes.category.CategoryList;
 import com.example.benjamin.recettes.db.dao.GenericDao;
-import com.example.benjamin.recettes.recipeGroup.RecipeGroup;
+import com.example.benjamin.recettes.recipeGroup.RecipeGroupList;
 import com.example.benjamin.recettes.shoppingList.ShoppingList;
 import com.example.benjamin.recettes.utils.CollectionUtils;
 
@@ -68,7 +68,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 startActivity(new Intent(this, RecipesActivity.class));
                 break;
             case R.id.nav_batch_cooking :
-                startActivity(new Intent(this, RecipeGroup.class));
+                startActivity(new Intent(this, RecipeGroupList.class));
                 break;
             case R.id.nav_import :
                 startActivity(new Intent(this, RecipeImport.class));
