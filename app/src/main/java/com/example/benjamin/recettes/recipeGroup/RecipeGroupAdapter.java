@@ -7,18 +7,24 @@ import android.view.ViewGroup;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.RecipeGroup;
+import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeGroupAdapter extends RecyclerView.Adapter<RecipeGroupViewHolder>{
+    private final RecyclerViewClickListener clickListener;
     private List<RecipeGroup> recipeGroups = new ArrayList<>();
+
+    public RecipeGroupAdapter(RecyclerViewClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
 
 
     @Override
     public RecipeGroupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_group_card,parent,false);
-        return new RecipeGroupViewHolder(cardView);
+        return new RecipeGroupViewHolder(cardView,clickListener);
     }
 
     @Override

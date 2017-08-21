@@ -3,9 +3,15 @@ package com.example.benjamin.recettes.db.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.db.table.TJGroupRecipe;
 import com.example.benjamin.recettes.db.table.TRecipe;
+import com.example.benjamin.recettes.utils.SUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.benjamin.recettes.utils.CursorUtils.getStringColumnOrEmpty;
 
@@ -18,11 +24,27 @@ public class RecipeDao extends GenericDao{
         super(context);
     }
 
-    public Cursor getAllRecipes() {
+    public RecipeDao(SQLiteDatabase db) {
+        super(db);
+    }
+
+    public Cursor getAllRecipesAsCursor() {
         String[] columns = new String[]{TRecipe.C_NAME, TRecipe._ID,
                 TRecipe.C_URL_IMAGE, TRecipe.C_STEPS, TRecipe.C_UPDATE_DATE};
         return db.query(TRecipe.T_RECIPE, columns, null, null, null, null, TRecipe.C_UPDATE_DATE + " DESC");
     }
+
+    public List<Recipe> getAllRecipes() {
+        Cursor cursor = getAllRecipesAsCursor();
+        List<Recipe> recipes = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                recipes.add(getRecipeFromCursor(cursor));
+            } while (cursor.moveToNext());
+        }
+        return recipes;
+    }
+
 
     public Recipe createOrUpdate(Recipe recipe) {
         if (recipe == null) {
@@ -79,11 +101,14 @@ public class RecipeDao extends GenericDao{
     }
 
     public static Recipe getRecipeFromCursor(Cursor cursor) {
+        return getRecipeFromCursor(cursor, TRecipe._ID);
+    }
+    public static Recipe getRecipeFromCursor(Cursor cursor, String nameColumnId) {
         Recipe recipe = new Recipe();
-        recipe.setId(cursor.getLong(cursor.getColumnIndex(TRecipe._ID)));
-        recipe.setUrlImage(cursor.getString(cursor.getColumnIndex(TRecipe.C_URL_IMAGE)));
+        recipe.setId(cursor.getLong(cursor.getColumnIndex(nameColumnId)));
+        recipe.setUrlImage(getStringColumnOrEmpty(cursor,TRecipe.C_URL_IMAGE));
         recipe.setName(cursor.getString(cursor.getColumnIndex(TRecipe.C_NAME)));
-        recipe.setSteps(cursor.getString(cursor.getColumnIndex(TRecipe.C_STEPS)));
+        recipe.setSteps(getStringColumnOrEmpty(cursor,TRecipe.C_STEPS));
         recipe.setCookTime(getStringColumnOrEmpty(cursor, TRecipe.C_COOK_TIME));
         recipe.setNbCovers(getStringColumnOrEmpty(cursor, TRecipe.C_NB_COVERS));
         recipe.setPrepareTime(getStringColumnOrEmpty(cursor, TRecipe.C_PREPARE_TIME));
@@ -115,4 +140,26 @@ public class RecipeDao extends GenericDao{
         recipe.setIngredients(ingredientDao.fetchIngredientsByRecId(recIdStr));
         return recipe;
     }
+
+    public List<Recipe> fetchRecipeByRegId(String regId) {
+        if (SUtils.nullOrEmpty(regId)) {
+            return new ArrayList<>();
+        }
+        Cursor cursor = db.rawQuery("select " +
+                        "recipe._id recId, " +
+                        "recipe."  + TRecipe.C_NAME  +
+                        " FROM " + TRecipe.T_RECIPE + " recipe " +
+                        " INNER JOIN " + TJGroupRecipe.TJ_GROUP_RECIPE + " linkRegRec ON " + TJGroupRecipe.C_ID_REC + " =  recId " +
+                        " WHERE linkRegRec." + TJGroupRecipe.C_ID_REG +  "= ?"
+                , new String[]{regId});
+
+        List<Recipe> categories = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                categories.add(getRecipeFromCursor(cursor,"recId"));
+            } while (cursor.moveToNext());
+        }
+        return categories;
+    }
+
 }

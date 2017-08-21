@@ -22,7 +22,7 @@ public class StepAdapter extends RecyclerView.Adapter<StepViewHolder>{
 
     @Override
     public StepViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.step_card, parent, false);
+        View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_text, parent, false);
         return new StepViewHolder(cardView);
     }
 

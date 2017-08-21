@@ -18,7 +18,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
 
     @Override
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
-        View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_card, parent, false);
+        View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_card, parent, false);
         final CategoryViewHolder viewHolder = new CategoryViewHolder(cardView);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override

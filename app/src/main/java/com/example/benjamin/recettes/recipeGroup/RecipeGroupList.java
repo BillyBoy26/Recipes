@@ -15,10 +15,11 @@ import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.RecipeGroup;
 import com.example.benjamin.recettes.db.dao.RecipeGroupDao;
+import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 
 import java.util.List;
 
-public class RecipeGroupList extends DrawerActivity implements LoaderManager.LoaderCallbacks<List<RecipeGroup>> {
+public class RecipeGroupList extends DrawerActivity implements LoaderManager.LoaderCallbacks<List<RecipeGroup>>,RecyclerViewClickListener {
 
     private RecipeGroupDao recipeGroupDao;
     private List<RecipeGroup> recipeGroups;
@@ -35,7 +36,7 @@ public class RecipeGroupList extends DrawerActivity implements LoaderManager.Loa
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recGroupAdapter = new RecipeGroupAdapter();
+        recGroupAdapter = new RecipeGroupAdapter(this);
         recyclerView.setAdapter(recGroupAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -68,5 +69,12 @@ public class RecipeGroupList extends DrawerActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<List<RecipeGroup>> loader) {
         recipeGroups = null;
         recGroupAdapter.setRecipeGroup(null);
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Intent intent = new Intent(RecipeGroupList.this, RecipeGroupCreate.class);
+        intent.putExtra(RecipeGroupCreate.CURRENT_GROUP, recipeGroups.get(position));
+        startActivity(intent);
     }
 }

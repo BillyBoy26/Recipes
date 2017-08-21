@@ -60,7 +60,7 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
         return new SimpleCursorLoader(this) {
             @Override
             public Cursor loadInBackground() {
-                return recipeDao.getAllRecipes();
+                return recipeDao.getAllRecipesAsCursor();
             }
         };
     }
