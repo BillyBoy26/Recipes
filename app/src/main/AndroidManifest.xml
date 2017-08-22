@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".RecipesActivity"
+            android:name=".recipes.RecipesActivity"
            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,11 +23,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".createForm.RecipeCreate"
+            android:name=".recipes.createForm.RecipeCreate"
             android:windowSoftInputMode="adjustPan"
             android:label="@string/create_a_recipe"
             />
-        <activity android:name=".RecipeImport"
+        <activity android:name=".importData.RecipeImport"
             android:label="@string/recipeImport"
             />
         <activity android:name=".category.CategoryList"

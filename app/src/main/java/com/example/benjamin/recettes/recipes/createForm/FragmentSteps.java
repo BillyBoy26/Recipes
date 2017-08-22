@@ -1,4 +1,4 @@
-package com.example.benjamin.recettes.createForm;
+package com.example.benjamin.recettes.recipes.createForm;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,13 +15,14 @@ import android.widget.ImageView;
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.utils.SUtils;
+import com.example.benjamin.recettes.views.NameAdapter;
 
 import java.util.List;
 
 public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller{
 
 
-    private StepAdapter adapter;
+    private NameAdapter adapter;
     private Recipe recipe;
     private List<String> steps;
 
@@ -63,7 +64,7 @@ public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller
                 if (SUtils.nullOrEmpty(editTxtStep.getText().toString())) {
                     return;
                 }
-                adapter.addStep(editTxtStep.getText().toString());
+                adapter.addItem(editTxtStep.getText().toString());
             }
         });
         return layout;
@@ -71,10 +72,9 @@ public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller
 
     private void fillView() {
         if (adapter == null) {
-            adapter = new StepAdapter(steps);
-        } else {
-            adapter.setSteps(steps, true);
+            adapter = new NameAdapter(true);
         }
+        adapter.setDatas(steps);
     }
 
     @Override

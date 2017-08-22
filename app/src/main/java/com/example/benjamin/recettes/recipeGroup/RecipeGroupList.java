@@ -62,13 +62,13 @@ public class RecipeGroupList extends DrawerActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<List<RecipeGroup>> loader, List<RecipeGroup> data) {
         recipeGroups = data;
-        recGroupAdapter.setRecipeGroup(data);
+        recGroupAdapter.setDatas(data);
     }
 
     @Override
     public void onLoaderReset(Loader<List<RecipeGroup>> loader) {
         recipeGroups = null;
-        recGroupAdapter.setRecipeGroup(null);
+        recGroupAdapter.setDatas(null);
     }
 
     @Override

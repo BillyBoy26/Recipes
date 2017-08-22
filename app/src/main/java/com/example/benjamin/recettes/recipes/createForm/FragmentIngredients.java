@@ -1,4 +1,4 @@
-package com.example.benjamin.recettes.createForm;
+package com.example.benjamin.recettes.recipes.createForm;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -48,7 +48,7 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
         if (adapter == null) {
             adapter = new IngredientAdapter();
         }
-        adapter.setIngredient(ingredients);
+        adapter.setDatas(ingredients);
     }
 
 

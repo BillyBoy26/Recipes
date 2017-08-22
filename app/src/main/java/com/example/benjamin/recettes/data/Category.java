@@ -2,7 +2,7 @@ package com.example.benjamin.recettes.data;
 
 import java.io.Serializable;
 
-public class Category implements Serializable {
+public class Category implements Serializable,HasName {
     private Long id;
     private String name;
 

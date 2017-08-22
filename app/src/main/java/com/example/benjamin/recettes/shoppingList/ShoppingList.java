@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
-import com.example.benjamin.recettes.createForm.IngredientAdapter;
-import com.example.benjamin.recettes.createForm.IngredientWidgetBuilder;
+import com.example.benjamin.recettes.recipes.createForm.IngredientAdapter;
+import com.example.benjamin.recettes.recipes.createForm.IngredientWidgetBuilder;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.db.dao.IngredientDao;
 import com.example.benjamin.recettes.db.dao.ShoppingDao;
@@ -93,12 +93,12 @@ public class ShoppingList extends DrawerActivity implements LoaderManager.Loader
     @Override
     public void onLoadFinished(Loader<List<Ingredient>> loader, List<Ingredient> data) {
         this.ingredients = data;
-        adapter.setIngredient(this.ingredients);
+        adapter.setDatas(this.ingredients);
     }
 
     @Override
     public void onLoaderReset(Loader<List<Ingredient>> loader) {
-        adapter.setIngredient(null);
+        adapter.setDatas(null);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class ShoppingList extends DrawerActivity implements LoaderManager.Loader
         }
         shoppingDao.deleteAll();
         ingredients.clear();
-        adapter.setIngredient(ingredients);
+        adapter.setDatas(ingredients);
         Toast.makeText(this, R.string.shopping_list_cleared, Toast.LENGTH_SHORT).show();
     }
 }

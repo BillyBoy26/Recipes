@@ -54,12 +54,12 @@ public class CategoryList extends DrawerActivity implements LoaderManager.Loader
 
     @Override
     public void onLoadFinished(Loader<List<Category>> loader, List<Category> data) {
-        categoryAdapter.setCategories(data);
+        categoryAdapter.setDatas(data);
     }
 
     @Override
     public void onLoaderReset(Loader<List<Category>> loader) {
-        categoryAdapter.setCategories(null);
+        categoryAdapter.setDatas(null);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class CategoryList extends DrawerActivity implements LoaderManager.Loader
                 categories.remove(category);
             }
         }
-        categoryAdapter.setCategories(categories);
+        categoryAdapter.setDatas(categories);
 
     }
 }

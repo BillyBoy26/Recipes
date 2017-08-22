@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.benjamin.recettes.createForm.RecipeCreate;
+import com.example.benjamin.recettes.recipes.createForm.RecipeCreate;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.parser.BuzzFeedParser;
 

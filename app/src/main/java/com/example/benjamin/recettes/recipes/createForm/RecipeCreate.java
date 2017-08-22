@@ -1,4 +1,4 @@
-package com.example.benjamin.recettes.createForm;
+package com.example.benjamin.recettes.recipes.createForm;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
-import com.example.benjamin.recettes.RecipesActivity;
+import com.example.benjamin.recettes.recipes.RecipesActivity;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.dao.RecipeDao;

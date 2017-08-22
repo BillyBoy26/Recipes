@@ -1,24 +1,26 @@
 package com.example.benjamin.recettes.category;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Category;
+import com.example.benjamin.recettes.views.BasicListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
+public class CategoryAdapter extends BasicListAdapter<Category,CategoryAdapter.CategoryViewHolder> {
 
-    private List<Category> categories = new ArrayList<>();
     private List<Integer> selectedPos = new ArrayList<>();
 
     @Override
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
-        View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_card, parent, false);
+        View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_text, parent, false);
         final CategoryViewHolder viewHolder = new CategoryViewHolder(cardView);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,29 +41,34 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(CategoryViewHolder holder, int position) {
-        holder.bind(categories.get(position),selectedPos.contains(position));
+    public void onBindViewHolder(CategoryViewHolder holder, Category category, int position) {
+        holder.bind(category,selectedPos.contains(position));
     }
 
-    @Override
-    public int getItemCount() {
-        return categories.size();
-    }
 
-    public void setCategories(List<Category> categories) {
-        if (categories == null) {
-            categories = new ArrayList<>();
-        }
-        this.categories = categories;
-        selectedPos.clear();
-        notifyDataSetChanged();
-    }
 
     public List<Category> getSelectedCategories() {
         List<Category> selectedCat = new ArrayList<>();
         for (Integer pos : selectedPos) {
-            selectedCat.add(categories.get(pos));
+            selectedCat.add(datas.get(pos));
         }
         return selectedCat;
+    }
+
+
+    class CategoryViewHolder extends RecyclerView.ViewHolder {
+
+        private final TextView txtName;
+
+        public CategoryViewHolder(View itemView) {
+            super(itemView);
+            txtName = (TextView) itemView.findViewById(R.id.text);
+        }
+
+        public void bind(Category category, boolean isSelected) {
+            itemView.setBackgroundColor(isSelected ? itemView.getContext().getResources().getColor(R.color.colorPrimaryLight,null): Color.TRANSPARENT);
+            txtName.setText(category.getName());
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-package com.example.benjamin.recettes.createForm;
+package com.example.benjamin.recettes.recipes.createForm;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

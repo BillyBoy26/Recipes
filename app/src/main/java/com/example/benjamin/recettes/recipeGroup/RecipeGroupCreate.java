@@ -20,6 +20,7 @@ import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.data.RecipeGroup;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
 import com.example.benjamin.recettes.db.dao.RecipeGroupDao;
+import com.example.benjamin.recettes.views.NameAdapter;
 import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 
 import java.util.List;
@@ -87,7 +88,7 @@ public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.L
             recipeGroup = new RecipeGroup();
         }
         recipeGroup.setName(txtName.getText().toString());
-        recipeGroup.setRecipes(recipeLinkedAdapter.getRecipes());
+        recipeGroup.setRecipes(recipeLinkedAdapter.getDatas());
     }
 
     @Override
@@ -106,7 +107,7 @@ public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.L
 
     @Override
     public void onLoadFinished(Loader<List<Recipe>> loader, List<Recipe> data) {
-        recipeAdapter.setRecipes(allRecipes);
+        recipeAdapter.setDatas(allRecipes);
         fillView();
     }
 
@@ -115,19 +116,19 @@ public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.L
             return;
         }
         txtName.setText(recipeGroup.getName());
-        recipeLinkedAdapter.setRecipes(recipeGroup.getRecipes());
+        recipeLinkedAdapter.setDatas(recipeGroup.getRecipes());
     }
 
     @Override
     public void onLoaderReset(Loader<List<Recipe>> loader) {
-        recipeAdapter.setRecipes(null);
-        recipeLinkedAdapter.setRecipes(null);
+        recipeAdapter.setDatas(null);
+        recipeLinkedAdapter.setDatas(null);
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        Recipe recipe = recipeAdapter.getRecipes().get(position);
-        recipeLinkedAdapter.addRecipe(recipe);
+        Recipe recipe = recipeAdapter.getItem(position);
+        recipeLinkedAdapter.addItem(recipe);
 
     }
 }

@@ -1,4 +1,4 @@
-package com.example.benjamin.recettes.createForm;
+package com.example.benjamin.recettes.recipes.createForm;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

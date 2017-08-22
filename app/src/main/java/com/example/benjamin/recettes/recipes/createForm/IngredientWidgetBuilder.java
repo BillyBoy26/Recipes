@@ -1,4 +1,4 @@
-package com.example.benjamin.recettes.createForm;
+package com.example.benjamin.recettes.recipes.createForm;
 
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
@@ -75,7 +75,7 @@ public class IngredientWidgetBuilder {
                 }
                 Ingredient ingredient = new Ingredient(currentIngName, -1, quantity);
                 ingredient.setQuantityUnit(editTextUnit.getText().toString());
-                adapter.addIngredient(ingredient);
+                adapter.addItem(ingredient);
                 editTextQte.setText("");
                 searchView.setQuery("",false);
                 dialog.cancel();
@@ -88,7 +88,7 @@ public class IngredientWidgetBuilder {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Ingredient ingredient = new Ingredient(currentIngName);
-                adapter.addIngredient(ingredient);
+                adapter.addItem(ingredient);
                 dialog.cancel();
                 if (command != null) {
                     command.execute(ingredient);

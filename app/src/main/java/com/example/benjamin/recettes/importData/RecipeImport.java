@@ -1,4 +1,4 @@
-package com.example.benjamin.recettes;
+package com.example.benjamin.recettes.importData;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +7,8 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.benjamin.recettes.DrawerActivity;
+import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.task.HttpRequestTask;
 
 public class RecipeImport extends DrawerActivity {

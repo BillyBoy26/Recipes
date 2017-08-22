@@ -2,7 +2,7 @@ package com.example.benjamin.recettes.data;
 
 import java.io.Serializable;
 
-public class Ingredient implements Serializable{
+public class Ingredient implements Serializable, HasName{
 
     public static final String SEP_ATTRIBUTE = ";";
     public static final String SEP_END = "§";

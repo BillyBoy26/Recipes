@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Recipe implements Serializable{
+public class Recipe implements Serializable, HasName{
     private String urlImage;
     private String description;
     private String name;

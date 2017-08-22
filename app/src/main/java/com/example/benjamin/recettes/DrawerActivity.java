@@ -16,8 +16,10 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.example.benjamin.recettes.category.CategoryList;
+import com.example.benjamin.recettes.importData.RecipeImport;
 import com.example.benjamin.recettes.db.dao.GenericDao;
 import com.example.benjamin.recettes.recipeGroup.RecipeGroupList;
+import com.example.benjamin.recettes.recipes.RecipesActivity;
 import com.example.benjamin.recettes.shoppingList.ShoppingList;
 import com.example.benjamin.recettes.utils.CollectionUtils;
 
