@@ -149,7 +149,7 @@ public class IngredientDao extends GenericDao {
         if (recipe == null) {
             return;
         }
-        db.delete(TJIngRecipe.TJ_ING_RECIPE, TJIngRecipe.C_ID_RECIPE + "= ?" + recipe.getId(), new String[]{recipe.getId().toString()});
+        db.delete(TJIngRecipe.TJ_ING_RECIPE, TJIngRecipe.C_ID_RECIPE + "= ?", new String[]{recipe.getId().toString()});
     }
 
     public void createLinkRecipeIng(Recipe recipe) {
