@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
-import com.example.benjamin.recettes.recipes.RecipesActivity;
+import com.example.benjamin.recettes.recipes.RecipesList;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
@@ -79,7 +79,7 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
             public void onClick(View v) {
                 boolean ok = createOrUpdateRecipe();
                 if (ok) {
-                    startActivity(new Intent(RecipeCreate.this, RecipesActivity.class));
+                    startActivity(new Intent(RecipeCreate.this, RecipesList.class));
                 }
             }
         });
@@ -190,7 +190,7 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
 
     private void deleteRecipe() {
         recipeDao.delete(recipe);
-        startActivity(new Intent(RecipeCreate.this, RecipesActivity.class));
+        startActivity(new Intent(RecipeCreate.this, RecipesList.class));
     }
 
 }

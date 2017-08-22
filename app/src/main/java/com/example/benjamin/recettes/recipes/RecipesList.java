@@ -19,7 +19,7 @@ import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 
 import java.util.List;
 
-public class RecipesActivity extends DrawerActivity implements LoaderManager.LoaderCallbacks<List<Recipe>>,RecyclerViewClickListener{
+public class RecipesList extends DrawerActivity implements LoaderManager.LoaderCallbacks<List<Recipe>>,RecyclerViewClickListener{
 
 
     private RecipeAdapter adapter;
@@ -46,7 +46,7 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(RecipesActivity.this, RecipeCreate.class));
+                startActivity(new Intent(RecipesList.this, RecipeCreate.class));
             }
         });
     }
@@ -75,7 +75,7 @@ public class RecipesActivity extends DrawerActivity implements LoaderManager.Loa
     @Override
     public void onItemClick(View view, int position) {
         Recipe recipe = adapter.getItem(position);
-        Intent intent = new Intent(RecipesActivity.this, RecipeCreate.class);
+        Intent intent = new Intent(RecipesList.this, RecipeCreate.class);
         intent.putExtra(RecipeCreate.CURRENT_RECIPE, recipe);
         startActivity(intent);
     }

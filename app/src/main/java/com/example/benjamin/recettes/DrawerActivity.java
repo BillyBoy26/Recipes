@@ -19,7 +19,7 @@ import com.example.benjamin.recettes.category.CategoryList;
 import com.example.benjamin.recettes.importData.RecipeImport;
 import com.example.benjamin.recettes.db.dao.GenericDao;
 import com.example.benjamin.recettes.recipeGroup.RecipeGroupList;
-import com.example.benjamin.recettes.recipes.RecipesActivity;
+import com.example.benjamin.recettes.recipes.RecipesList;
 import com.example.benjamin.recettes.shoppingList.ShoppingList;
 import com.example.benjamin.recettes.utils.CollectionUtils;
 
@@ -67,7 +67,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
 
         switch (item.getItemId()) {
             case R.id.nav_recipes :
-                startActivity(new Intent(this, RecipesActivity.class));
+                startActivity(new Intent(this, RecipesList.class));
                 break;
             case R.id.nav_batch_cooking :
                 startActivity(new Intent(this, RecipeGroupList.class));

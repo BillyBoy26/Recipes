@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".recipes.RecipesActivity"
+            android:name=".recipes.RecipesList"
            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
