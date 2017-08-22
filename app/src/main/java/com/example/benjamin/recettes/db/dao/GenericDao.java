@@ -24,12 +24,15 @@ public class GenericDao {
     }
 
     public void open() {
-        db = dbHelper.getWritableDatabase();
+        if (db ==  null  || !db.isOpen()) {
+            db = dbHelper.getWritableDatabase();
+        }
     }
 
 
     public void close() {
         dbHelper.close();
+        db = null;
     }
 
     protected void fillUpdatedate(ContentValues contentValues) {

@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
@@ -17,11 +16,12 @@ import android.widget.Toast;
 
 import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
-import com.example.benjamin.recettes.recipes.RecipesList;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
 import com.example.benjamin.recettes.db.dao.ShoppingDao;
+import com.example.benjamin.recettes.recipes.RecipesList;
+import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
 import com.example.benjamin.recettes.utils.SUtils;
 
@@ -66,7 +66,7 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.get(CURRENT_RECIPE) != null) {
             recipe = (Recipe) extras.get(CURRENT_RECIPE);
-            getSupportLoaderManager().initLoader(2, null, this).forceLoad();
+            getSupportLoaderManager().initLoader(AsyncTaskDataLoader.getNewUniqueLoaderId(), null, this);
         } else {
             setRecipe();
         }
@@ -128,7 +128,7 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
 
     @Override
     public Loader<Recipe> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<Recipe>(this) {
+        return new AsyncTaskDataLoader<Recipe>(this) {
             @Override
             public Recipe loadInBackground() {
                 return recipeDao.findById(recipe.getId());

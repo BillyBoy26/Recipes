@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
@@ -24,6 +23,7 @@ import com.example.benjamin.recettes.data.RecipeGroup;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
 import com.example.benjamin.recettes.db.dao.RecipeGroupDao;
 import com.example.benjamin.recettes.db.dao.ShoppingDao;
+import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
 import com.example.benjamin.recettes.views.NameAdapter;
 import com.example.benjamin.recettes.views.RecyclerViewClickListener;
@@ -55,7 +55,7 @@ public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.L
             recipeGroup = (RecipeGroup) extras.get(CURRENT_GROUP);
         }
 
-        getSupportLoaderManager().initLoader(0, null, this).forceLoad();
+        getSupportLoaderManager().initLoader(AsyncTaskDataLoader.getNewUniqueLoaderId(), null, this);
 
         recipeAdapter = new RecipeSearchAdapter(this);
 
@@ -101,7 +101,7 @@ public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.L
 
     @Override
     public Loader<List<Recipe>> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<List<Recipe>>(this) {
+        return new AsyncTaskDataLoader<List<Recipe>>(this) {
             @Override
             public List<Recipe> loadInBackground() {
                 allRecipes = recipeDao.getAllRecipes(EnumSet.of(Recipe.RecipeFiller.WITH_ING));

@@ -3,7 +3,6 @@ package com.example.benjamin.recettes.category;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +14,7 @@ import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Category;
 import com.example.benjamin.recettes.db.dao.CategoryDao;
+import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class CategoryList extends DrawerActivity implements LoaderManager.Loader
 
         categoryDao = new CategoryDao(this);
         initDaos(categoryDao);
-        getSupportLoaderManager().initLoader(5, null, this).forceLoad();
+        getSupportLoaderManager().initLoader(AsyncTaskDataLoader.getNewUniqueLoaderId(), null, this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerCategory);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         categoryAdapter = new CategoryAdapter();
@@ -43,7 +43,7 @@ public class CategoryList extends DrawerActivity implements LoaderManager.Loader
 
     @Override
     public Loader<List<Category>> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<List<Category>>(this) {
+        return new AsyncTaskDataLoader<List<Category>>(this) {
             @Override
             public List<Category> loadInBackground() {
                 categories = categoryDao.getAllCategory();

@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -103,6 +104,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 daos.add(dao);
             }
             openAllDaos();
+            Log.i("DAO", "initDaos, allDaos opened");
         }
     }
 
@@ -125,12 +127,14 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
     @Override
     protected void onResume() {
         openAllDaos();
+        Log.i("DAO", "On resume, allDaos opened");
         super.onResume();
     }
 
     @Override
     protected void onPause() {
         closeAllDaos();
+        Log.i("DAO", "On pause, allDaos closed");
         super.onPause();
     }
 }

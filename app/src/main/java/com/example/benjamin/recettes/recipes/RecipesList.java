@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,9 +11,10 @@ import android.view.View;
 
 import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
-import com.example.benjamin.recettes.recipes.createForm.RecipeCreate;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
+import com.example.benjamin.recettes.recipes.createForm.RecipeCreate;
+import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
         initDaos(recipeDao);
 
 
-        getSupportLoaderManager().initLoader(3, null, this).forceLoad();
+        getSupportLoaderManager().initLoader(AsyncTaskDataLoader.getNewUniqueLoaderId(), null, this);
 
         adapter = new RecipeAdapter(this);
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.lstRecipes);
@@ -53,8 +53,8 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
 
 
     @Override
-    public Loader onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader(this) {
+    public Loader<List<Recipe>> onCreateLoader(int id, Bundle args) {
+        return new AsyncTaskDataLoader<List<Recipe>>(this) {
             @Override
             public List<Recipe> loadInBackground() {
                 return recipeDao.getAllRecipes();

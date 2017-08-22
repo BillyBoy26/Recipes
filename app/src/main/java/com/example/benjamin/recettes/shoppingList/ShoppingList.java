@@ -3,7 +3,6 @@ package com.example.benjamin.recettes.shoppingList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,11 +14,12 @@ import android.widget.Toast;
 
 import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
-import com.example.benjamin.recettes.recipes.createForm.IngredientAdapter;
-import com.example.benjamin.recettes.recipes.createForm.IngredientWidgetBuilder;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.db.dao.IngredientDao;
 import com.example.benjamin.recettes.db.dao.ShoppingDao;
+import com.example.benjamin.recettes.recipes.createForm.IngredientAdapter;
+import com.example.benjamin.recettes.recipes.createForm.IngredientWidgetBuilder;
+import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
 import com.example.benjamin.recettes.utils.CommandWithParam;
 
@@ -43,7 +43,7 @@ public class ShoppingList extends DrawerActivity implements LoaderManager.Loader
         shoppingDao = new ShoppingDao(this);
         ingredientDao = new IngredientDao(this);
         initDaos(shoppingDao,ingredientDao);
-        getSupportLoaderManager().initLoader(0, null, this).forceLoad();
+        getSupportLoaderManager().initLoader(AsyncTaskDataLoader.getNewUniqueLoaderId(), null, this);
 
         adapter = new IngredientAdapter(buildDeleteCommand());
 
@@ -82,7 +82,7 @@ public class ShoppingList extends DrawerActivity implements LoaderManager.Loader
 
     @Override
     public Loader<List<Ingredient>> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<List<Ingredient>>(this) {
+        return new AsyncTaskDataLoader<List<Ingredient>>(this) {
             @Override
             public List<Ingredient> loadInBackground() {
                 return shoppingDao.getShoppingList();
