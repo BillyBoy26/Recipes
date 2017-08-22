@@ -6,6 +6,7 @@ import android.database.Cursor;
 
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.data.RecipeGroup;
 import com.example.benjamin.recettes.db.table.TIngredient;
 import com.example.benjamin.recettes.db.table.TShoppingIngredient;
 import com.example.benjamin.recettes.utils.CollectionUtils;
@@ -90,6 +91,19 @@ public class ShoppingDao extends GenericDao{
             if (ingredient.getId() != null) {
                 createOrUpdate(ingredient);
                 ingAdded = true;
+            }
+        }
+        return ingAdded;
+    }
+
+    public boolean createFromRecipeGroup(RecipeGroup recipeGroup) {
+        if (recipeGroup == null || CollectionUtils.nullOrEmpty(recipeGroup.getRecipes())) {
+            return false;
+        }
+        boolean ingAdded = false;
+        for (Recipe recipe : recipeGroup.getRecipes()) {
+            if (CollectionUtils.notNullOrEmpty(recipe.getIngredients())) {
+                ingAdded = createFromRecipe(recipe);
             }
         }
         return ingAdded;

@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Recipe implements Serializable, HasName{
+
+    public enum RecipeFiller{
+        WITH_ING
+    }
+
     private String urlImage;
     private String description;
     private String name;

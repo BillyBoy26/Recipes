@@ -38,6 +38,7 @@
     <string name="add_to_shopping_list">Ajouter à la liste de courses</string>
     <string name="none_ingredient_to_add_shopping_list">Aucun ingrédient à ajouter à la liste de course</string>
     <string name="ingredients_from_recipe_added_to_shopping_list">Les ingrédients de la recette ont été ajouté à la liste de course</string>
+    <string name="ingredients_from_recipe_group_added_to_shopping_list">Les ingrédients du groupe de recettes ont été ajouté à la liste de course</string>
     <string name="your_recipe_has_no_name">Votre recette n\'a pas de nom</string>
     <string name="update_in_ingredient_list_not_saved">Des modifications dans la liste d\'ingrédients n\'ont pas encore été sauvegardé</string>
     <string name="delete_category">Supprimer la catégorie</string>
@@ -48,4 +49,6 @@
     <string name="shopping_list_already_clear">La liste de courses est déja vide</string>
     <string name="shopping_list_cleared">Liste de course vidée</string>
     <string name="application_name">Batch Cooking</string>
+    <string name="delete_group_recipe">Supprimer le groupe de recette</string>
+    <string name="none_recipe_to_add_shopping_list">Aucune recette à ajouter à la liste de course</string>
 </resources>

@@ -11,8 +11,11 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
@@ -20,9 +23,12 @@ import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.data.RecipeGroup;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
 import com.example.benjamin.recettes.db.dao.RecipeGroupDao;
+import com.example.benjamin.recettes.db.dao.ShoppingDao;
+import com.example.benjamin.recettes.utils.CollectionUtils;
 import com.example.benjamin.recettes.views.NameAdapter;
 import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 
+import java.util.EnumSet;
 import java.util.List;
 
 public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.LoaderCallbacks<List<Recipe>>,RecyclerViewClickListener {
@@ -31,6 +37,7 @@ public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.L
     private EditText txtName;
     private RecipeGroup recipeGroup;
     private RecipeGroupDao recipeGroupDao;
+    private ShoppingDao shoppingDao;
     private RecipeDao recipeDao;
     private RecipeSearchAdapter recipeAdapter;
     private NameAdapter recipeLinkedAdapter;
@@ -41,7 +48,8 @@ public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.L
         setContent(R.layout.recipes_group_create);
         recipeGroupDao = new RecipeGroupDao(this);
         recipeDao = new RecipeDao(this);
-        initDaos(recipeGroupDao,recipeDao);
+        shoppingDao = new ShoppingDao(this);
+        initDaos(recipeGroupDao,recipeDao,shoppingDao);
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.get(CURRENT_GROUP) != null) {
             recipeGroup = (RecipeGroup) extras.get(CURRENT_GROUP);
@@ -96,7 +104,7 @@ public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.L
         return new AsyncTaskLoader<List<Recipe>>(this) {
             @Override
             public List<Recipe> loadInBackground() {
-                allRecipes = recipeDao.getAllRecipes();
+                allRecipes = recipeDao.getAllRecipes(EnumSet.of(Recipe.RecipeFiller.WITH_ING));
                 if (recipeGroup != null && recipeGroup.getId() != null) {
                     recipeGroup = recipeGroupDao.findById(recipeGroup.getId());
                 }
@@ -130,5 +138,47 @@ public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.L
         Recipe recipe = recipeAdapter.getItem(position);
         recipeLinkedAdapter.addItem(recipe);
 
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (recipeGroup != null && recipeGroup.getId() != null) {
+            getMenuInflater().inflate(R.menu.menu_toolbar_recipe_create,menu);
+            return true;
+        }
+        return false;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                deleteGroupRecipe();
+                break;
+            case R.id.action_add_shoppping_list:
+                addToShoppingList();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void addToShoppingList() {
+        if (CollectionUtils.nullOrEmpty(recipeGroup.getRecipes())) {
+            Toast.makeText(this, R.string.none_recipe_to_add_shopping_list, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        boolean created = shoppingDao.createFromRecipeGroup(recipeGroup);
+        if (created) {
+            Toast.makeText(this, R.string.ingredients_from_recipe_group_added_to_shopping_list, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, R.string.none_ingredient_to_add_shopping_list, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void deleteGroupRecipe() {
+        recipeGroupDao.delete(recipeGroup);
+        startActivity(new Intent(RecipeGroupCreate.this, RecipeGroupList.class));
     }
 }

@@ -77,7 +77,7 @@ public class CategoryDao extends GenericDao{
             }
         }
 
-        Map<String,Long> idsByName = searchCatIdsByNames(categories);
+        Map<String,Long> idsByName = searchCatIdsByNames(unSavedCategories);
         if (idsByName != null) {
             ListIterator<Category> iterator = unSavedCategories.listIterator();
             while (iterator.hasNext()) {

@@ -5,14 +5,18 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.table.TJGroupRecipe;
 import com.example.benjamin.recettes.db.table.TRecipe;
 import com.example.benjamin.recettes.utils.SUtils;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
+import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_ING;
 import static com.example.benjamin.recettes.utils.CursorUtils.getStringColumnOrEmpty;
 
 public class RecipeDao extends GenericDao{
@@ -26,6 +30,12 @@ public class RecipeDao extends GenericDao{
 
     public RecipeDao(SQLiteDatabase db) {
         super(db);
+        initLinkDao();
+    }
+
+    private void initLinkDao() {
+        categoryDao = new CategoryDao(db);
+        ingredientDao = new IngredientDao(db);
     }
 
     public Cursor getAllRecipesAsCursor() {
@@ -35,6 +45,10 @@ public class RecipeDao extends GenericDao{
     }
 
     public List<Recipe> getAllRecipes() {
+        return getAllRecipes(EnumSet.noneOf(Recipe.RecipeFiller.class));
+    }
+
+    public List<Recipe> getAllRecipes(EnumSet<Recipe.RecipeFiller> recipeFillers) {
         Cursor cursor = getAllRecipesAsCursor();
         List<Recipe> recipes = new ArrayList<>();
         if (cursor.moveToFirst()) {
@@ -42,7 +56,26 @@ public class RecipeDao extends GenericDao{
                 recipes.add(getRecipeFromCursor(cursor));
             } while (cursor.moveToNext());
         }
+
+        if (recipeFillers.contains(WITH_ING)) {
+            fillIngredientsInRecipe(recipes);
+        }
         return recipes;
+    }
+
+    private void fillIngredientsInRecipe(List<Recipe> recipes) {
+        List<String> ids = new ArrayList<>();
+        for (Recipe recipe : recipes) {
+            ids.add(String.valueOf(recipe.getId()));
+        }
+        Map<Long, List<Ingredient>> ingByRecId = ingredientDao.fetchIngredientsByRecId(ids);
+        if (!ingByRecId.isEmpty()) {
+            for (Recipe recipe : recipes) {
+                if (ingByRecId.containsKey(recipe.getId())) {
+                    recipe.setIngredients(ingByRecId.get(recipe.getId()));
+                }
+            }
+        }
     }
 
 
@@ -122,8 +155,7 @@ public class RecipeDao extends GenericDao{
     @Override
     public void open() {
         super.open();
-        categoryDao = new CategoryDao(db);
-        ingredientDao = new IngredientDao(db);
+        initLinkDao();
     }
 
     public Recipe findById(Long recipeId) {
@@ -153,13 +185,15 @@ public class RecipeDao extends GenericDao{
                         " WHERE linkRegRec." + TJGroupRecipe.C_ID_REG +  "= ?"
                 , new String[]{regId});
 
-        List<Recipe> categories = new ArrayList<>();
+        List<Recipe> recipes = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
-                categories.add(getRecipeFromCursor(cursor,"recId"));
+                recipes.add(getRecipeFromCursor(cursor,"recId"));
             } while (cursor.moveToNext());
         }
-        return categories;
+        fillIngredientsInRecipe(recipes);
+
+        return recipes;
     }
 
 }

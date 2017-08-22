@@ -167,4 +167,34 @@ public class IngredientDao extends GenericDao {
             db.insert(TJIngRecipe.TJ_ING_RECIPE, null, contentValues);
         }
     }
+
+    public Map<Long, List<Ingredient>> fetchIngredientsByRecId(List<String> idsRec) {
+        if (CollectionUtils.nullOrEmpty(idsRec)) {
+            return new HashMap<>();
+        }
+        Cursor cursor = db.rawQuery("select" +
+                        " rec." + TRecipe._ID + " recId, " +
+                        " ing." + TIngredient._ID + " ingId, " +
+                        " ing." + TIngredient.C_NAME +
+                        " FROM " + TRecipe.T_RECIPE + " rec " +
+                        " INNER JOIN " + TJIngRecipe.TJ_ING_RECIPE + " linkIngRec ON linkIngRec." + TJIngRecipe.C_ID_RECIPE + "= rec." + TRecipe._ID +
+                        " INNER JOIN " + TIngredient.T_INGREDIENT + " ing ON linkIngRec." + TJIngRecipe.C_ID_ING + "= ing." + TIngredient._ID +
+                        " WHERE rec." + TRecipe._ID + " IN (" + makePlaceholders(idsRec.size()) + ")"
+                , idsRec.toArray(new String[0]));
+        Map<Long, List<Ingredient>> ingsByRecId = new HashMap<>();
+        if (cursor.moveToFirst()) {
+            do {
+                Long idRec = cursor.getLong(cursor.getColumnIndex("recId"));
+                Ingredient ingredient = new Ingredient();
+                ingredient.setId(cursor.getLong(cursor.getColumnIndex("ingId")));
+                ingredient.setName(cursor.getString(cursor.getColumnIndex(TIngredient.C_NAME)));
+                if (ingsByRecId.get(idRec) == null) {
+                    ingsByRecId.put(idRec, new ArrayList<Ingredient>());
+                }
+                ingsByRecId.get(idRec).add(ingredient);
+
+            } while (cursor.moveToNext());
+        }
+        return ingsByRecId;
+    }
 }
