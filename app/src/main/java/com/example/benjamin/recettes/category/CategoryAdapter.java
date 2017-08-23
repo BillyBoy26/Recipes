@@ -66,7 +66,7 @@ public class CategoryAdapter extends BasicListAdapter<Category,CategoryAdapter.C
         }
 
         public void bind(Category category, boolean isSelected) {
-            itemView.setBackgroundColor(isSelected ? itemView.getContext().getResources().getColor(R.color.colorPrimaryLight,null): Color.TRANSPARENT);
+            itemView.setBackgroundColor(isSelected ? itemView.getContext().getResources().getColor(R.color.colorPrimaryLight,null): Color.WHITE);
             txtName.setText(category.getName());
         }
 
