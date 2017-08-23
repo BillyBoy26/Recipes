@@ -12,12 +12,13 @@ import com.example.benjamin.recettes.db.table.TJIngRecipe;
 import com.example.benjamin.recettes.db.table.TRecipe;
 import com.example.benjamin.recettes.db.table.TRecipeGroup;
 import com.example.benjamin.recettes.db.table.TShoppingIngredient;
+import com.example.benjamin.recettes.db.table.TStep;
 
 public class RecipeDbHelper  extends SQLiteOpenHelper{
 
 
     public static final String RECIPE_DB_NAME = "recipe.db";
-    public static final int RECIPE_DB_VERSION = 20;
+    public static final int RECIPE_DB_VERSION = 21;
 
 
 
@@ -32,6 +33,8 @@ public class RecipeDbHelper  extends SQLiteOpenHelper{
         TRecipe.onCreate(db);
         TIngredient.onCreate(db);
         TRecipeGroup.onCreate(db);
+        TStep.onCreate(db);
+
         TJCatRecipe.onCreate(db);
         TJIngRecipe.onCreate(db);
         TJGroupRecipe.onCreate(db);
@@ -44,6 +47,8 @@ public class RecipeDbHelper  extends SQLiteOpenHelper{
         TRecipe.onUpgrade(db,oldVersion,newVersion);
         TIngredient.onUpgrade(db,oldVersion,newVersion);
         TRecipeGroup.onUpgrade(db,oldVersion,newVersion);
+        TStep.onUpgrade(db,oldVersion,newVersion);
+
         TJCatRecipe.onUpgrade(db,oldVersion,newVersion);
         TJIngRecipe.onUpgrade(db,oldVersion,newVersion);
         TJGroupRecipe.onUpgrade(db,oldVersion,newVersion);

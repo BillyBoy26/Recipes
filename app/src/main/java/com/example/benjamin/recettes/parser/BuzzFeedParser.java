@@ -2,6 +2,7 @@ package com.example.benjamin.recettes.parser;
 
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.data.Step;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -41,11 +42,12 @@ public class BuzzFeedParser {
         }
 
         if (h3Steps != null) {
+            int rank = 1;
             Element step = h3Steps.nextElementSibling();
             while (step != null && step.is("p")) {
                 String text = step.text();
                 //get decimal number
-                recipe.getSteps().add(text);
+                recipe.getSteps().add(new Step(text,rank++));
                 step = step.nextElementSibling();
             }
         }

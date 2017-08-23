@@ -1,7 +1,5 @@
 package com.example.benjamin.recettes.data;
 
-import com.example.benjamin.recettes.utils.SUtils;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +14,7 @@ public class Recipe implements Serializable, HasName{
     private String description;
     private String name;
     private List<Ingredient> ingredients = new ArrayList<>();
-    private List<String> steps = new ArrayList<>();
+    private List<Step> steps = new ArrayList<>();
     private Long id;
     private List<Category> categories = new ArrayList<>();
     private String prepareTime;
@@ -73,35 +71,14 @@ public class Recipe implements Serializable, HasName{
         this.id = id;
     }
 
-
-    public List<String> getSteps() {
+    public List<Step> getSteps() {
         return steps;
     }
 
-    public void setSteps(List<String> steps) {
+    public void setSteps(List<Step> steps) {
         this.steps = steps;
     }
 
-    public String getStepsAsString() {
-        StringBuilder builder = new StringBuilder();
-        for (String step : steps) {
-            builder.append(step + Ingredient.SEP_ATTRIBUTE);
-        }
-
-        return builder.toString();
-    }
-
-    public void setSteps(String stepsAsStr) {
-        steps = new ArrayList<>();
-        if (SUtils.notNullOrEmpty(stepsAsStr)) {
-            String[] split = stepsAsStr.split(Ingredient.SEP_ATTRIBUTE);
-            for (String step : split) {
-                if (SUtils.notNullOrEmpty(step)) {
-                    steps.add(step);
-                }
-            }
-        }
-    }
 
     public List<Category> getCategories() {
         return categories;

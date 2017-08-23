@@ -7,8 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.data.Step;
 import com.example.benjamin.recettes.db.table.TJGroupRecipe;
 import com.example.benjamin.recettes.db.table.TRecipe;
+import com.example.benjamin.recettes.utils.CollectionUtils;
 import com.example.benjamin.recettes.utils.SUtils;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class RecipeDao extends GenericDao{
 
     private CategoryDao categoryDao;
     private IngredientDao ingredientDao;
+    private StepDao stepDao;
 
     public RecipeDao(Context context) {
         super(context);
@@ -36,6 +39,7 @@ public class RecipeDao extends GenericDao{
     private void initLinkDao() {
         categoryDao = new CategoryDao(db);
         ingredientDao = new IngredientDao(db);
+        stepDao = new StepDao(db);
     }
 
     public Cursor getAllRecipesAsCursor() {
@@ -86,7 +90,6 @@ public class RecipeDao extends GenericDao{
         ContentValues contentValues = new ContentValues();
         contentValues.put(TRecipe.C_NAME,recipe.getName());
         contentValues.put(TRecipe.C_URL_IMAGE,recipe.getUrlImage());
-        contentValues.put(TRecipe.C_STEPS,recipe.getStepsAsString());
         contentValues.put(TRecipe.C_NB_COVERS,recipe.getNbCovers());
         contentValues.put(TRecipe.C_COOK_TIME,recipe.getCookTime());
         contentValues.put(TRecipe.C_TOTAL_TIME,recipe.getTotalTime());
@@ -105,7 +108,21 @@ public class RecipeDao extends GenericDao{
 
         linkRecipeToCategories(recipe);
         linkRecipeToIngredients(recipe);
+        linkRecipeToSteps(recipe);
         return recipe;
+    }
+
+    private void linkRecipeToSteps(Recipe recipe) {
+        List<String> idSteps = new ArrayList<>();
+        if (CollectionUtils.notNullOrEmpty(recipe.getSteps())) {
+            for (Step step : recipe.getSteps()) {
+                if (step.getId() != null) {
+                    idSteps.add(String.valueOf(step.getId()));
+                }
+            }
+        }
+        stepDao.deleteStepsFromRecId(recipe.getId(),idSteps);
+        stepDao.createOrUpdate(recipe.getSteps(), recipe.getId());
     }
 
     private void linkRecipeToIngredients(Recipe recipe) {
@@ -141,7 +158,6 @@ public class RecipeDao extends GenericDao{
         recipe.setId(cursor.getLong(cursor.getColumnIndex(nameColumnId)));
         recipe.setUrlImage(getStringColumnOrEmpty(cursor,TRecipe.C_URL_IMAGE));
         recipe.setName(cursor.getString(cursor.getColumnIndex(TRecipe.C_NAME)));
-        recipe.setSteps(getStringColumnOrEmpty(cursor,TRecipe.C_STEPS));
         recipe.setCookTime(getStringColumnOrEmpty(cursor, TRecipe.C_COOK_TIME));
         recipe.setNbCovers(getStringColumnOrEmpty(cursor, TRecipe.C_NB_COVERS));
         recipe.setPrepareTime(getStringColumnOrEmpty(cursor, TRecipe.C_PREPARE_TIME));
@@ -170,6 +186,7 @@ public class RecipeDao extends GenericDao{
         }
         recipe.setCategories(categoryDao.fetchCategoriesByRecId(recIdStr));
         recipe.setIngredients(ingredientDao.fetchIngredientsByRecId(recIdStr));
+        recipe.setSteps(stepDao.fetchStepsByRecId(recIdStr));
         return recipe;
     }
 
@@ -192,8 +209,24 @@ public class RecipeDao extends GenericDao{
             } while (cursor.moveToNext());
         }
         fillIngredientsInRecipe(recipes);
+        fillStepsInRecipe(recipes);
 
         return recipes;
+    }
+
+    private void fillStepsInRecipe(List<Recipe> recipes) {
+        List<String> ids = new ArrayList<>();
+        for (Recipe recipe : recipes) {
+            ids.add(String.valueOf(recipe.getId()));
+        }
+        Map<Long, List<Step>> stepsByRecId = stepDao.fetchStepsByRecId(ids);
+        if (!stepsByRecId.isEmpty()) {
+            for (Recipe recipe : recipes) {
+                if (stepsByRecId.containsKey(recipe.getId())) {
+                    recipe.setSteps(stepsByRecId.get(recipe.getId()));
+                }
+            }
+        }
     }
 
 }

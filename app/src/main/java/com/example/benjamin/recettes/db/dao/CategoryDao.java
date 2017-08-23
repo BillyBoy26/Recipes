@@ -121,7 +121,7 @@ public class CategoryDao extends GenericDao{
             return false;
         }
 
-        db.delete(TCategory.T_CATEGORY, TCategory._ID + "=" + category.getId(), null);
+        db.delete(TCategory.T_CATEGORY, TCategory._ID + "= ?", new String[]{category.getId().toString()});
         return true;
     }
 

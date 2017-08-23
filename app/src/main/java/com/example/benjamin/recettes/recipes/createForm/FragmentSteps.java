@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.data.Step;
 import com.example.benjamin.recettes.utils.SUtils;
 import com.example.benjamin.recettes.views.NameAdapter;
 
@@ -24,7 +25,7 @@ public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller
 
     private NameAdapter adapter;
     private Recipe recipe;
-    private List<String> steps;
+    private List<Step> steps;
 
     @Nullable
     @Override
@@ -64,7 +65,9 @@ public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller
                 if (SUtils.nullOrEmpty(editTxtStep.getText().toString())) {
                     return;
                 }
-                adapter.addItem(editTxtStep.getText().toString());
+                Step step = new Step();
+                step.setName(editTxtStep.getText().toString());
+                adapter.addItem(step);
             }
         });
         return layout;
@@ -85,6 +88,12 @@ public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller
 
     @Override
     public void getRecipe() {
+        if (steps != null) {
+            for (Step step : steps) {
+                step.setRank(steps.indexOf(step) + 1);
+            }
+        }
         recipe.setSteps(steps);
+
     }
 }
