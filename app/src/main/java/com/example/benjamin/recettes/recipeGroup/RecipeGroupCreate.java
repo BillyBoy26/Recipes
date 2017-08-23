@@ -144,7 +144,7 @@ public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.L
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (recipeGroup != null && recipeGroup.getId() != null) {
-            getMenuInflater().inflate(R.menu.menu_toolbar_recipe_create,menu);
+            getMenuInflater().inflate(R.menu.menu_toolbar_recipegrp_create,menu);
             return true;
         }
         return false;
