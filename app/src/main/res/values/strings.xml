@@ -52,4 +52,5 @@
     <string name="delete_group_recipe">Supprimer le groupe de recette</string>
     <string name="none_recipe_to_add_shopping_list">Aucune recette à ajouter à la liste de course</string>
     <string name="recipe_already_in_group">La recette est déja présente dans le groupe</string>
+    <string name="recipe_group">Groupe de recettes</string>
 </resources>
