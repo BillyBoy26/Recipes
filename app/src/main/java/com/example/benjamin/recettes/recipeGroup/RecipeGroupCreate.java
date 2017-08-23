@@ -7,45 +7,41 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
+import com.example.benjamin.recettes.TabsActivity;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.data.RecipeGroup;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
 import com.example.benjamin.recettes.db.dao.RecipeGroupDao;
 import com.example.benjamin.recettes.db.dao.ShoppingDao;
+import com.example.benjamin.recettes.recipes.createForm.ViewPagerAdapter;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
-import com.example.benjamin.recettes.views.NameAdapter;
-import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 
 import java.util.EnumSet;
 import java.util.List;
 
-public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.LoaderCallbacks<List<Recipe>>,RecyclerViewClickListener {
+public class RecipeGroupCreate extends TabsActivity implements LoaderManager.LoaderCallbacks<List<Recipe>>{
 
     public static final String CURRENT_GROUP = "CURRENT_GROUP";
-    private EditText txtName;
+
     private RecipeGroup recipeGroup;
     private RecipeGroupDao recipeGroupDao;
     private ShoppingDao shoppingDao;
     private RecipeDao recipeDao;
-    private RecipeSearchAdapter recipeAdapter;
-    private NameAdapter recipeLinkedAdapter;
+
     private List<Recipe> allRecipes;
+    private FrgGroupGeneral fragmentGen;
+    private FrgGroupRecipes fragmentRecipes;
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContent(R.layout.recipes_group_create);
         recipeGroupDao = new RecipeGroupDao(this);
         recipeDao = new RecipeDao(this);
         shoppingDao = new ShoppingDao(this);
@@ -56,19 +52,6 @@ public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.L
         }
 
         getSupportLoaderManager().initLoader(AsyncTaskDataLoader.getNewUniqueLoaderId(), null, this);
-
-        recipeAdapter = new RecipeSearchAdapter(this);
-
-        txtName = (EditText) findViewById(R.id.txtName);
-        RecyclerView lstRecipesSearch = (RecyclerView) findViewById(R.id.recyclerRecipes);
-        lstRecipesSearch.setAdapter(recipeAdapter);
-        lstRecipesSearch.setLayoutManager(new GridLayoutManager(this,2));
-
-        RecyclerView lstRecipesCreated = (RecyclerView) findViewById(R.id.recyclerRecipesLink);
-        lstRecipesCreated.setLayoutManager(new LinearLayoutManager(this));
-        recipeLinkedAdapter = new NameAdapter();
-        lstRecipesCreated.setAdapter(recipeLinkedAdapter);
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_done_white_24dp));
@@ -83,6 +66,16 @@ public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.L
         });
     }
 
+    @Override
+    protected void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        fragmentGen = new FrgGroupGeneral();
+        adapter.addFragment(fragmentGen,getString(R.string.general));
+        fragmentRecipes = new FrgGroupRecipes();
+        adapter.addFragment(fragmentRecipes,getString(R.string.recipes));
+        viewPager.setAdapter(adapter);
+    }
+
 
     private boolean createOrUpdateRecipeGroup() {
         getRecipeGroup();
@@ -92,11 +85,8 @@ public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.L
     }
 
     private void getRecipeGroup() {
-        if (recipeGroup == null) {
-            recipeGroup = new RecipeGroup();
-        }
-        recipeGroup.setName(txtName.getText().toString());
-        recipeGroup.setRecipes(recipeLinkedAdapter.getDatas());
+        fragmentGen.getRecipeGroup();
+        fragmentRecipes.getRecipeGroup();
     }
 
     @Override
@@ -115,30 +105,26 @@ public class RecipeGroupCreate extends DrawerActivity implements LoaderManager.L
 
     @Override
     public void onLoadFinished(Loader<List<Recipe>> loader, List<Recipe> data) {
-        recipeAdapter.setDatas(allRecipes);
-        fillView();
+        fillFragmentsView();
     }
 
-    private void fillView() {
+    private void fillFragmentsView() {
         if (recipeGroup == null) {
-            return;
+            recipeGroup = new RecipeGroup();
         }
-        txtName.setText(recipeGroup.getName());
-        recipeLinkedAdapter.setDatas(recipeGroup.getRecipes());
+        fragmentGen.fillView(recipeGroup);
+        fragmentRecipes.fillView(recipeGroup,allRecipes);
+
     }
 
     @Override
     public void onLoaderReset(Loader<List<Recipe>> loader) {
-        recipeAdapter.setDatas(null);
-        recipeLinkedAdapter.setDatas(null);
+        recipeGroup = new RecipeGroup();
+        fragmentGen.fillView(recipeGroup);
+        fragmentRecipes.fillView(recipeGroup,allRecipes);
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
-        Recipe recipe = recipeAdapter.getItem(position);
-        recipeLinkedAdapter.addItem(recipe);
 
-    }
 
 
     @Override

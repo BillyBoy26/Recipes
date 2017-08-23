@@ -57,7 +57,7 @@ public class RecipeGroupDao extends GenericDao {
     }
 
     private void deleteAllLinkReciceToGroup(RecipeGroup recipeGroup) {
-        db.delete(TJGroupRecipe.TJ_GROUP_RECIPE, TJGroupRecipe.C_ID_REG + "= ?", new String[]{recipeGroup.getId().toString()});
+        db.delete(TJGroupRecipe.TJ_GROUP_RECIPE, TJGroupRecipe.C_ID_REG + "=?", new String[]{recipeGroup.getId().toString()});
     }
 
     public void delete(RecipeGroup recipeGroup) {

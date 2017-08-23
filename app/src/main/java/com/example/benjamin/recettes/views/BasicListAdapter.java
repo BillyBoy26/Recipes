@@ -41,12 +41,13 @@ public abstract class BasicListAdapter<T,V extends RecyclerView.ViewHolder> exte
         notifyDataSetChanged();
     }
 
-    public void addItem(T data) {
+    public boolean addItem(T data) {
         if (!datas.contains(data)) {
             datas.add(data);
             notifyItemInserted(datas.size() - 1);
-
+            return true;
         }
+        return false;
     }
 
     public T removeItem(int position) {

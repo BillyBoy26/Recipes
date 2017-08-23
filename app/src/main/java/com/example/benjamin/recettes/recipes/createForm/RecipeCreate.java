@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
@@ -14,8 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
+import com.example.benjamin.recettes.TabsActivity;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
@@ -28,7 +27,7 @@ import com.example.benjamin.recettes.utils.SUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeCreate extends DrawerActivity implements LoaderManager.LoaderCallbacks<Recipe> {
+public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCallbacks<Recipe> {
 
 
     private ShoppingDao shoppingDao;
@@ -41,8 +40,6 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
 
     public static final String CURRENT_RECIPE = "NEW_RECIPE";
     private Recipe recipe;
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
     private List<RecipeFiller> fragments = new ArrayList<>();
     private RecipeDao recipeDao;
 
@@ -50,14 +47,6 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        enableTabs();
-        setContent(R.layout.recipe_create_form);
-
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager);
 
         recipeDao = new RecipeDao(this);
         shoppingDao = new ShoppingDao(this);
@@ -94,7 +83,8 @@ public class RecipeCreate extends DrawerActivity implements LoaderManager.Loader
         }
     }
 
-    private void setupViewPager(ViewPager viewPager) {
+    @Override
+    protected void setupViewPager(ViewPager viewPager) {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 

@@ -3,22 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     android:paddingTop="58dp"
-    >
+    android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/txtName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/name"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/recipes"
-        />
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
@@ -42,7 +29,5 @@
         >
 
     </android.support.v7.widget.RecyclerView>
-
-
 
 </LinearLayout>

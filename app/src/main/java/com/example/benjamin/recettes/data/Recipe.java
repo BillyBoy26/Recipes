@@ -142,4 +142,26 @@ public class Recipe implements Serializable, HasName{
     public void setNbCovers(String nbCovers) {
         this.nbCovers = nbCovers;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Recipe recipe = (Recipe) o;
+        if (id != null && recipe.id != null) {
+            return id.equals(recipe.id);
+        }
+        if (name != null && recipe.name != null) {
+            return name.equals(recipe.name);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        return result;
+    }
 }
