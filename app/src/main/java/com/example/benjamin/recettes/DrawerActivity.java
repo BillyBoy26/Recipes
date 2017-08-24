@@ -21,7 +21,7 @@ import com.example.benjamin.recettes.importData.RecipeImport;
 import com.example.benjamin.recettes.db.dao.GenericDao;
 import com.example.benjamin.recettes.recipeGroup.RecipeGroupList;
 import com.example.benjamin.recettes.recipes.RecipesList;
-import com.example.benjamin.recettes.shoppingList.ShoppingList;
+import com.example.benjamin.recettes.shoppingList.BatchCooking;
 import com.example.benjamin.recettes.utils.CollectionUtils;
 
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 startActivity(new Intent(this, RecipeImport.class));
                 break;
             case R.id.nav_shopping_list :
-                startActivity(new Intent(this, ShoppingList.class));
+                startActivity(new Intent(this, BatchCooking.class));
                 break;
             case R.id.nav_category :
                 startActivity(new Intent(this, CategoryList.class));

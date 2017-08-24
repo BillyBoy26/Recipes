@@ -33,11 +33,11 @@
         <activity android:name=".category.CategoryList"
             android:label="@string/handle_category"
             />
-        <activity android:name=".shoppingList.ShoppingList"
-            android:label="@string/shopping_list"
+        <activity android:name=".shoppingList.BatchCooking"
+            android:label="@string/application_name"
             />
         <activity android:name=".recipeGroup.RecipeGroupList"
-            android:label="@string/application_name"
+            android:label="@string/recipe_group"
             />
         <activity android:name=".recipeGroup.RecipeGroupCreate"
             android:label="Créer un groupe de recette"

@@ -4,81 +4,58 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
-import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
+import com.example.benjamin.recettes.TabsActivity;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.db.dao.IngredientDao;
 import com.example.benjamin.recettes.db.dao.ShoppingDao;
-import com.example.benjamin.recettes.recipes.createForm.IngredientAdapter;
-import com.example.benjamin.recettes.recipes.createForm.IngredientWidgetBuilder;
+import com.example.benjamin.recettes.recipes.createForm.ViewPagerAdapter;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
-import com.example.benjamin.recettes.utils.CommandWithParam;
 
 import java.util.Collections;
 import java.util.List;
 
-public class ShoppingList extends DrawerActivity implements LoaderManager.LoaderCallbacks<List<Ingredient>>{
+public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCallbacks<List<Ingredient>>,FrgShoppingList.OnIngredientListEditedListener{
+
 
 
     private ShoppingDao shoppingDao;
     private IngredientDao ingredientDao;
-    private IngredientAdapter adapter;
+
     private List<Ingredient> ingredients;
+    private FrgShoppingList frgShoppingList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getNavigationView().setCheckedItem(R.id.nav_shopping_list);
-        setContent(R.layout.shopping_list);
 
         shoppingDao = new ShoppingDao(this);
         ingredientDao = new IngredientDao(this);
         initDaos(shoppingDao,ingredientDao);
         getSupportLoaderManager().initLoader(AsyncTaskDataLoader.getNewUniqueLoaderId(), null, this);
-
-        adapter = new IngredientAdapter(buildDeleteCommand());
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerIngredient);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,3));
-        recyclerView.setAdapter(adapter);
-
-        final SearchView searchView = (SearchView) findViewById(R.id.searchView);
-        View dialogView = getLayoutInflater().inflate(R.layout.ingredient_dialog_quantity, null);
-        IngredientWidgetBuilder ingBuilder = new IngredientWidgetBuilder(searchView,dialogView,adapter,buildCommandeAddIngredient());
-        searchView.setOnQueryTextListener(ingBuilder.createQueryTextListener());
     }
 
-    private CommandWithParam<Ingredient> buildDeleteCommand() {
-        return new CommandWithParam<Ingredient>() {
-            @Override
-            public void execute(Ingredient ingRemoved) {
-                if (ingRemoved != null) {
-                    shoppingDao.delete(ingRemoved);
-                }
-            }
-        };
+    @Override
+    protected void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        frgShoppingList = new FrgShoppingList();
+//        Bundle args = new Bundle();
+//        args.putSerializable(FrgShoppingList.ADD_COMMAND,buildCommandeAddIngredient());
+//        args.putSerializable(FrgShoppingList.DELETE_COMMAND,buildDeleteCommand());
+//        frgShoppingList.setArguments(args);
+
+        adapter.addFragment(frgShoppingList,getString(R.string.shopping_list));
+        viewPager.setAdapter(adapter);
     }
 
-    private CommandWithParam<Ingredient> buildCommandeAddIngredient() {
-        return new CommandWithParam<Ingredient>() {
-            @Override
-            public void execute(Ingredient ingredient) {
-                if (ingredient != null) {
-                    ingredientDao.createIngredientsIfNeeded(Collections.singletonList(ingredient));
-                    shoppingDao.createOrUpdate(ingredient);
-                }
-            }
-        };
-    }
 
     @Override
     public Loader<List<Ingredient>> onCreateLoader(int id, Bundle args) {
@@ -93,12 +70,18 @@ public class ShoppingList extends DrawerActivity implements LoaderManager.Loader
     @Override
     public void onLoadFinished(Loader<List<Ingredient>> loader, List<Ingredient> data) {
         this.ingredients = data;
-        adapter.setDatas(this.ingredients);
+        fillView();
+    }
+
+    private void fillView() {
+        frgShoppingList.fillView(ingredients);
+
     }
 
     @Override
     public void onLoaderReset(Loader<List<Ingredient>> loader) {
-        adapter.setDatas(null);
+        ingredients = null;
+        fillView();
     }
 
     @Override
@@ -124,7 +107,22 @@ public class ShoppingList extends DrawerActivity implements LoaderManager.Loader
         }
         shoppingDao.deleteAll();
         ingredients.clear();
-        adapter.setDatas(ingredients);
+        frgShoppingList.fillView(ingredients);
         Toast.makeText(this, R.string.shopping_list_cleared, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onIngredientSelected(Ingredient ingredient) {
+        if (ingredient != null) {
+            ingredientDao.createIngredientsIfNeeded(Collections.singletonList(ingredient));
+            shoppingDao.createOrUpdate(ingredient);
+        }
+    }
+
+    @Override
+    public void onIngredientClicked(Ingredient ingredient) {
+        if (ingredient != null) {
+            shoppingDao.delete(ingredient);
+        }
     }
 }

@@ -9,7 +9,7 @@ import android.widget.EditText;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Ingredient;
-import com.example.benjamin.recettes.utils.CommandWithParam;
+import com.example.benjamin.recettes.shoppingList.FrgShoppingList;
 import com.example.benjamin.recettes.utils.SUtils;
 
 public class IngredientWidgetBuilder {
@@ -17,17 +17,16 @@ public class IngredientWidgetBuilder {
     private final AlertDialog alertDialog;
     private final IngredientAdapter adapter;
     private String currentIngName;
-    private CommandWithParam<Ingredient> command;
+    private FrgShoppingList.OnIngredientListEditedListener listener;
 
     public IngredientWidgetBuilder(SearchView searchView, View dialogView,IngredientAdapter adapter) {
         this(searchView, dialogView, adapter, null);
     }
 
-    public IngredientWidgetBuilder(SearchView searchView, View dialogView, IngredientAdapter adapter, CommandWithParam<Ingredient> command) {
+    public IngredientWidgetBuilder(SearchView searchView, View dialogView, IngredientAdapter adapter, FrgShoppingList.OnIngredientListEditedListener listener) {
         alertDialog = createDialogBox(searchView, dialogView);
         this.adapter = adapter;
-        this.command = command;
-
+        this.listener = listener;
     }
 
     public SearchView.OnQueryTextListener createQueryTextListener() {
@@ -79,8 +78,8 @@ public class IngredientWidgetBuilder {
                 editTextQte.setText("");
                 searchView.setQuery("",false);
                 dialog.cancel();
-                if (command != null) {
-                    command.execute(ingredient);
+                if (listener != null) {
+                    listener.onIngredientSelected(ingredient);
                 }
             }
         });
@@ -90,8 +89,8 @@ public class IngredientWidgetBuilder {
                 Ingredient ingredient = new Ingredient(currentIngName);
                 adapter.addItem(ingredient);
                 dialog.cancel();
-                if (command != null) {
-                    command.execute(ingredient);
+                if (listener != null) {
+                    listener.onIngredientSelected(ingredient);
                 }
             }
         });

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Ingredient;
-import com.example.benjamin.recettes.utils.CommandWithParam;
+import com.example.benjamin.recettes.shoppingList.FrgShoppingList;
 import com.example.benjamin.recettes.utils.SUtils;
 import com.example.benjamin.recettes.views.BasicListAdapter;
 
@@ -17,15 +17,15 @@ import java.text.NumberFormat;
 
 public class IngredientAdapter extends BasicListAdapter<Ingredient,IngredientAdapter.IngredientViewHolder> {
 
-    private CommandWithParam<Ingredient> deleteCommande;
+    private FrgShoppingList.OnIngredientListEditedListener listener;
 
 
     public IngredientAdapter() {
         this(null);
     }
 
-    public IngredientAdapter(CommandWithParam<Ingredient> deleteCommande) {
-        this.deleteCommande = deleteCommande;
+    public IngredientAdapter(FrgShoppingList.OnIngredientListEditedListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -36,8 +36,8 @@ public class IngredientAdapter extends BasicListAdapter<Ingredient,IngredientAda
             @Override
             public void onClick(View v) {
                 Ingredient ingRemoved = removeItem(viewHolder.getAdapterPosition());
-                if (deleteCommande != null) {
-                    deleteCommande.execute(ingRemoved);
+                if (listener != null) {
+                    listener.onIngredientClicked(ingRemoved);
                 }
             }
         });

@@ -1,5 +1,7 @@
 package com.example.benjamin.recettes.utils;
 
-public interface CommandWithParam<T> {
+import java.io.Serializable;
+
+public interface CommandWithParam<T> extends Serializable {
     void execute(T param);
 }
