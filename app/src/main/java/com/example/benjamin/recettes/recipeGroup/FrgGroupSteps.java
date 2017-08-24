@@ -18,7 +18,6 @@ import java.util.List;
 
 public class FrgGroupSteps extends Fragment {
 
-    public static final String DATA_STEPS = "DATA_STEPS";
     private NameAdapter adapter;
     private RecipeGroup recipeGroup;
 
