@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_ING;
+import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_STEPS;
 import static com.example.benjamin.recettes.utils.CursorUtils.getStringColumnOrEmpty;
 
 public class RecipeDao extends GenericDao{
@@ -63,6 +64,9 @@ public class RecipeDao extends GenericDao{
 
         if (recipeFillers.contains(WITH_ING)) {
             fillIngredientsInRecipe(recipes);
+        }
+        if (recipeFillers.contains(WITH_STEPS)) {
+            fillStepsInRecipe(recipes);
         }
         return recipes;
     }

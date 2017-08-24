@@ -17,6 +17,7 @@ import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.TabsActivity;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.data.RecipeGroup;
+import com.example.benjamin.recettes.data.Step;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
 import com.example.benjamin.recettes.db.dao.RecipeGroupDao;
 import com.example.benjamin.recettes.db.dao.ShoppingDao;
@@ -24,10 +25,14 @@ import com.example.benjamin.recettes.recipes.createForm.ViewPagerAdapter;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-public class RecipeGroupCreate extends TabsActivity implements LoaderManager.LoaderCallbacks<List<Recipe>>{
+import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_ING;
+import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_STEPS;
+
+public class RecipeGroupCreate extends TabsActivity implements LoaderManager.LoaderCallbacks<List<Recipe>>,FrgGroupRecipes.OnRecipeSelectedListener {
 
     public static final String CURRENT_GROUP = "CURRENT_GROUP";
 
@@ -39,6 +44,7 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
     private List<Recipe> allRecipes;
     private FrgGroupGeneral fragmentGen;
     private FrgGroupRecipes fragmentRecipes;
+    private FrgGroupSteps fragmentSteps;
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +79,8 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
         adapter.addFragment(fragmentGen,getString(R.string.general));
         fragmentRecipes = new FrgGroupRecipes();
         adapter.addFragment(fragmentRecipes,getString(R.string.recipes));
+        fragmentSteps = new FrgGroupSteps();
+        adapter.addFragment(fragmentSteps,getString(R.string.steps));
         viewPager.setAdapter(adapter);
     }
 
@@ -87,6 +95,7 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
     private void getRecipeGroup() {
         fragmentGen.getRecipeGroup();
         fragmentRecipes.getRecipeGroup();
+        fragmentSteps.getRecipeGroup();
     }
 
     @Override
@@ -94,7 +103,7 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
         return new AsyncTaskDataLoader<List<Recipe>>(this) {
             @Override
             public List<Recipe> loadInBackground() {
-                allRecipes = recipeDao.getAllRecipes(EnumSet.of(Recipe.RecipeFiller.WITH_ING));
+                allRecipes = recipeDao.getAllRecipes(EnumSet.of(WITH_ING, WITH_STEPS));
                 if (recipeGroup != null && recipeGroup.getId() != null) {
                     recipeGroup = recipeGroupDao.findById(recipeGroup.getId());
                 }
@@ -114,6 +123,7 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
         }
         fragmentGen.fillView(recipeGroup);
         fragmentRecipes.fillView(recipeGroup,allRecipes);
+        fragmentSteps.fillView(recipeGroup);
 
     }
 
@@ -122,6 +132,7 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
         recipeGroup = new RecipeGroup();
         fragmentGen.fillView(recipeGroup);
         fragmentRecipes.fillView(recipeGroup,allRecipes);
+        fragmentSteps.fillView(recipeGroup);
     }
 
 
@@ -166,5 +177,14 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
     private void deleteGroupRecipe() {
         recipeGroupDao.delete(recipeGroup);
         startActivity(new Intent(RecipeGroupCreate.this, RecipeGroupList.class));
+    }
+
+    @Override
+    public void onRecipeSelectedListener(Recipe recipe) {
+        if (recipeGroup.getSteps() == null) {
+            recipeGroup.setSteps(new ArrayList<Step>());
+        }
+        recipeGroup.getSteps().addAll(recipe.getSteps());
+        fragmentSteps.fillView(recipeGroup);
     }
 }

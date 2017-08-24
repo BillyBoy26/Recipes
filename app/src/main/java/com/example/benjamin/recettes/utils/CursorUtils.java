@@ -16,6 +16,12 @@ public class CursorUtils {
         }
         return cursor.getLong(cursor.getColumnIndex(columnName));
     }
+    public static Integer getIntegerColumnOrNull(Cursor cursor, String columnName) {
+        if (cursor.getColumnIndex(columnName) == -1) {
+            return null;
+        }
+        return cursor.getInt(cursor.getColumnIndex(columnName));
+    }
     public static Float getFloatColumnOrNull(Cursor cursor, String columnName) {
         if (cursor.getColumnIndex(columnName) == -1) {
             return null;

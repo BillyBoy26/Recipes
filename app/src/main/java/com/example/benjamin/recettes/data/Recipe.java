@@ -7,7 +7,7 @@ import java.util.List;
 public class Recipe implements Serializable, HasName{
 
     public enum RecipeFiller{
-        WITH_ING
+        WITH_STEPS, WITH_ING
     }
 
     private String urlImage;

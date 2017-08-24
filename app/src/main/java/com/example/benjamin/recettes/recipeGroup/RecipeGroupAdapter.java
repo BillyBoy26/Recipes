@@ -25,7 +25,7 @@ public class RecipeGroupAdapter extends BasicListAdapter<RecipeGroup,RecipeGroup
 
     @Override
     public RecipeGroupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_group_card,parent,false);
+        View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipes_group_card,parent,false);
         return new RecipeGroupViewHolder(cardView,clickListener);
     }
 

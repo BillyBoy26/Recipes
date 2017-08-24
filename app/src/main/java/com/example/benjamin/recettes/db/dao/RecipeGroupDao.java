@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.data.RecipeGroup;
+import com.example.benjamin.recettes.data.Step;
 import com.example.benjamin.recettes.db.table.TJGroupRecipe;
+import com.example.benjamin.recettes.db.table.TJRegSte;
 import com.example.benjamin.recettes.db.table.TRecipeGroup;
 import com.example.benjamin.recettes.utils.CollectionUtils;
 
@@ -17,6 +19,7 @@ import java.util.List;
 public class RecipeGroupDao extends GenericDao {
 
     private RecipeDao recipeDao;
+    private StepDao stepDao;
 
     public RecipeGroupDao(Context context) {
         super(context);
@@ -44,7 +47,23 @@ public class RecipeGroupDao extends GenericDao {
         }
         deleteAllLinkReciceToGroup(recipeGroup);
         createLinkReciceToGroup(recipeGroup);
+        deleteAllLinkStepToGroup(recipeGroup);
+        createLinkStepToGroup(recipeGroup);
         return recipeGroup;
+    }
+
+    private void createLinkStepToGroup(RecipeGroup recipeGroup) {
+        if (CollectionUtils.nullOrEmpty(recipeGroup.getSteps())) {
+            return;
+        }
+        for (Step step : recipeGroup.getSteps()) {
+            addStepToGroup(step, recipeGroup);
+        }
+    }
+
+
+    private void deleteAllLinkStepToGroup(RecipeGroup recipeGroup) {
+        db.delete(TJRegSte.TJ_REG_STE, TJRegSte.C_ID_REG + "=?", new String[]{recipeGroup.getId().toString()});
     }
 
     private void createLinkReciceToGroup(RecipeGroup recipeGroup) {
@@ -87,6 +106,19 @@ public class RecipeGroupDao extends GenericDao {
         return recipGroup;
     }
 
+    private void addStepToGroup(Step step, RecipeGroup recipeGroup) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TJRegSte.C_ID_REG, recipeGroup.getId());
+        contentValues.put(TJRegSte.C_ID_STEP, step.getId());
+        contentValues.put(TJRegSte.C_RANK, step.getRank());
+
+        Long newId = db.insert(TJRegSte.TJ_REG_STE, null, contentValues);
+        if (newId < 0) {
+            throw new RuntimeException("Error create TJRegSte with idStep = " + step.getId() + " and idReg=" + recipeGroup.getId());
+        }
+    }
+
+
     public void addRecipeToGroup(Recipe recipe, RecipeGroup recipeGroup) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(TJGroupRecipe.C_ID_REG, recipeGroup.getId());
@@ -109,6 +141,7 @@ public class RecipeGroupDao extends GenericDao {
             return null;
         }
         recipeGrp.setRecipes(recipeDao.fetchRecipeByRegId(regIdStr));
+        recipeGrp.setSteps(stepDao.fetchStepByRegId(regIdStr));
         return recipeGrp;
     }
 
@@ -116,5 +149,6 @@ public class RecipeGroupDao extends GenericDao {
     public void open() {
         super.open();
         recipeDao = new RecipeDao(db);
+        stepDao = new StepDao(db);
     }
 }

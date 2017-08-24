@@ -8,6 +8,7 @@ public class RecipeGroup implements Serializable, HasName {
     private Long id;
     private String name;
     private List<Recipe> recipes;
+    private List<Step> steps;
 
     public Long getId() {
         return id;
@@ -31,5 +32,13 @@ public class RecipeGroup implements Serializable, HasName {
 
     public void setRecipes(List<Recipe> recipes) {
         this.recipes = recipes;
+    }
+
+    public List<Step> getSteps() {
+        return steps;
+    }
+
+    public void setSteps(List<Step> steps) {
+        this.steps = steps;
     }
 }

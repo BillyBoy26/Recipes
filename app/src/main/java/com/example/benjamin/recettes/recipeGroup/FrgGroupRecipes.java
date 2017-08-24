@@ -1,5 +1,6 @@
 package com.example.benjamin.recettes.recipeGroup;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,13 @@ import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 import java.util.List;
 
 public class FrgGroupRecipes extends Fragment implements RecyclerViewClickListener {
+
+    private OnRecipeSelectedListener recipeSelectedListener;
+
+    interface OnRecipeSelectedListener{
+        void onRecipeSelectedListener(Recipe recipe);
+    }
+
 
     private RecipeSearchAdapter recipeAdapter;
     private NameAdapter recipeLinkedAdapter;
@@ -58,8 +66,20 @@ public class FrgGroupRecipes extends Fragment implements RecyclerViewClickListen
         Recipe recipe = recipeAdapter.getItem(position);
         boolean added = recipeLinkedAdapter.addItem(recipe);
         if (!added) {
-            Toast.makeText(getContext(), R.string.recipe_already_in_group,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.recipe_already_in_group, Toast.LENGTH_SHORT).show();
+        } else {
+            recipeSelectedListener.onRecipeSelectedListener(recipe);
         }
 
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            recipeSelectedListener = (OnRecipeSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnArticleSelectedListener");
+        }
     }
 }

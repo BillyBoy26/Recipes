@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
@@ -168,7 +169,7 @@ public class IngredientDao extends GenericDao {
         }
     }
 
-    public Map<Long, List<Ingredient>> fetchIngredientsByRecId(List<String> idsRec) {
+    public @NonNull Map<Long, List<Ingredient>> fetchIngredientsByRecId(List<String> idsRec) {
         if (CollectionUtils.nullOrEmpty(idsRec)) {
             return new HashMap<>();
         }
