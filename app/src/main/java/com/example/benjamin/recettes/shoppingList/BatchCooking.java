@@ -14,6 +14,7 @@ import com.example.benjamin.recettes.TabsActivity;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.db.dao.IngredientDao;
 import com.example.benjamin.recettes.db.dao.ShoppingDao;
+import com.example.benjamin.recettes.recipes.createForm.FragmentSteps;
 import com.example.benjamin.recettes.recipes.createForm.ViewPagerAdapter;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
@@ -30,6 +31,8 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
 
     private List<Ingredient> ingredients;
     private FrgShoppingList frgShoppingList;
+    private FrgRecipeList frgRecipeList;
+    private FragmentSteps frgSteps;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,12 +50,12 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         frgShoppingList = new FrgShoppingList();
-//        Bundle args = new Bundle();
-//        args.putSerializable(FrgShoppingList.ADD_COMMAND,buildCommandeAddIngredient());
-//        args.putSerializable(FrgShoppingList.DELETE_COMMAND,buildDeleteCommand());
-//        frgShoppingList.setArguments(args);
-
         adapter.addFragment(frgShoppingList,getString(R.string.shopping_list));
+        frgRecipeList = new FrgRecipeList();
+        adapter.addFragment(frgRecipeList,getString(R.string.recipes));
+        frgSteps = new FragmentSteps();
+        adapter.addFragment(frgSteps,getString(R.string.steps));
+
         viewPager.setAdapter(adapter);
     }
 
