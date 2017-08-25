@@ -18,9 +18,9 @@ import com.example.benjamin.recettes.TabsActivity;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.data.RecipeGroup;
 import com.example.benjamin.recettes.data.Step;
+import com.example.benjamin.recettes.db.dao.BatchCookingDao;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
 import com.example.benjamin.recettes.db.dao.RecipeGroupDao;
-import com.example.benjamin.recettes.db.dao.ShoppingDao;
 import com.example.benjamin.recettes.recipes.createForm.ViewPagerAdapter;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
@@ -38,7 +38,7 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
 
     private RecipeGroup recipeGroup;
     private RecipeGroupDao recipeGroupDao;
-    private ShoppingDao shoppingDao;
+    private BatchCookingDao batchCookingDao;
     private RecipeDao recipeDao;
 
     private List<Recipe> allRecipes;
@@ -50,8 +50,8 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         recipeGroupDao = new RecipeGroupDao(this);
         recipeDao = new RecipeDao(this);
-        shoppingDao = new ShoppingDao(this);
-        initDaos(recipeGroupDao,recipeDao,shoppingDao);
+        batchCookingDao = new BatchCookingDao(this);
+        initDaos(recipeGroupDao,recipeDao,batchCookingDao);
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.get(CURRENT_GROUP) != null) {
             recipeGroup = (RecipeGroup) extras.get(CURRENT_GROUP);
@@ -166,7 +166,7 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
             Toast.makeText(this, R.string.none_recipe_to_add_shopping_list, Toast.LENGTH_SHORT).show();
             return;
         }
-        boolean created = shoppingDao.createFromRecipeGroup(recipeGroup);
+        boolean created = batchCookingDao.addRecipeGroupToBatchCooking(recipeGroup);
         if (created) {
             Toast.makeText(this, R.string.ingredients_from_recipe_group_added_to_shopping_list, Toast.LENGTH_SHORT).show();
         } else {

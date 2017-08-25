@@ -98,6 +98,7 @@ public class RecipeDao extends GenericDao{
         contentValues.put(TRecipe.C_COOK_TIME,recipe.getCookTime());
         contentValues.put(TRecipe.C_TOTAL_TIME,recipe.getTotalTime());
         contentValues.put(TRecipe.C_PREPARE_TIME,recipe.getPrepareTime());
+        contentValues.put(TRecipe.C_IS_BATCH,recipe.isBatchCooking());
         fillUpdatedate(contentValues);
 
 

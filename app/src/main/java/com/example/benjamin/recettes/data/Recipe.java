@@ -21,6 +21,7 @@ public class Recipe implements Serializable, HasName{
     private String cookTime;
     private String totalTime;
     private String nbCovers;
+    private boolean batchCooking;
 
     public Recipe() {
     }
@@ -140,5 +141,13 @@ public class Recipe implements Serializable, HasName{
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (id != null ? id.hashCode() : 0);
         return result;
+    }
+
+    public boolean isBatchCooking() {
+        return batchCooking;
+    }
+
+    public void setBatchCooking(boolean batchCooking) {
+        this.batchCooking = batchCooking;
     }
 }

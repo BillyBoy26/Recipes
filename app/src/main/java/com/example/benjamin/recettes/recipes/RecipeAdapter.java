@@ -14,7 +14,7 @@ import com.example.benjamin.recettes.views.ClickableViewHolder;
 import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 import com.squareup.picasso.Picasso;
 
-class RecipeAdapter extends BasicListAdapter<Recipe,RecipeAdapter.RecipeViewHolder> {
+public class RecipeAdapter extends BasicListAdapter<Recipe,RecipeAdapter.RecipeViewHolder> {
 
 
     private final RecyclerViewClickListener clickListener;

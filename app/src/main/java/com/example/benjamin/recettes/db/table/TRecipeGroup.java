@@ -6,12 +6,14 @@ public class TRecipeGroup implements TCommon {
 
     public static final String T_RECIPE_GROUP = "T_RECIPE_GROUP";
     public static final String C_NAME = "REG_NAME";
+    public static final String C_IS_BATCH = "REG_IS_BATCH";
 
 
     private static final String CREATE_TABLE_RECIPE_GROUP =
             "CREATE TABLE " + T_RECIPE_GROUP + " (" +
                     _ID +  " INTEGER PRIMARY KEY, " +
                     C_NAME + " TEXT, " +
+                    C_IS_BATCH + " INTEGER, " +
                     C_UPDATE_DATE + " DATE " +
                     ")";
 

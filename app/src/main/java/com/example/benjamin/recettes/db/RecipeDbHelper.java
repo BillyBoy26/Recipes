@@ -19,7 +19,7 @@ public class RecipeDbHelper  extends SQLiteOpenHelper{
 
 
     public static final String RECIPE_DB_NAME = "recipe.db";
-    public static final int RECIPE_DB_VERSION = 22;
+    public static final int RECIPE_DB_VERSION = 23;
 
 
 

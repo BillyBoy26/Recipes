@@ -3,10 +3,9 @@ package com.example.benjamin.recettes.db.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.example.benjamin.recettes.data.Ingredient;
-import com.example.benjamin.recettes.data.Recipe;
-import com.example.benjamin.recettes.data.RecipeGroup;
 import com.example.benjamin.recettes.db.table.TIngredient;
 import com.example.benjamin.recettes.db.table.TShoppingIngredient;
 import com.example.benjamin.recettes.utils.CollectionUtils;
@@ -18,6 +17,10 @@ import java.util.List;
 public class ShoppingDao extends GenericDao{
     public ShoppingDao(Context context) {
         super(context);
+    }
+
+    public ShoppingDao(SQLiteDatabase sqLiteDatabase) {
+        super(sqLiteDatabase);
     }
 
     public Ingredient createOrUpdate(Ingredient ingredient) {
@@ -82,34 +85,20 @@ public class ShoppingDao extends GenericDao{
         db.delete(TShoppingIngredient.T_SHOPPING_INGREDIENT, TShoppingIngredient.C_ID_ING + "= ?", new String[]{ingredient.getId().toString()});
     }
 
-    public boolean createFromRecipe(Recipe recipe) {
-        if (recipe == null || CollectionUtils.nullOrEmpty(recipe.getIngredients())) {
-            return false;
-        }
-        boolean ingAdded = false;
-        for (Ingredient ingredient : recipe.getIngredients()) {
-            if (ingredient.getId() != null) {
-                createOrUpdate(ingredient);
-                ingAdded = true;
-            }
-        }
-        return ingAdded;
-    }
-
-    public boolean createFromRecipeGroup(RecipeGroup recipeGroup) {
-        if (recipeGroup == null || CollectionUtils.nullOrEmpty(recipeGroup.getRecipes())) {
-            return false;
-        }
-        boolean ingAdded = false;
-        for (Recipe recipe : recipeGroup.getRecipes()) {
-            if (CollectionUtils.notNullOrEmpty(recipe.getIngredients())) {
-                ingAdded = createFromRecipe(recipe);
-            }
-        }
-        return ingAdded;
-    }
-
     public void deleteAll() {
         db.delete(TShoppingIngredient.T_SHOPPING_INGREDIENT,null, null);
+    }
+
+    public boolean addIngredientToShoppingList(List<Ingredient> ingredients) {
+        boolean ingAdded = false;
+        if (CollectionUtils.notNullOrEmpty(ingredients)) {
+            for (Ingredient ingredient : ingredients) {
+                if (ingredient.getId() != null) {
+                    createOrUpdate(ingredient);
+                    ingAdded = true;
+                }
+            }
+        }
+        return ingAdded;
     }
 }

@@ -99,7 +99,7 @@ public class RecipeGroupDao extends GenericDao {
         return recipeGroups;
     }
 
-    private RecipeGroup getRecipeGroupFromCursor(Cursor cursor) {
+    public static RecipeGroup getRecipeGroupFromCursor(Cursor cursor) {
         RecipeGroup recipGroup = new RecipeGroup();
         recipGroup.setId(cursor.getLong(cursor.getColumnIndex(TRecipeGroup._ID)));
         recipGroup.setName(cursor.getString(cursor.getColumnIndex(TRecipeGroup.C_NAME)));

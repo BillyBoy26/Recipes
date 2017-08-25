@@ -9,6 +9,15 @@ public class RecipeGroup implements Serializable, HasName {
     private String name;
     private List<Recipe> recipes;
     private List<Step> steps;
+    private boolean batchCooking;
+
+    public boolean isBatchCooking() {
+        return batchCooking;
+    }
+
+    public void setBatchCooking(boolean batchCooking) {
+        this.batchCooking = batchCooking;
+    }
 
     public Long getId() {
         return id;

@@ -17,8 +17,8 @@ import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.TabsActivity;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.db.dao.BatchCookingDao;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
-import com.example.benjamin.recettes.db.dao.ShoppingDao;
 import com.example.benjamin.recettes.recipes.RecipesList;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
@@ -30,7 +30,6 @@ import java.util.List;
 public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCallbacks<Recipe> {
 
 
-    private ShoppingDao shoppingDao;
 
     public interface RecipeFiller{
         void setRecipe(Recipe recipe);
@@ -42,6 +41,7 @@ public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCa
     private Recipe recipe;
     private List<RecipeFiller> fragments = new ArrayList<>();
     private RecipeDao recipeDao;
+    private BatchCookingDao batchCookingDao;
 
 
     @Override
@@ -49,8 +49,8 @@ public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCa
         super.onCreate(savedInstanceState);
 
         recipeDao = new RecipeDao(this);
-        shoppingDao = new ShoppingDao(this);
-        initDaos(recipeDao,shoppingDao);
+        batchCookingDao = new BatchCookingDao(this);
+        initDaos(recipeDao,batchCookingDao);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.get(CURRENT_RECIPE) != null) {
@@ -172,8 +172,8 @@ public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCa
                 return;
             }
         }
-        boolean created = shoppingDao.createFromRecipe(recipe);
-        if (created) {
+        boolean ingCreated = batchCookingDao.addRecipeToBatchCooking(recipe);
+        if (ingCreated) {
             Toast.makeText(this, R.string.ingredients_from_recipe_added_to_shopping_list, Toast.LENGTH_SHORT).show();
         }
     }
