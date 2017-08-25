@@ -38,6 +38,7 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
     private FragmentSteps frgSteps;
     private List<Recipe> recipes;
     private List<Ingredient> ingredients;
+    private List<RecipeGroup> recipeGroups;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,12 +81,13 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
     public void onLoadFinished(Loader<BatchCookingBundle> loader,BatchCookingBundle data) {
         this.ingredients = data.ingredients;
         this.recipes = data.recipes;
+        recipeGroups = data.recipeGroups;
         fillView();
     }
 
     private void fillView() {
         frgShoppingList.fillView(ingredients);
-        frgRecipeList.fillView(recipes);
+        frgRecipeList.fillView(recipes,recipeGroups);
 
     }
 

@@ -115,7 +115,10 @@ public class BatchCookingDao extends GenericDao {
         List<RecipeGroup> recipeGroups = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
-                recipeGroups.add(RecipeGroupDao.getRecipeGroupFromCursor(cursor));
+                RecipeGroup recipeGroup = RecipeGroupDao.getRecipeGroupFromCursor(cursor);
+                //TODO récup en une fois pour tout les groupes
+                recipeGroup.setRecipes(recipeDao.fetchRecipeByRegId(String.valueOf(recipeGroup.getId())));
+                recipeGroups.add(recipeGroup);
             } while (cursor.moveToNext());
         }
         return recipeGroups;
