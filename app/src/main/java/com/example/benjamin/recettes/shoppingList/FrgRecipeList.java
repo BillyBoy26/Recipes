@@ -1,5 +1,6 @@
 package com.example.benjamin.recettes.shoppingList;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,13 +14,15 @@ import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.data.RecipeGroup;
 import com.example.benjamin.recettes.recipes.RecipeAdapter;
+import com.example.benjamin.recettes.recipes.createForm.RecipeCreate;
+import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class FrgRecipeList extends Fragment {
+public class FrgRecipeList extends Fragment implements RecyclerViewClickListener {
 
     private RecipeAdapter adapter;
 
@@ -37,7 +40,7 @@ public class FrgRecipeList extends Fragment {
 
     private void initAdapter() {
         if (adapter == null) {
-            adapter = new RecipeAdapter(null);
+            adapter = new RecipeAdapter(this);
         }
     }
 
@@ -57,5 +60,13 @@ public class FrgRecipeList extends Fragment {
             }
         });
         adapter.setDatas(allRecipe);
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Recipe recipe = adapter.getItem(position);
+        Intent intent = new Intent(getActivity(), RecipeCreate.class);
+        intent.putExtra(RecipeCreate.CURRENT_RECIPE, recipe);
+        startActivity(intent);
     }
 }

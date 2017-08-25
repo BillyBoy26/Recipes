@@ -25,7 +25,8 @@ import com.example.benjamin.recettes.utils.CollectionUtils;
 import java.util.Collections;
 import java.util.List;
 
-public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCallbacks<BatchCooking.BatchCookingBundle>,FrgShoppingList.OnIngredientListEditedListener{
+public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCallbacks<BatchCooking.BatchCookingBundle>
+        ,FrgShoppingList.OnIngredientListEditedListener{
 
 
 
