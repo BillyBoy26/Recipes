@@ -101,6 +101,7 @@ public class BatchCookingDao extends GenericDao {
                 recipes.add(RecipeDao.getRecipeFromCursor(cursor));
             } while (cursor.moveToNext());
         }
+        recipeDao.fillStepsInRecipe(recipes);
         return recipes;
     }
 
@@ -121,6 +122,32 @@ public class BatchCookingDao extends GenericDao {
                 recipeGroups.add(recipeGroup);
             } while (cursor.moveToNext());
         }
+        for (RecipeGroup recipeGroup : recipeGroups) {
+            recipeDao.fillStepsInRecipe(recipeGroup.getRecipes());
+        }
         return recipeGroups;
+    }
+
+    public void clearBatchCookingRecipes(List<Recipe> recipes) {
+        if (CollectionUtils.nullOrEmpty(recipes)) {
+            return;
+        }
+        for (Recipe recipe : recipes) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(TRecipe.C_IS_BATCH,0);
+            int recipeUpdated = db.update(TRecipe.T_RECIPE, contentValues, "_id= ?", new String[]{String.valueOf(recipe.getId())});
+        }
+
+    }
+
+    public void clearBatchCookingRecipeGroups(List<RecipeGroup> recipeGroups) {
+        if (CollectionUtils.nullOrEmpty(recipeGroups)) {
+            return;
+        }
+        for (RecipeGroup recGrp : recipeGroups) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(TRecipeGroup.C_IS_BATCH,0);
+            int recipeGroupUpdated = db.update(TRecipeGroup.T_RECIPE_GROUP, contentValues, "_id= ?", new String[]{String.valueOf(recGrp.getId())});
+        }
     }
 }

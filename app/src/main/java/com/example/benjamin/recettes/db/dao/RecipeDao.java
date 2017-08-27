@@ -219,7 +219,7 @@ public class RecipeDao extends GenericDao{
         return recipes;
     }
 
-    private void fillStepsInRecipe(List<Recipe> recipes) {
+    public void fillStepsInRecipe(List<Recipe> recipes) {
         List<String> ids = new ArrayList<>();
         for (Recipe recipe : recipes) {
             ids.add(String.valueOf(recipe.getId()));

@@ -12,14 +12,10 @@ import android.view.ViewGroup;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Recipe;
-import com.example.benjamin.recettes.data.RecipeGroup;
 import com.example.benjamin.recettes.recipes.RecipeAdapter;
 import com.example.benjamin.recettes.recipes.createForm.RecipeCreate;
 import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class FrgRecipeList extends Fragment implements RecyclerViewClickListener {
@@ -44,22 +40,9 @@ public class FrgRecipeList extends Fragment implements RecyclerViewClickListener
         }
     }
 
-    public void fillView(List<Recipe> recipes, List<RecipeGroup> recipeGroups) {
+    public void fillView(List<Recipe> recipes) {
         initAdapter();
-        List<Recipe> allRecipe = new ArrayList<>();
-        allRecipe.addAll(recipes);
-        for (RecipeGroup recipeGroup : recipeGroups) {
-            if (recipeGroup.getRecipes() != null) {
-                allRecipe.addAll(recipeGroup.getRecipes());
-            }
-        }
-        Collections.sort(allRecipe, new Comparator<Recipe>() {
-            @Override
-            public int compare(Recipe o1, Recipe o2) {
-                return o1.getName().toUpperCase().compareTo(o2.getName().toUpperCase());
-            }
-        });
-        adapter.setDatas(allRecipe);
+        adapter.setDatas(recipes);
     }
 
     @Override

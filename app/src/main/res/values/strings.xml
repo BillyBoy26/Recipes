@@ -53,4 +53,7 @@
     <string name="none_recipe_to_add_shopping_list">Aucune recette à ajouter à la liste de course</string>
     <string name="recipe_already_in_group">La recette est déja présente dans le groupe</string>
     <string name="recipe_group">Groupe de recettes</string>
+    <string name="clear_recipes_list">Vider la liste de recettes</string>
+    <string name="recipe_list_already_clear">La liste de recettes est déja vide</string>
+    <string name="recipes_list_cleared">Liste de recettes a été vidé</string>
 </resources>

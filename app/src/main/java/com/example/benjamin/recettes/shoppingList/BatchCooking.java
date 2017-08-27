@@ -14,6 +14,7 @@ import com.example.benjamin.recettes.TabsActivity;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.data.RecipeGroup;
+import com.example.benjamin.recettes.data.Step;
 import com.example.benjamin.recettes.db.dao.BatchCookingDao;
 import com.example.benjamin.recettes.db.dao.IngredientDao;
 import com.example.benjamin.recettes.db.dao.ShoppingDao;
@@ -22,7 +23,9 @@ import com.example.benjamin.recettes.recipes.createForm.ViewPagerAdapter;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCallbacks<BatchCooking.BatchCookingBundle>
@@ -62,6 +65,9 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
         frgRecipeList = new FrgRecipeList();
         adapter.addFragment(frgRecipeList,getString(R.string.recipes));
         frgSteps = new FragmentSteps();
+        Bundle args = new Bundle();
+        args.putBoolean(FragmentSteps.CAN_ADD,false);
+        frgSteps.setArguments(args);
         adapter.addFragment(frgSteps,getString(R.string.steps));
 
         viewPager.setAdapter(adapter);
@@ -87,8 +93,40 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
     }
 
     private void fillView() {
+        List<Recipe> allRecipe = new ArrayList<>();
+        List<Step> allSteps = new ArrayList<>();
+        if (recipeGroups != null) {
+            for (RecipeGroup recipeGroup : recipeGroups) {
+                if (recipeGroup.getRecipes() != null) {
+                    for (Recipe recipe : recipeGroup.getRecipes()) {
+                        allRecipe.add(recipe);
+                        for (Step step : recipe.getSteps()) {
+                            allSteps.add(step);
+                        }
+                    }
+                }
+            }
+        }
+        if (recipes != null) {
+            for (Recipe recipe : recipes) {
+                allRecipe.add(recipe);
+                for (Step step : recipe.getSteps()) {
+                    allSteps.add(step);
+                }
+            }
+        }
+
+        Collections.sort(allRecipe, new Comparator<Recipe>() {
+            @Override
+            public int compare(Recipe o1, Recipe o2) {
+                return o1.getName().toUpperCase().compareTo(o2.getName().toUpperCase());
+            }
+        });
+
+
         frgShoppingList.fillView(ingredients);
-        frgRecipeList.fillView(recipes,recipeGroups);
+        frgRecipeList.fillView(allRecipe);
+        frgSteps.setSteps(allSteps);
 
     }
 
@@ -109,16 +147,34 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_delete:
+            case R.id.action_delete_shopping:
                 clearShoppingList();
+                break;
+            case R.id.action_delete_recipes:
+                clearRecipesList();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void clearRecipesList() {
+        if (CollectionUtils.nullOrEmpty(recipes) && CollectionUtils.nullOrEmpty(recipeGroups)) {
+            Toast.makeText(this, R.string.recipe_list_already_clear, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        batchCookingDao.clearBatchCookingRecipes(recipes);
+        batchCookingDao.clearBatchCookingRecipeGroups(recipeGroups);
+        recipeGroups.clear();
+        recipes.clear();
+        frgRecipeList.fillView(null);
+        frgSteps.setSteps(null);
+        Toast.makeText(this, R.string.recipes_list_cleared, Toast.LENGTH_SHORT).show();
+    }
+
     private void clearShoppingList() {
         if (CollectionUtils.nullOrEmpty(ingredients)) {
             Toast.makeText(this, R.string.shopping_list_already_clear, Toast.LENGTH_SHORT).show();
+            return;
         }
         shoppingDao.deleteAll();
         ingredients.clear();

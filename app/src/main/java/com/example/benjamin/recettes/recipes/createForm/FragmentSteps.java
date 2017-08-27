@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Recipe;
@@ -23,6 +24,7 @@ import java.util.List;
 public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller{
 
 
+    public static final String CAN_ADD = "CAN_ADD";
     private NameAdapter adapter;
     private Recipe recipe;
     private List<Step> steps;
@@ -33,6 +35,11 @@ public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller
         View layout = inflater.inflate(R.layout.recipe_create_steps, container, false);
         final RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerSteps);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        if (getArguments() != null && getArguments().get(CAN_ADD) != null && !(Boolean)getArguments().get(CAN_ADD)) {
+            LinearLayout searchView = (LinearLayout) layout.findViewById(R.id.pnlSearchAndAdd);
+            searchView.setVisibility(View.GONE);
+        }
 
 
         fillView();
@@ -93,7 +100,14 @@ public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller
                 step.setRank(steps.indexOf(step) + 1);
             }
         }
-        recipe.setSteps(steps);
+        if (recipe != null) {
+            recipe.setSteps(steps);
+        }
 
+    }
+
+    public void setSteps(List<Step> steps) {
+        this.steps = steps;
+        fillView();
     }
 }
