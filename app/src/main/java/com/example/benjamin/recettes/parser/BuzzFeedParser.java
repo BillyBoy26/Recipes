@@ -62,8 +62,14 @@ public class BuzzFeedParser {
                     continue;
                 }
                 String text = step.text();
-                //get decimal number
-                recipe.getSteps().add(new Step(text,rank++));
+                if (SUtils.notNullOrEmpty(text)) {
+                    while (Character.isDigit(text.charAt(0)) || text.charAt(0) == '.' || text.charAt(0) =='#') {
+                        text = text.substring(1);
+                    }
+
+                    //get decimal number
+                    recipe.getSteps().add(new Step(text.trim(),rank++));
+                }
                 step = step.nextElementSibling();
             }
         }
@@ -99,6 +105,12 @@ public class BuzzFeedParser {
             Element ingr = h3Ingredients.nextElementSibling();
             while (ingr != null && !ingr.is("div")) {
                 if (ingr.is("script")) {
+                    ingr = ingr.nextElementSibling();
+                    continue;
+                }
+                Element elemInIngr = ingr.children().first();
+                if (elemInIngr != null && elemInIngr.is("b")) {
+                    //subSession
                     ingr = ingr.nextElementSibling();
                     continue;
                 }
