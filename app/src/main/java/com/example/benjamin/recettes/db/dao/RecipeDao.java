@@ -180,6 +180,9 @@ public class RecipeDao extends GenericDao{
     }
 
     public Recipe findById(Long recipeId) {
+        if (recipeId == null) {
+            return null;
+        }
         String recIdStr = Long.toString(recipeId);
         Cursor cursor = db.rawQuery("Select * from " + TRecipe.T_RECIPE + " where " + TRecipe._ID + " = ?",new String[]{recIdStr});
         if (!cursor.moveToFirst()) {

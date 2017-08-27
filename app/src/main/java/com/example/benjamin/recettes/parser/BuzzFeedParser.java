@@ -44,7 +44,11 @@ public class BuzzFeedParser {
         if (h3Steps != null) {
             int rank = 1;
             Element step = h3Steps.nextElementSibling();
-            while (step != null && step.is("p")) {
+            while (step != null && !step.is("div")) {
+                if (step.is("script")) {
+                    step = step.nextElementSibling();
+                    continue;
+                }
                 String text = step.text();
                 //get decimal number
                 recipe.getSteps().add(new Step(text,rank++));
@@ -81,9 +85,15 @@ public class BuzzFeedParser {
 
         if (h3Ingredients != null) {
             Element ingr = h3Ingredients.nextElementSibling();
-            while (ingr != null && ingr.is("p")) {
+            while (ingr != null && !ingr.is("div")) {
+                if (ingr.is("script")) {
+                    ingr = ingr.nextElementSibling();
+                    continue;
+                }
                 String text = ingr.text();
                 if (text.contains("Serves")) {
+                    text = text.replace("Serves ","");
+                    recipe.setNbCovers(text.trim());
                     ingr = ingr.nextElementSibling();
                     continue;
                 }

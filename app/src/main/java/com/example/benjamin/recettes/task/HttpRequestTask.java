@@ -5,9 +5,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.benjamin.recettes.recipes.createForm.RecipeCreate;
 import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.db.dao.RecipeDao;
 import com.example.benjamin.recettes.parser.BuzzFeedParser;
+import com.example.benjamin.recettes.recipes.RecipesList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,7 +48,12 @@ public class HttpRequestTask extends AsyncTask<String,Void,Recipe> {
                 }
                 inputStream.close();
                 String html = builder.toString();
-                return BuzzFeedParser.parse(html);
+                Recipe recipe = BuzzFeedParser.parse(html);
+                RecipeDao recipeDao = new RecipeDao(context);
+                recipeDao.open();
+                recipeDao.createOrUpdate(recipe);
+                recipeDao.close();
+                return recipe;
 
             }
 
@@ -61,6 +67,6 @@ public class HttpRequestTask extends AsyncTask<String,Void,Recipe> {
     @Override
     protected void onPostExecute(Recipe recipe) {
         super.onPostExecute(recipe);
-        context.startActivity(new Intent(context,RecipeCreate.class).putExtra(RecipeCreate.CURRENT_RECIPE,recipe));
+        context.startActivity(new Intent(context,RecipesList.class));
     }
 }
