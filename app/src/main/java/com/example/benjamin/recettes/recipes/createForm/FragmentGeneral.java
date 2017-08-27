@@ -26,6 +26,7 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
     private EditText txtTimeCook;
     private EditText txtTotalTime;
     private EditText txtNbCovers;
+    private EditText txtUrlVideo;
     private ImageInputView imageView;
     private Recipe recipe;
     private EditText txtCategory;
@@ -40,6 +41,7 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
         txtCategory = (EditText) generalView.findViewById(R.id.category);
         txtNbCovers = (EditText) generalView.findViewById(R.id.nb_covers);
         txtTimeCook = (EditText) generalView.findViewById(R.id.time_cook);
+        txtUrlVideo = (EditText) generalView.findViewById(R.id.url_video);
         txtTimePrepare = (EditText) generalView.findViewById(R.id.time_prepare);
         txtTotalTime = (EditText) generalView.findViewById(R.id.time_total);
         pnlCategories = (FlexboxLayout) generalView.findViewById(R.id.pnlCategories);
@@ -85,6 +87,7 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
             txtNbCovers.setText(recipe.getNbCovers());
             txtTotalTime.setText(recipe.getTotalTime());
             txtTimePrepare.setText(recipe.getPrepareTime());
+            txtUrlVideo.setText(recipe.getUrlVideo());
             if (recipe.getUrlImage() != null) {
                 new DownloadImageTask(imageView).execute(recipe.getUrlImage());
             }
@@ -107,6 +110,7 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
         recipe.setCookTime(txtTimeCook.getText().toString());
         recipe.setTotalTime(txtTotalTime.getText().toString());
         recipe.setNbCovers(txtNbCovers.getText().toString());
+        recipe.setUrlVideo(txtUrlVideo.getText().toString());
         //les catégories sont gérés automatiquement
     }
 

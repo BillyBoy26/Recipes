@@ -99,6 +99,7 @@ public class RecipeDao extends GenericDao{
         contentValues.put(TRecipe.C_TOTAL_TIME,recipe.getTotalTime());
         contentValues.put(TRecipe.C_PREPARE_TIME,recipe.getPrepareTime());
         contentValues.put(TRecipe.C_IS_BATCH,recipe.isBatchCooking());
+        contentValues.put(TRecipe.C_URL_VIDEO,recipe.getUrlVideo());
         fillUpdatedate(contentValues);
 
 
@@ -167,6 +168,7 @@ public class RecipeDao extends GenericDao{
         recipe.setNbCovers(getStringColumnOrEmpty(cursor, TRecipe.C_NB_COVERS));
         recipe.setPrepareTime(getStringColumnOrEmpty(cursor, TRecipe.C_PREPARE_TIME));
         recipe.setTotalTime(getStringColumnOrEmpty(cursor, TRecipe.C_TOTAL_TIME));
+        recipe.setUrlVideo(getStringColumnOrEmpty(cursor, TRecipe.C_URL_VIDEO));
 
         return recipe;
     }

@@ -22,6 +22,7 @@ public class Recipe implements Serializable, HasName{
     private String totalTime;
     private String nbCovers;
     private boolean batchCooking;
+    private String urlVideo;
 
     public Recipe() {
     }
@@ -149,5 +150,13 @@ public class Recipe implements Serializable, HasName{
 
     public void setBatchCooking(boolean batchCooking) {
         this.batchCooking = batchCooking;
+    }
+
+    public String getUrlVideo() {
+        return urlVideo;
+    }
+
+    public void setUrlVideo(String urlVideo) {
+        this.urlVideo = urlVideo;
     }
 }
