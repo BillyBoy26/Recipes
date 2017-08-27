@@ -23,6 +23,11 @@ public class Recipe implements Serializable, HasName{
     private String nbCovers;
     private boolean batchCooking;
     private String urlVideo;
+    private String urlImage2;
+    private String urlImage3;
+    private String urlImage4;
+    private String urlImage5;
+
 
     public Recipe() {
     }
@@ -158,5 +163,37 @@ public class Recipe implements Serializable, HasName{
 
     public void setUrlVideo(String urlVideo) {
         this.urlVideo = urlVideo;
+    }
+
+    public String getUrlImage2() {
+        return urlImage2;
+    }
+
+    public void setUrlImage2(String urlImage2) {
+        this.urlImage2 = urlImage2;
+    }
+
+    public String getUrlImage3() {
+        return urlImage3;
+    }
+
+    public void setUrlImage3(String urlImage3) {
+        this.urlImage3 = urlImage3;
+    }
+
+    public String getUrlImage4() {
+        return urlImage4;
+    }
+
+    public void setUrlImage4(String urlImage4) {
+        this.urlImage4 = urlImage4;
+    }
+
+    public String getUrlImage5() {
+        return urlImage5;
+    }
+
+    public void setUrlImage5(String urlImage5) {
+        this.urlImage5 = urlImage5;
     }
 }

@@ -31,6 +31,10 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
     private Recipe recipe;
     private EditText txtCategory;
     private FlexboxLayout pnlCategories;
+    private ImageInputView imageView2;
+    private ImageInputView imageView3;
+    private ImageInputView imageView4;
+    private ImageInputView imageView5;
 
     @Nullable
     @Override
@@ -38,6 +42,10 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
         View generalView = inflater.inflate(R.layout.recipe_create_general, container, false);
         txtName = (EditText) generalView.findViewById(R.id.name);
         imageView = (ImageInputView) generalView.findViewById(R.id.image1);
+        imageView2 = (ImageInputView) generalView.findViewById(R.id.image2);
+        imageView3 = (ImageInputView) generalView.findViewById(R.id.image3);
+        imageView4 = (ImageInputView) generalView.findViewById(R.id.image4);
+        imageView5 = (ImageInputView) generalView.findViewById(R.id.image5);
         txtCategory = (EditText) generalView.findViewById(R.id.category);
         txtNbCovers = (EditText) generalView.findViewById(R.id.nb_covers);
         txtTimeCook = (EditText) generalView.findViewById(R.id.time_cook);
@@ -91,6 +99,18 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
             if (recipe.getUrlImage() != null) {
                 new DownloadImageTask(imageView).execute(recipe.getUrlImage());
             }
+            if (recipe.getUrlImage2() != null) {
+                new DownloadImageTask(imageView2).execute(recipe.getUrlImage2());
+            }
+            if (recipe.getUrlImage3() != null) {
+                new DownloadImageTask(imageView3).execute(recipe.getUrlImage3());
+            }
+            if (recipe.getUrlImage4() != null) {
+                new DownloadImageTask(imageView4).execute(recipe.getUrlImage4());
+            }
+            if (recipe.getUrlImage5() != null) {
+                new DownloadImageTask(imageView5).execute(recipe.getUrlImage5());
+            }
 
 
             for (Category category : recipe.getCategories()) {
@@ -102,10 +122,12 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
 
     @Override
     public void getRecipe() {
-        String name = txtName.getText().toString();
-        String imageUrl = imageView.getUrlImage();
-        recipe.setName(name);
-        recipe.setUrlImage(imageUrl);
+        recipe.setName( txtName.getText().toString());
+        recipe.setUrlImage(imageView.getUrlImage());
+        recipe.setUrlImage2(imageView2.getUrlImage());
+        recipe.setUrlImage3(imageView3.getUrlImage());
+        recipe.setUrlImage4(imageView4.getUrlImage());
+        recipe.setUrlImage5(imageView5.getUrlImage());
         recipe.setPrepareTime(txtTimePrepare.getText().toString());
         recipe.setCookTime(txtTimeCook.getText().toString());
         recipe.setTotalTime(txtTotalTime.getText().toString());
