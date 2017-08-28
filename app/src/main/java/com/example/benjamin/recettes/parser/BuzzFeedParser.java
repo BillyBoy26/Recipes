@@ -1,6 +1,7 @@
 package com.example.benjamin.recettes.parser;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
@@ -26,45 +27,11 @@ public class BuzzFeedParser {
         List<Recipe> recipes = new ArrayList<>();
 
         String urlVideo = parseUrlVideo(document);
-        Elements ingredientsElem = document.body().select("p:matches((?i)Ingredients$)");
-        if (!ingredientsElem.isEmpty()) {
-            //article with multiple article and p formating
-
-            for (Element currentElem : ingredientsElem) {
-                Recipe recipe = new Recipe();
-
-                //ingredients
-                Element ingr = currentElem.nextElementSibling();
-                ingr = proceedIngredientElement(recipe,ingr,true);
-
-                //steps
-                if (ingr != null) {
-                    ingr.text(ingr.text().replace("PREPARATION", ""));
-                    extractSteps(recipe, ingr);
-                }
-
-                do {
-                    if (currentElem.previousElementSibling() != null) {
-                        currentElem = currentElem.previousElementSibling();
-                    } else {
-                        currentElem = currentElem.parent();
-                    }
-                    if (currentElem != null) {
-                        Elements img = currentElem.select("img[data-src]");
-                        if (!img.isEmpty()) {
-                            recipe.setUrlImage(img.first().attr("data-src"));
-                        }
-                    }
-                } while (currentElem != null && !currentElem.is("h3"));
-
-                if (currentElem != null) {
-                    recipe.setName(currentElem.text());
-                }
-                recipe.setUrlVideo(urlVideo);
-                recipes.add(recipe);
-
-
-            }
+        //select element with p or h3 with the exact text ingredients
+        Elements ingredientsElem = document.body().select("p:matches((?i)Ingredients$),h3:matches((?i)Ingredients$)");
+        if (ingredientsElem.size() > 1) {
+            //article with multiple article
+            parseMultipleRecipe(recipes, urlVideo, ingredientsElem);
         } else {
             //article with one recipe and h3 formating
             Recipe recipe = new Recipe();
@@ -80,6 +47,58 @@ public class BuzzFeedParser {
 
 
         return recipes;
+    }
+
+    private static void parseMultipleRecipe(List<Recipe> recipes, String urlVideo, Elements ingredientsElem) {
+        for (Element currentElem : ingredientsElem) {
+            Recipe recipe = new Recipe();
+
+            //ingredients
+            Element ingrElement = currentElem.nextElementSibling();
+            Element stepElement = proceedIngredientElement(recipe,ingrElement);
+
+            //steps
+            //searching stepElement
+            if (stepElement == null || stepElement.select("*:matches((?i)PREPARATION)").isEmpty()) {
+                stepElement = ingrElement.parent().nextElementSibling();
+                Elements select = stepElement.select("h3:matches((?i)PREPARATION)");
+                if (select.isEmpty()) {
+                    Log.w("BF_PARSER", "No steps found for the recipe");
+                } else {
+                    stepElement = select.first();
+                }
+            }
+            if (stepElement != null) {
+                stepElement.text(stepElement.text().replace("PREPARATION", ""));
+                extractSteps(recipe, stepElement);
+            }
+
+            do {
+                if (currentElem.previousElementSibling() != null) {
+                    currentElem = currentElem.previousElementSibling();
+                } else {
+                    currentElem = currentElem.parent();
+                }
+                if (currentElem != null) {
+                    Elements img = currentElem.select("img[data-src]");
+                    if (!img.isEmpty()) {
+                        recipe.setUrlImage(img.first().attr("data-src"));
+                        Elements h3 = currentElem.select("h3");
+                        if (!h3.isEmpty()) {
+                            currentElem = h3.first();
+                        }
+                    }
+                }
+            } while (currentElem != null && !currentElem.is("h3"));
+
+            if (currentElem != null) {
+                recipe.setName(currentElem.text());
+            }
+            recipe.setUrlVideo(urlVideo);
+            recipes.add(recipe);
+
+
+        }
     }
 
     private static void parseSteps(Document document, Recipe recipe) {
@@ -114,9 +133,9 @@ public class BuzzFeedParser {
                     while (!text.isEmpty() && (text.charAt(0) == '.' || Character.isDigit(text.charAt(0)))) {
                         text = text.substring(1);
                     }
-
+                    recipe.getSteps().add(new Step(text.trim(),rank++));
                 }
-                recipe.getSteps().add(new Step(text.trim(),rank++));
+
                 step = step.nextElementSibling();
             }
         }
@@ -148,22 +167,25 @@ public class BuzzFeedParser {
             }
         }
 
-        proceedIngredientElement(recipe, h3Ingredients,false);
+        proceedIngredientElement(recipe, h3Ingredients);
     }
 
-    private static Element proceedIngredientElement(Recipe recipe, Element h3Ingredients,boolean fromMultipleRecipes) {
+    private static Element proceedIngredientElement(Recipe recipe, Element h3Ingredients) {
         if (h3Ingredients == null) {
             return null;
         }
         Element ingr = h3Ingredients.nextElementSibling();
-        while (ingr != null && (fromMultipleRecipes ? !ingr.text().contains("PREPARATION") : !ingr.is("div"))) {
+        while (ingr != null && !ingr.text().contains("PREPARATION") && !ingr.is("div")) {
             if (ingr.is("script")) {
                 ingr = ingr.nextElementSibling();
                 continue;
             }
             String text = ingr.text();
-            if (text.contains("Serves")) {
+            if (text.contains("Serves") || text.contains("Serving")) {
                 text = text.replace("Serves ", "");
+                text = text.replace("Servings", "");
+                text = text.replace("Serving", "");
+                text = text.replace(":", "");
                 recipe.setNbCovers(text.trim());
                 ingr = ingr.nextElementSibling();
                 continue;
@@ -184,6 +206,7 @@ public class BuzzFeedParser {
 
     @NonNull
     private static Ingredient extractIngredient(String text) {
+        //TODO handle "1½"
         text = text.replace("½", "0.5");
         text = text.replace("¼", "0.25");
         text = text.replace("¾", "0.75");
