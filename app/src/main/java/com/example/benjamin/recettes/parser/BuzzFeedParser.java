@@ -27,18 +27,19 @@ public class BuzzFeedParser {
         List<Recipe> recipes = new ArrayList<>();
 
         String urlVideo = parseUrlVideo(document);
+        String mainUrlImage = parseImage(document);
         //select element with p or h3 with the exact text ingredients
         Elements ingredientsElem = document.body().select("p:matches((?i)Ingredients$),h3:matches((?i)Ingredients$)");
         if (ingredientsElem.size() > 1) {
             //article with multiple article
-            parseMultipleRecipe(recipes, urlVideo, ingredientsElem);
+            parseMultipleRecipe(recipes, ingredientsElem, urlVideo, mainUrlImage);
         } else {
             //article with one recipe and h3 formating
             Recipe recipe = new Recipe();
 
             parseName(document, recipe);
             recipe.setUrlVideo(urlVideo);
-            parseImage(document, recipe);
+            recipe.setUrlImage(mainUrlImage);
             parseIngredients(document, recipe);
             parseSteps(document, recipe);
             recipes.add(recipe);
@@ -49,12 +50,12 @@ public class BuzzFeedParser {
         return recipes;
     }
 
-    private static void parseMultipleRecipe(List<Recipe> recipes, String urlVideo, Elements ingredientsElem) {
+    private static void parseMultipleRecipe(List<Recipe> recipes, Elements ingredientsElem, String urlVideo, String mainUrlImage) {
         for (Element currentElem : ingredientsElem) {
             Recipe recipe = new Recipe();
 
             //ingredients
-            Element ingrElement = currentElem.nextElementSibling();
+            Element ingrElement = currentElem;
             Element stepElement = proceedIngredientElement(recipe,ingrElement);
 
             //steps
@@ -73,6 +74,7 @@ public class BuzzFeedParser {
                 extractSteps(recipe, stepElement);
             }
 
+            //searching img element and name element
             do {
                 if (currentElem.previousElementSibling() != null) {
                     currentElem = currentElem.previousElementSibling();
@@ -80,6 +82,10 @@ public class BuzzFeedParser {
                     currentElem = currentElem.parent();
                 }
                 if (currentElem != null) {
+                    Elements servingElem = currentElem.select("*:containsOwn(Serving)");
+                    if (!servingElem.isEmpty()) {
+                        parseNbCovers(recipe,servingElem.first().text());
+                    }
                     Elements img = currentElem.select("img[data-src]");
                     if (!img.isEmpty()) {
                         recipe.setUrlImage(img.first().attr("data-src"));
@@ -95,6 +101,9 @@ public class BuzzFeedParser {
                 recipe.setName(currentElem.text());
             }
             recipe.setUrlVideo(urlVideo);
+            if (SUtils.nullOrEmpty(recipe.getUrlImage())) {
+                recipe.setUrlImage(mainUrlImage);
+            }
             recipes.add(recipe);
 
 
@@ -114,8 +123,9 @@ public class BuzzFeedParser {
                 }
             }
         }
-
-        extractSteps(recipe, h3Steps.nextElementSibling());
+        if (h3Steps != null) {
+            extractSteps(recipe, h3Steps.nextElementSibling());
+        }
     }
 
     private static void extractSteps(Recipe recipe, Element firstStepElement) {
@@ -141,10 +151,11 @@ public class BuzzFeedParser {
         }
     }
 
-    private static void parseImage(Document document, Recipe recipe) {
+    private static String parseImage(Document document) {
         Element imageBalise = document.body().select("img.subbuzz__media-image").first();
         String urlImage = imageBalise.attr("data-src");
-        recipe.setUrlImage(urlImage);
+        return urlImage;
+
     }
 
     private static void parseName(Document document, Recipe recipe) {
@@ -170,23 +181,18 @@ public class BuzzFeedParser {
         proceedIngredientElement(recipe, h3Ingredients);
     }
 
-    private static Element proceedIngredientElement(Recipe recipe, Element h3Ingredients) {
-        if (h3Ingredients == null) {
+    private static Element proceedIngredientElement(Recipe recipe, Element ingElementTitle) {
+        if (ingElementTitle == null) {
             return null;
         }
-        Element ingr = h3Ingredients.nextElementSibling();
+        Element ingr = ingElementTitle.nextElementSibling();
         while (ingr != null && !ingr.text().contains("PREPARATION") && !ingr.is("div")) {
             if (ingr.is("script")) {
                 ingr = ingr.nextElementSibling();
                 continue;
             }
             String text = ingr.text();
-            if (text.contains("Serves") || text.contains("Serving")) {
-                text = text.replace("Serves ", "");
-                text = text.replace("Servings", "");
-                text = text.replace("Serving", "");
-                text = text.replace(":", "");
-                recipe.setNbCovers(text.trim());
+            if (parseNbCovers(recipe, text)) {
                 ingr = ingr.nextElementSibling();
                 continue;
             }
@@ -202,6 +208,18 @@ public class BuzzFeedParser {
             ingr = ingr.nextElementSibling();
         }
         return ingr;
+    }
+
+    private static boolean parseNbCovers(Recipe recipe, String text) {
+        if (text.contains("Serves") || text.contains("Serving")) {
+            text = text.replace("Serves ", "");
+            text = text.replace("Servings", "");
+            text = text.replace("Serving", "");
+            text = text.replace(":", "");
+            recipe.setNbCovers(text.trim());
+            return true;
+        }
+        return false;
     }
 
     @NonNull
