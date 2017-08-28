@@ -16,8 +16,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
-public class HttpRequestTask extends AsyncTask<String,Void,Recipe> {
+public class HttpRequestTask extends AsyncTask<String,Void,List<Recipe>> {
 
 
     private final Context context;
@@ -28,7 +29,7 @@ public class HttpRequestTask extends AsyncTask<String,Void,Recipe> {
     }
 
     @Override
-    protected Recipe doInBackground(String... params) {
+    protected List<Recipe> doInBackground(String... params) {
         String urlStr = params[0];
 
         InputStream inputStream;
@@ -48,12 +49,15 @@ public class HttpRequestTask extends AsyncTask<String,Void,Recipe> {
                 }
                 inputStream.close();
                 String html = builder.toString();
-                Recipe recipe = BuzzFeedParser.parse(html);
-                RecipeDao recipeDao = new RecipeDao(context);
-                recipeDao.open();
-                recipeDao.createOrUpdate(recipe);
-                recipeDao.close();
-                return recipe;
+                List<Recipe> recipes = BuzzFeedParser.parse(html);
+                for (Recipe recipe : recipes) {
+                    RecipeDao recipeDao = new RecipeDao(context);
+                    recipeDao.open();
+                    recipeDao.createOrUpdate(recipe);
+                    recipeDao.close();
+                }
+
+                return recipes;
 
             }
 
@@ -65,8 +69,8 @@ public class HttpRequestTask extends AsyncTask<String,Void,Recipe> {
     }
 
     @Override
-    protected void onPostExecute(Recipe recipe) {
-        super.onPostExecute(recipe);
+    protected void onPostExecute(List<Recipe> recipes) {
+        super.onPostExecute(recipes);
         context.startActivity(new Intent(context,RecipesList.class));
     }
 }
