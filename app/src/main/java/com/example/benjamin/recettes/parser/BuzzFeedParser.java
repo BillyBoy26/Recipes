@@ -21,6 +21,8 @@ import java.util.regex.Pattern;
 public class BuzzFeedParser {
 
 
+    public static final String BF_PARSER = "BF_PARSER";
+
     public static List<Recipe> parse(String html) {
         Document document = Jsoup.parse(html);
 
@@ -64,7 +66,7 @@ public class BuzzFeedParser {
                 stepElement = ingrElement.parent().nextElementSibling();
                 Elements select = stepElement.select("h3:matches((?i)PREPARATION)");
                 if (select.isEmpty()) {
-                    Log.w("BF_PARSER", "No steps found for the recipe");
+                    Log.w(BF_PARSER, "No steps found for the recipe");
                 } else {
                     stepElement = select.first();
                 }
@@ -254,7 +256,7 @@ public class BuzzFeedParser {
                         number += Double.parseDouble(text.substring(index-1,index))  ;
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
-                        Log.w("BF_PARSER", "NumberFormatException happend while extracting ingredient");
+                        Log.w(BF_PARSER, "NumberFormatException happend while extracting ingredient");
                     }
                 }
             }
