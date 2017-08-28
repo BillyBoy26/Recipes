@@ -18,7 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-public class HttpRequestTask extends AsyncTask<String,Void,List<Recipe>> {
+public class HttpRequestTask extends AsyncTask<URL,Void,List<Recipe>> {
 
 
     private final Context context;
@@ -29,12 +29,10 @@ public class HttpRequestTask extends AsyncTask<String,Void,List<Recipe>> {
     }
 
     @Override
-    protected List<Recipe> doInBackground(String... params) {
-        String urlStr = params[0];
-
+    protected List<Recipe> doInBackground(URL... urls) {
+        URL url = urls[0];
         InputStream inputStream;
         try {
-            URL url = new URL(urlStr);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.connect();

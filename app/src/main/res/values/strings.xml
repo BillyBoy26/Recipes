@@ -57,4 +57,7 @@
     <string name="recipe_list_already_clear">La liste de recettes est déja vide</string>
     <string name="recipes_list_cleared">Liste de recettes a été vidé</string>
     <string name="url_video">URL de la vidéo</string>
+    <string name="url_not_valid">L\'url renseignée n\'est pas valide</string>
+    <string name="please_inform_url">Veuillez renseigner une url</string>
+    <string name="site_not_allowed">Le site n\'est pas géré par l\'application</string>
 </resources>
