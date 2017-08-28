@@ -224,12 +224,12 @@ public class BuzzFeedParser {
 
     @NonNull
     private static Ingredient extractIngredient(String text) {
-        //TODO handle "1½"
-        text = text.replace("½", "0.5");
-        text = text.replace("¼", "0.25");
-        text = text.replace("¾", "0.75");
-        text = text.replace("⅓", "0.3");
-        text = text.replace("⅔", "0.6");
+
+        text = replaceSpecialNumberChar(text, "½", 0.5);
+        text = replaceSpecialNumberChar(text, "¼", 0.25);
+        text = replaceSpecialNumberChar(text, "¾", 0.75);
+        text = replaceSpecialNumberChar(text, "⅓", 0.3);
+        text = replaceSpecialNumberChar(text, "⅔", 0.6);
 
         float quantity = -1;
         //get decimal number
@@ -242,6 +242,26 @@ public class BuzzFeedParser {
         }
         String nameIngr = text;
         return new Ingredient(nameIngr, -1, quantity);
+    }
+
+    private static String replaceSpecialNumberChar(String text, String specialChar, double specialCharValue) {
+        if (text.contains(specialChar)) {
+            int index = text.indexOf(specialChar);
+            double number = 0;
+            if (index > 0) {
+                if (Character.isDigit(text.charAt(index - 1))) {
+                    try {
+                        number += Double.parseDouble(text.substring(index-1,index))  ;
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        Log.w("BF_PARSER", "NumberFormatException happend while extracting ingredient");
+                    }
+                }
+            }
+            number += specialCharValue;
+            text = text.replaceAll("[1-9]?" + specialChar, Double.toString(number));
+        }
+        return text;
     }
 
     private static String parseUrlVideo(Document document) {
