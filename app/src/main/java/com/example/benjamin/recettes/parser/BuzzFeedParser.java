@@ -3,6 +3,7 @@ package com.example.benjamin.recettes.parser;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.data.Step;
+import com.example.benjamin.recettes.utils.SUtils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -20,11 +21,22 @@ public class BuzzFeedParser {
         Recipe recipe = new Recipe();
 
         parseName(document, recipe);
+        parseUrlVideo(document, recipe);
         parseImage(document, recipe);
         parseIngredients(document, recipe);
         parseSteps(document, recipe);
 
         return recipe;
+    }
+
+    private static void parseUrlVideo(Document document, Recipe recipe) {
+        Element aElement = document.body().select("a.subbuzz-youtube__thumb").first();
+        if (aElement != null) {
+            String urlVideo = aElement.attr("href");
+            if (SUtils.notNullOrEmpty(urlVideo)) {
+                recipe.setUrlVideo(urlVideo);
+            }
+        }
     }
 
     private static void parseSteps(Document document, Recipe recipe) {
@@ -50,8 +62,14 @@ public class BuzzFeedParser {
                     continue;
                 }
                 String text = step.text();
-                //get decimal number
-                recipe.getSteps().add(new Step(text,rank++));
+                if (SUtils.notNullOrEmpty(text)) {
+                    while (Character.isDigit(text.charAt(0)) || text.charAt(0) == '.' || text.charAt(0) =='#') {
+                        text = text.substring(1);
+                    }
+
+                    //get decimal number
+                    recipe.getSteps().add(new Step(text.trim(),rank++));
+                }
                 step = step.nextElementSibling();
             }
         }
@@ -87,6 +105,12 @@ public class BuzzFeedParser {
             Element ingr = h3Ingredients.nextElementSibling();
             while (ingr != null && !ingr.is("div")) {
                 if (ingr.is("script")) {
+                    ingr = ingr.nextElementSibling();
+                    continue;
+                }
+                Element elemInIngr = ingr.children().first();
+                if (elemInIngr != null && elemInIngr.is("b")) {
+                    //subSession
                     ingr = ingr.nextElementSibling();
                     continue;
                 }
