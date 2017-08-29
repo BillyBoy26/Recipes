@@ -60,4 +60,7 @@
     <string name="url_not_valid">L\'url renseignée n\'est pas valide</string>
     <string name="please_inform_url">Veuillez renseigner une url</string>
     <string name="site_not_allowed">Le site n\'est pas géré par l\'application</string>
+    <string name="url_to_import">Url du site à importer</string>
+    <string name="import_from_bookmarks_file">Importer à partir d\'un fichier de favoris</string>
+    <string name="delete_all_recipes">Supprimer toutes les recettes</string>
 </resources>

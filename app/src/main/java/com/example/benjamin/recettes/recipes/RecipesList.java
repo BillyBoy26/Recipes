@@ -7,6 +7,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.example.benjamin.recettes.DrawerActivity;
@@ -78,5 +80,27 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
         Intent intent = new Intent(RecipesList.this, RecipeCreate.class);
         intent.putExtra(RecipeCreate.CURRENT_RECIPE, recipe);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar_recipe_list,menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                deleteAllRecipe();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteAllRecipe() {
+        recipeDao.deleteAll();
+        adapter.setDatas(null);
     }
 }
