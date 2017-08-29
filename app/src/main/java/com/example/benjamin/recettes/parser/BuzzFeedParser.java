@@ -206,7 +206,7 @@ public class BuzzFeedParser {
                 continue;
             }
             Ingredient ingrObject = extractIngredient(text);
-            recipe.getIngredients().add(ingrObject);
+            recipe.addIngredient(ingrObject);
             ingr = ingr.nextElementSibling();
         }
         return ingr;

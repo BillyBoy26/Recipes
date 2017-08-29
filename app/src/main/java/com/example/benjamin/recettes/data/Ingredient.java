@@ -1,11 +1,11 @@
 package com.example.benjamin.recettes.data;
 
+import android.util.Log;
+
 import java.io.Serializable;
 
 public class Ingredient implements Serializable, HasName{
 
-    public static final String SEP_ATTRIBUTE = ";";
-    public static final String SEP_END = "§";
     public Long id;
     private String name;
     private String quantityUnit = "";
@@ -87,4 +87,27 @@ public class Ingredient implements Serializable, HasName{
     public void setId(Long id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Ingredient{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", quantityUnit='" + quantityUnit + '\'' +
+                ", quantity=" + quantity +
+                '}';
+    }
+
+    /**
+     * @return true if merged
+     */
+    public boolean mergeIngredient(Ingredient ingredient) {
+        if (ingredient.getQuantityUnit().equalsIgnoreCase(this.getQuantityUnit())) {
+            this.setQuantity(this.getQuantity() + ingredient.getQuantity());
+            return true;
+        }
+        Log.i("INGREDIENT", "Trying to merge two ingredient with different unit " + ingredient.toString() + ", " + this.toString());
+        return false;
+    }
+
 }

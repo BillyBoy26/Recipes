@@ -169,6 +169,7 @@ public class IngredientDao extends GenericDao {
         }
     }
 
+
     public @NonNull Map<Long, List<Ingredient>> fetchIngredientsByRecId(List<String> idsRec) {
         if (CollectionUtils.nullOrEmpty(idsRec)) {
             return new HashMap<>();

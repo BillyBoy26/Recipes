@@ -84,5 +84,19 @@ public class IngredientAdapter extends BasicListAdapter<Ingredient,IngredientAda
 
     }
 
-
+    @Override
+    public boolean addItem(Ingredient data) {
+        if (!datas.contains(data)) {
+            datas.add(data);
+            notifyItemInserted(datas.size() - 1);
+            return true;
+        }
+        int position = datas.indexOf(data);
+        Ingredient firstIngredient = datas.get(position);
+        if (firstIngredient.mergeIngredient(data)) {
+            notifyItemChanged(position);
+            return true;
+        }
+        return false;
+    }
 }

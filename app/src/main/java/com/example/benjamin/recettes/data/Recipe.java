@@ -6,6 +6,8 @@ import java.util.List;
 
 public class Recipe implements Serializable, HasName{
 
+
+
     public enum RecipeFiller{
         WITH_STEPS, WITH_ING
     }
@@ -196,4 +198,18 @@ public class Recipe implements Serializable, HasName{
     public void setUrlImage5(String urlImage5) {
         this.urlImage5 = urlImage5;
     }
+
+    public void addIngredient(Ingredient ingredient) {
+        if (ingredients == null) {
+            ingredients = new ArrayList<>();
+        }
+        if (ingredients.contains(ingredient)) {
+            Ingredient firstIngredient = ingredients.get(ingredients.indexOf(ingredient));
+            firstIngredient.mergeIngredient(ingredient);
+        } else {
+            ingredients.add(ingredient);
+        }
+    }
+
+
 }
