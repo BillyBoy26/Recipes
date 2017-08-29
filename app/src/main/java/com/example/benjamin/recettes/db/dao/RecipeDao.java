@@ -247,4 +247,7 @@ public class RecipeDao extends GenericDao{
         }
     }
 
+    public void deleteAll() {
+        db.delete(TRecipe.T_RECIPE,null, null);
+    }
 }
