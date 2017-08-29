@@ -1,34 +1,39 @@
 package com.example.benjamin.recettes.importData;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
+import com.example.benjamin.recettes.task.BookmarksLoadTask;
 import com.example.benjamin.recettes.task.HttpRequestTask;
 import com.example.benjamin.recettes.utils.SUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
+
+import static com.example.benjamin.recettes.importData.HttpImportHelper.HOST_ALLOWED;
 
 public class RecipeImport extends DrawerActivity {
 
+    public static final int UPLOAD_FILE_CODE = 1;
     private EditText txtUrl;
-    private static final List<String> HOST_ALLOWED = Arrays.asList("buzzfeed.com");
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         getNavigationView().setCheckedItem(R.id.nav_import);
-        setContent(R.layout.import_recipe_layout);
+        setContent(R.layout.recipe_import_layout);
         txtUrl = (EditText) findViewById(R.id.importUrl);
 
 
@@ -43,7 +48,7 @@ public class RecipeImport extends DrawerActivity {
                 }
                 try {
                     URL url = new URL(txtUrl.getText().toString());
-                    if (!HOST_ALLOWED.contains(getDomainName(url.getHost()))) {
+                    if (!HOST_ALLOWED.contains(HttpImportHelper.getDomainName(url.getHost()))) {
                         Toast.makeText(RecipeImport.this, R.string.site_not_allowed, Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -54,10 +59,30 @@ public class RecipeImport extends DrawerActivity {
                 }
             }
         });
+
+        Button button = (Button) findViewById(R.id.btnBookmarks);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                startActivityForResult(intent, UPLOAD_FILE_CODE);
+            }
+        });
+
+
     }
 
-    public static String getDomainName(String host) {
-        return host.startsWith("www.") ? host.substring(4) : host;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == UPLOAD_FILE_CODE && resultCode == Activity.RESULT_OK) {
+            if (data != null && data.getData() != null) {
+                new BookmarksLoadTask(RecipeImport.this).execute(data.getData());
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
+
+
 
 }

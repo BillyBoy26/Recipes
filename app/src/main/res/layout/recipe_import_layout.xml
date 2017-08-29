@@ -11,9 +11,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/importUrl"
-            android:hint="Url du site à importer"
+            android:hint="@string/url_to_import"
             android:inputType="textUri" />
 
     </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnBookmarks"
+        android:text="@string/import_from_bookmarks_file"/>
 
 </LinearLayout>

@@ -165,7 +165,7 @@ public class IngredientDao extends GenericDao {
             contentValues.put(TJIngRecipe.C_ID_ING, ingredient.getId());
             contentValues.put(TJIngRecipe.C_QUANTITY,ingredient.getQuantity());
             contentValues.put(TJIngRecipe.C_QUANTITY_UNIT,ingredient.getQuantityUnit());
-            db.insert(TJIngRecipe.TJ_ING_RECIPE, null, contentValues);
+            db.insertOrThrow(TJIngRecipe.TJ_ING_RECIPE, null, contentValues);
         }
     }
 
