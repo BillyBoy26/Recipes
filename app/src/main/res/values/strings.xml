@@ -63,4 +63,6 @@
     <string name="url_to_import">Url du site à importer</string>
     <string name="import_from_bookmarks_file">Importer à partir d\'un fichier de favoris</string>
     <string name="delete_all_recipes">Supprimer toutes les recettes</string>
+    <string name="loading">Chargement</string>
+    <string name="currently_loading_file">Nous sommes en train de charger votre fichier, cela peut prendre un certain temps…</string>
 </resources>

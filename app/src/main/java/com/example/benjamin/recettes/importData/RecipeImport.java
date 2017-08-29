@@ -1,6 +1,7 @@
 package com.example.benjamin.recettes.importData;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -78,6 +79,7 @@ public class RecipeImport extends DrawerActivity {
         if (requestCode == UPLOAD_FILE_CODE && resultCode == Activity.RESULT_OK) {
             if (data != null && data.getData() != null) {
                 new BookmarksLoadTask(RecipeImport.this).execute(data.getData());
+                ProgressDialog.show(this, getString(R.string.loading), getString(R.string.currently_loading_file));
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
