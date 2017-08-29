@@ -39,7 +39,10 @@ public class BuzzFeedParser {
         String urlVideo = parseUrlVideo(document);
         String mainUrlImage = parseImage(document);
         //select element with p or h3 with the exact text ingredients
-        Elements ingredientsElem = document.body().select("p:matches((?i)Ingredients$),h3:matches((?i)Ingredients$)");
+        Elements ingredientsElem = document.body().select(
+                "p:matches((?i)Ingredients$)" +
+                ",h3:matches((?i)Ingredients$)" +
+                ",h3:matches((?i)what you will need)");
         if (ingredientsElem.size() > 1) {
             //article with multiple article
             parseMultipleRecipe(recipes, ingredientsElem, urlVideo, mainUrlImage);
@@ -103,7 +106,7 @@ public class BuzzFeedParser {
             //searching stepElement
             if (stepElement == null || stepElement.select("*:matches((?i)PREPARATION)").isEmpty()) {
                 stepElement = ingrElement.parent().nextElementSibling();
-                Elements select = stepElement.select("h3:matches((?i)PREPARATION)");
+                Elements select = stepElement.select("h3:matches((?i)PREPARATION),h3:matches((?i)Directions)");
                 if (select.isEmpty()) {
                     Log.w(BF_PARSER, "No steps found for the recipe");
                 } else {
@@ -145,7 +148,8 @@ public class BuzzFeedParser {
         for (Element h3 : h3s) {
             if (h3.children().is("span")) {
                 for (Element el : h3.children()) {
-                    if (el.text().trim().equalsIgnoreCase("PREPARATION")) {
+                    String text = el.text().trim();
+                    if (text.equalsIgnoreCase("PREPARATION") || text.contains("Directions")) {
                         h3Steps = h3;
                         break;
                     }
@@ -199,7 +203,8 @@ public class BuzzFeedParser {
         for (Element h3 : h3s) {
             if (h3.children().is("span")) {
                 for (Element el : h3.children()) {
-                    if (el.text().trim().equalsIgnoreCase("INGREDIENTS")) {
+                    String text= el.text().trim();
+                    if (text.equalsIgnoreCase("INGREDIENTS") || text.contains("Here's what you will need")) {
                         h3Ingredients = h3;
                         break;
                     }
@@ -240,12 +245,14 @@ public class BuzzFeedParser {
     }
 
     private  boolean parseNbCovers(Recipe recipe, String text) {
-        if (text.contains("Serves") || text.contains("Serving")) {
-            text = text.replace("Serves ", "");
-            text = text.replace("Servings", "");
-            text = text.replace("Serving", "");
-            text = text.replace(":", "");
-            recipe.setNbCovers(text.trim());
+        String textLowerCaser = text.toLowerCase();
+        if (textLowerCaser.contains("serves") || textLowerCaser.contains("serving")) {
+            textLowerCaser = textLowerCaser.replace("serves ", "");
+            textLowerCaser = textLowerCaser.replace("servings", "");
+            textLowerCaser = textLowerCaser.replace("serving", "");
+            textLowerCaser = textLowerCaser.replace("yields", "");
+            textLowerCaser = textLowerCaser.replace(":", "");
+            recipe.setNbCovers(textLowerCaser.trim());
             return true;
         }
         return false;
@@ -259,6 +266,7 @@ public class BuzzFeedParser {
         text = replaceSpecialNumberChar(text, "¾", 0.75);
         text = replaceSpecialNumberChar(text, "⅓", 0.3);
         text = replaceSpecialNumberChar(text, "⅔", 0.6);
+        text = text.replace("*", "");
 
         float quantity = -1;
         //get decimal number
@@ -269,7 +277,7 @@ public class BuzzFeedParser {
             quantity = Float.valueOf(qteStr);
             text = text.replace(qteStr, "");
         }
-        String nameIngr = text;
+        String nameIngr = text.trim();
         return new Ingredient(nameIngr, -1, quantity);
     }
 

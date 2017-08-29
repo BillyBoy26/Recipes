@@ -27,7 +27,7 @@ public class HttpRequestTask extends AsyncTask<URL,Void,List<Recipe>> {
     protected List<Recipe> doInBackground(URL... urls) {
         URL url = urls[0];
         List<Recipe> recipes = HttpImportHelper.requestUrlAndCreateRecipes(url,context);
-        Log.i(HTTP_REQUEST_TASK, recipes.size() + " recipes imported");
+        Log.i(HTTP_REQUEST_TASK, (recipes != null ? recipes.size():0) + " recipes imported");
         return recipes;
     }
 
@@ -35,7 +35,7 @@ public class HttpRequestTask extends AsyncTask<URL,Void,List<Recipe>> {
     protected void onPostExecute(List<Recipe> recipes) {
         super.onPostExecute(recipes);
         Intent intent = new Intent(context, RecipesList.class);
-        intent.putExtra(RecipesList.NB_RECIPES_IMPORTED, recipes.size());
+        intent.putExtra(RecipesList.NB_RECIPES_IMPORTED, (recipes != null ? recipes.size():0));
         context.startActivity(intent);
     }
 }
