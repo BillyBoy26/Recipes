@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.importData.HttpImportHelper;
@@ -23,6 +24,7 @@ import java.util.List;
 
 public class BookmarksLoadTask extends AsyncTask<Uri,Void,List<Recipe>> {
 
+    public static final String BOOKMARKS_LOAD_TASK = "BOOKMARKS_LOAD_TASK";
     private final Context context;
 
     public BookmarksLoadTask(Context context) {
@@ -43,7 +45,7 @@ public class BookmarksLoadTask extends AsyncTask<Uri,Void,List<Recipe>> {
                         if (HttpImportHelper.HOST_ALLOWED.contains(HttpImportHelper.getDomainName(url.getHost()))) {
                                 List<Recipe> importedRecipes = HttpImportHelper.requestUrlAndCreateRecipes(url, context);
                                 if (importedRecipes != null) {
-                                    recipes.addAll(recipes);
+                                    recipes.addAll(importedRecipes);
                                 }
                         }
                     } catch (MalformedURLException e) {
@@ -52,6 +54,7 @@ public class BookmarksLoadTask extends AsyncTask<Uri,Void,List<Recipe>> {
                 }
             }
         }
+        Log.i(BOOKMARKS_LOAD_TASK, recipes.size() + " recipes imported");
         return recipes;
     }
 
@@ -83,6 +86,8 @@ public class BookmarksLoadTask extends AsyncTask<Uri,Void,List<Recipe>> {
     @Override
     protected void onPostExecute(List<Recipe> recipes) {
         super.onPostExecute(recipes);
-        context.startActivity(new Intent(context,RecipesList.class));
+        Intent intent = new Intent(context, RecipesList.class);
+        intent.putExtra(RecipesList.NB_RECIPES_IMPORTED, recipes.size());
+        context.startActivity(intent);
     }
 }

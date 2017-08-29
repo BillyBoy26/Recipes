@@ -65,4 +65,5 @@
     <string name="delete_all_recipes">Supprimer toutes les recettes</string>
     <string name="loading">Chargement</string>
     <string name="currently_loading_file">Nous sommes en train de charger votre fichier, cela peut prendre un certain temps…</string>
+    <string name="imported_recipes">recettes importées</string>
 </resources>

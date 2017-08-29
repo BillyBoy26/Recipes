@@ -56,24 +56,22 @@ public class HttpImportHelper {
                 }
                 inputStream.close();
                 String html = builder.toString();
-                List<Recipe> recipes = BuzzFeedParser.parse(html);
+                List<Recipe> recipes = new BuzzFeedParser(html,url).parse();
 
-                    if (CollectionUtils.notNullOrEmpty(recipes)) {
-                        RecipeDao recipeDao = new RecipeDao(context);
-                        recipeDao.open();
-                        for (Recipe recipe : recipes) {
-                            try {
-                                recipeDao.createOrUpdate(recipe);
-                            }catch (Exception e) {
-                                Log.e(HTTP_IMPORT_HELPER, "Error while creating recipe (" + recipe.getName() + ")" + e.getMessage());
-                                e.printStackTrace();
-                            }
+                if (CollectionUtils.notNullOrEmpty(recipes)) {
+                    RecipeDao recipeDao = new RecipeDao(context);
+                    recipeDao.open();
+                    for (Recipe recipe : recipes) {
+                        try {
+                            recipeDao.createOrUpdate(recipe);
+                        }catch (Exception e) {
+                            Log.e(HTTP_IMPORT_HELPER, "Error while creating recipe (" + recipe.getName() + ")" + e.getMessage());
+                            e.printStackTrace();
                         }
-                        recipeDao.close();
-
                     }
+                    recipeDao.close();
 
-
+                }
                 return recipes;
             }
 

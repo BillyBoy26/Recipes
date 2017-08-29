@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
@@ -23,6 +24,7 @@ import java.util.List;
 
 public class RecipesList extends DrawerActivity implements LoaderManager.LoaderCallbacks<List<Recipe>>,RecyclerViewClickListener{
 
+    public static final String NB_RECIPES_IMPORTED = "NB_RECIPES_IMPORTED";
 
     private RecipeAdapter adapter;
     private RecipeDao recipeDao;
@@ -35,7 +37,11 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
 
         recipeDao = new RecipeDao(this);
         initDaos(recipeDao);
-
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.get(NB_RECIPES_IMPORTED) != null) {
+            int nbRecipesImported = (int) extras.get(NB_RECIPES_IMPORTED);
+            Toast.makeText(this, nbRecipesImported + " " + getString(R.string.imported_recipes), Toast.LENGTH_SHORT).show();
+        }
 
         getSupportLoaderManager().initLoader(AsyncTaskDataLoader.getNewUniqueLoaderId(), null, this);
 
