@@ -271,6 +271,10 @@ public class BuzzFeedParser {
         if (aElement != null) {
             return aElement.attr("href");
         }
+        Element videoElement = document.body().select("figure a[href*=https://www.facebook.com/video.php]").first();
+        if (videoElement != null) {
+            return videoElement.attr("href");
+        }
         return "";
     }
 
