@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.benjamin.recettes.R;
@@ -30,7 +29,7 @@ public class IngredientAdapter extends BasicListAdapter<Ingredient,IngredientAda
 
     @Override
     public IngredientViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.ingredient_card, parent,false);
+        View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.ingredient_item, parent,false);
         final IngredientViewHolder viewHolder = new IngredientViewHolder(cardView);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,21 +54,16 @@ public class IngredientAdapter extends BasicListAdapter<Ingredient,IngredientAda
 
         private final TextView textViewName;
         private final TextView textViewQuantity;
-        private final ImageView imageView;
 
         public IngredientViewHolder(View itemView) {
             super(itemView);
             textViewName = (TextView) itemView.findViewById(R.id.textViewName);
             textViewQuantity = (TextView) itemView.findViewById(R.id.textViewQuant);
-            imageView = (ImageView) itemView.findViewById(R.id.imageView);
 
         }
 
         public void bind(Ingredient ingredient) {
-            textViewName.setText(ingredient.getName());
-            if (ingredient.getImage() > 0) {
-//            imageView.setImageResource(R.drawable.ic_cake_white_24dp);
-            }
+            textViewName.setText(SUtils.capitalize(ingredient.getName()));
             if (ingredient.getQuantity() != null && ingredient.getQuantity() > 0) {
                 String quantity = NumberFormat.getInstance().format((ingredient.getQuantity()));
                 if (SUtils.notNullOrEmpty(ingredient.getQuantityUnit())) {

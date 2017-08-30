@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_width="130dp"
-    android:layout_height="130dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="5dp"
     app:cardBackgroundColor="#9FA8DA"
     app:cardCornerRadius="2dp"
@@ -17,29 +17,15 @@
         android:layout_gravity="center"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/image1"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_gravity="center"
+        <!--<ImageView-->
+            <!--android:id="@+id/image1"-->
+            <!--android:layout_width="75dp"-->
+            <!--android:layout_height="75dp"-->
+            <!--android:layout_gravity="center"-->
 
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_cake_white_24dp" />
+            <!--android:scaleType="centerCrop"-->
+            <!--android:src="@drawable/ic_cake_white_24dp" />-->
 
-        <TextView
-            android:id="@+id/textViewQuant"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:lines="1"
-            android:text="quantity"
-            android:padding="2dp"
-            android:textAlignment="center"
-            android:textColor="#E0E0E0"
-            android:textSize="12sp"
-
-            />
 
         <TextView
             android:id="@+id/textViewName"
@@ -47,12 +33,23 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:fontFamily="sans-serif"
-            android:gravity="center"
             android:lines="1"
             android:text="@string/ingredient"
-            android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/textViewQuant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:lines="1"
+            android:text="quantity"
+            android:padding="2dp"
+            android:textColor="#E0E0E0"
+            android:textSize="12sp"
+
+            />
 
 
     </LinearLayout>

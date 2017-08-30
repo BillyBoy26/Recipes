@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
@@ -15,6 +15,7 @@ import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.recipes.createForm.IngredientAdapter;
 import com.example.benjamin.recettes.recipes.createForm.IngredientWidgetBuilder;
+import com.example.benjamin.recettes.views.SimpleItemDividerDecoration;
 
 import java.util.List;
 
@@ -37,7 +38,8 @@ public class FrgShoppingList extends Fragment {
         View shoppingView = inflater.inflate(R.layout.shopping_list, container, false);
         initAdapter();
         RecyclerView recyclerView = (RecyclerView) shoppingView.findViewById(R.id.recyclerIngredient);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addItemDecoration(new SimpleItemDividerDecoration(getContext()));
         recyclerView.setAdapter(adapter);
 
 
