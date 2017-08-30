@@ -7,10 +7,5 @@
         android:icon="@drawable/ic_sort_by_alpha_white_24dp"
         android:title="@string/sort_by_alpha"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_delete"
-        android:orderInCategory="200"
-        android:title="@string/delete_all_recipes"
-        app:showAsAction="never" />
 
 </menu>

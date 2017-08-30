@@ -8,6 +8,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.example.benjamin.recettes.DrawerActivity;
@@ -17,6 +19,7 @@ import com.example.benjamin.recettes.db.dao.RecipeGroupDao;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class RecipeGroupList extends DrawerActivity implements LoaderManager.LoaderCallbacks<List<RecipeGroup>>,RecyclerViewClickListener {
@@ -24,6 +27,7 @@ public class RecipeGroupList extends DrawerActivity implements LoaderManager.Loa
     private RecipeGroupDao recipeGroupDao;
     private List<RecipeGroup> recipeGroups;
     private RecipeGroupAdapter recGroupAdapter;
+    private boolean sortByAlpha = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,5 +80,41 @@ public class RecipeGroupList extends DrawerActivity implements LoaderManager.Loa
         Intent intent = new Intent(RecipeGroupList.this, RecipeGroupCreate.class);
         intent.putExtra(RecipeGroupCreate.CURRENT_GROUP, recipeGroups.get(position));
         startActivity(intent);
+    }
+
+    private void sortByAlpha() {
+        recGroupAdapter.sort(new Comparator<RecipeGroup>() {
+            @Override
+            public int compare(RecipeGroup o1, RecipeGroup o2) {
+                if (o1.getName() == null) {
+                    return 1;
+                }
+                if (o2.getName() == null) {
+                    return -1;
+                }
+                if (sortByAlpha) {
+                    return o1.getName().toUpperCase().compareTo(o2.getName().toUpperCase());
+                } else {
+                    return o2.getName().toUpperCase().compareTo(o1.getName().toUpperCase());
+                }
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu){
+        getMenuInflater().inflate(R.menu.menu_toolbar_recipe_group_list, menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item){
+        switch (item.getItemId()) {
+            case R.id.action_sort_alpha:
+                sortByAlpha();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -90,7 +90,7 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
 
     public void fillRecipeView() {
         if (recipe != null && txtName != null) {
-            txtName.setText(recipe.getName());
+            txtName.setText(SUtils.capitalize(recipe.getName()));
             txtTimeCook.setText(recipe.getCookTime());
             txtNbCovers.setText(recipe.getNbCovers());
             txtTotalTime.setText(recipe.getTotalTime());

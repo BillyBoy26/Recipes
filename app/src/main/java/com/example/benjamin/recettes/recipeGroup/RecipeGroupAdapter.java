@@ -10,6 +10,7 @@ import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.data.RecipeGroup;
 import com.example.benjamin.recettes.utils.CollectionUtils;
+import com.example.benjamin.recettes.utils.SUtils;
 import com.example.benjamin.recettes.views.BasicListAdapter;
 import com.example.benjamin.recettes.views.ClickableViewHolder;
 import com.example.benjamin.recettes.views.RecyclerViewClickListener;
@@ -46,7 +47,7 @@ public class RecipeGroupAdapter extends BasicListAdapter<RecipeGroup,RecipeGroup
         }
 
         public void bind(RecipeGroup recipeGroup) {
-            txtName.setText(recipeGroup.getName());
+            txtName.setText(SUtils.capitalize(recipeGroup.getName()));
 
             if (CollectionUtils.nullOrEmpty(recipeGroup.getRecipes())) {
                 image.setImageResource(R.drawable.defaut_recipe);

@@ -48,8 +48,7 @@ public class RecipeAdapter extends BasicListAdapter<Recipe,RecipeAdapter.RecipeV
         }
 
         public void bind(Recipe recipe) {
-            textView.setText(recipe.getName());
-
+            textView.setText(SUtils.capitalize(recipe.getName()));
             if (SUtils.notNullOrEmpty(recipe.getUrlImage())) {
                 Picasso.with(imageView.getContext()).load(recipe.getUrlImage()).centerCrop().fit().into(imageView);
             } else {

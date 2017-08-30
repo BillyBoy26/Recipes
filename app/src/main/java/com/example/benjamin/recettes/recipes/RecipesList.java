@@ -20,6 +20,7 @@ import com.example.benjamin.recettes.recipes.createForm.RecipeCreate;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class RecipesList extends DrawerActivity implements LoaderManager.LoaderCallbacks<List<Recipe>>,RecyclerViewClickListener{
@@ -28,6 +29,7 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
 
     private RecipeAdapter adapter;
     private RecipeDao recipeDao;
+    private boolean sortByAlpha = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,8 +103,31 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
             case R.id.action_delete:
                 deleteAllRecipe();
                 break;
+            case R.id.action_sort_alpha:
+                sortByAlpha();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void sortByAlpha() {
+        adapter.sort(new Comparator<Recipe>() {
+            @Override
+            public int compare(Recipe o1, Recipe o2) {
+                if (o1.getName() == null) {
+                    return 1;
+                }
+                if (o2.getName() == null) {
+                    return -1;
+                }
+                if (sortByAlpha) {
+                    return o1.getName().toUpperCase().compareTo(o2.getName().toUpperCase());
+                } else {
+                    return o2.getName().toUpperCase().compareTo(o1.getName().toUpperCase());
+                }
+            }
+        });
+        sortByAlpha = !sortByAlpha;
     }
 
     private void deleteAllRecipe() {

@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.RecipeGroup;
+import com.example.benjamin.recettes.utils.SUtils;
 
 public class FrgGroupGeneral extends Fragment {
     private EditText txtName;
@@ -32,7 +33,7 @@ public class FrgGroupGeneral extends Fragment {
 
     public void fillView(RecipeGroup recGroup) {
         this.recipeGroup = recGroup;
-        txtName.setText(this.recipeGroup.getName());
+        txtName.setText(SUtils.capitalize(this.recipeGroup.getName()));
 
     }
 }

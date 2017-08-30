@@ -4,8 +4,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.example.benjamin.recettes.utils.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public abstract class BasicListAdapter<T,V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V> {
@@ -68,4 +71,11 @@ public abstract class BasicListAdapter<T,V extends RecyclerView.ViewHolder> exte
         return datas.get(position);
     }
 
+    public void sort(Comparator<? super T> comparator) {
+        if (CollectionUtils.nullOrEmpty(datas)) {
+            return;
+        }
+        Collections.sort(datas, comparator);
+        notifyDataSetChanged();
+    }
 }
