@@ -149,7 +149,7 @@ public class BuzzFeedParser {
             if (h3.children().is("span")) {
                 for (Element el : h3.children()) {
                     String text = el.text().trim();
-                    if (text.equalsIgnoreCase("PREPARATION") || text.contains("Directions")) {
+                    if (text.equalsIgnoreCase("PREPARATION") || text.contains("Directions") || text.contains("Here's what you'll do") || text.contains("Here's what you will do")) {
                         h3Steps = h3;
                         break;
                     }
@@ -204,7 +204,7 @@ public class BuzzFeedParser {
             if (h3.children().is("span")) {
                 for (Element el : h3.children()) {
                     String text= el.text().trim();
-                    if (text.equalsIgnoreCase("INGREDIENTS") || text.contains("Here's what you will need")) {
+                    if (text.equalsIgnoreCase("INGREDIENTS") || text.contains("Here's what you will need") || text.contains("Here's what you'll need")) {
                         h3Ingredients = h3;
                         break;
                     }
@@ -267,6 +267,7 @@ public class BuzzFeedParser {
         text = replaceSpecialNumberChar(text, "⅓", 0.3);
         text = replaceSpecialNumberChar(text, "⅔", 0.6);
         text = text.replace("*", "");
+        text = text.replace("#", "");
 
         float quantity = -1;
         //get decimal number
