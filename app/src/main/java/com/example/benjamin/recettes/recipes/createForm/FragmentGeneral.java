@@ -1,14 +1,21 @@
 package com.example.benjamin.recettes.recipes.createForm;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Category;
@@ -35,6 +42,7 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
     private ImageInputView imageView3;
     private ImageInputView imageView4;
     private ImageInputView imageView5;
+    private TextView lblUrlVideo;
 
     @Nullable
     @Override
@@ -52,6 +60,7 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
         txtUrlVideo = (EditText) generalView.findViewById(R.id.url_video);
         txtTimePrepare = (EditText) generalView.findViewById(R.id.time_prepare);
         txtTotalTime = (EditText) generalView.findViewById(R.id.time_total);
+        lblUrlVideo = (TextView) generalView.findViewById(R.id.lblUrlVideo);
         pnlCategories = (FlexboxLayout) generalView.findViewById(R.id.pnlCategories);
         ImageView btnAddCat = (ImageView) generalView.findViewById(R.id.iconAddCat);
         btnAddCat.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +76,40 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
             }
         });
         fillRecipeView();
+
+        txtUrlVideo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String url = txtUrlVideo.getText().toString();
+                lblUrlVideo.setText(url);
+                if (URLUtil.isValidUrl(url)) {
+                    lblUrlVideo.setTextColor(Color.MAGENTA);
+                } else {
+                    lblUrlVideo.setTextColor(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        lblUrlVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = lblUrlVideo.getText().toString();
+                if (SUtils.notNullOrEmpty(url) && URLUtil.isValidUrl(url)) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(browserIntent);
+                }
+            }
+        });
         return generalView;
     }
 
@@ -96,6 +139,7 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
             txtTotalTime.setText(recipe.getTotalTime());
             txtTimePrepare.setText(recipe.getPrepareTime());
             txtUrlVideo.setText(recipe.getUrlVideo());
+            lblUrlVideo.setText(recipe.getUrlVideo());
             if (recipe.getUrlImage() != null) {
                 new DownloadImageTask(imageView).execute(recipe.getUrlImage());
             }
