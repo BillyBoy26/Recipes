@@ -1,6 +1,10 @@
 package com.example.benjamin.recettes.recipes.createForm;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,26 +57,26 @@ public class IngredientAdapter extends BasicListAdapter<Ingredient,IngredientAda
     public class IngredientViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView textViewName;
-        private final TextView textViewQuantity;
 
         public IngredientViewHolder(View itemView) {
             super(itemView);
             textViewName = (TextView) itemView.findViewById(R.id.textViewName);
-            textViewQuantity = (TextView) itemView.findViewById(R.id.textViewQuant);
 
         }
 
         public void bind(Ingredient ingredient) {
-            textViewName.setText(SUtils.capitalize(ingredient.getName()));
+            String ingrName = SUtils.capitalize(ingredient.getName());
+            String ingrQuantity = "";
             if (ingredient.getQuantity() != null && ingredient.getQuantity() > 0) {
-                String quantity = NumberFormat.getInstance().format((ingredient.getQuantity()));
+                ingrQuantity = NumberFormat.getInstance().format((ingredient.getQuantity()));
                 if (SUtils.notNullOrEmpty(ingredient.getQuantityUnit())) {
-                    quantity += " " + ingredient.getQuantityUnit();
+                    ingrQuantity += " " + ingredient.getQuantityUnit();
                 }
-                textViewQuantity.setText(quantity);
-            } else {
-                textViewQuantity.setText("");
+                ingrQuantity += " ";
             }
+            Spannable spannable = new SpannableString(ingrQuantity + ingrName);
+            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#9CCC65")),0,ingrQuantity.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            textViewName.setText(spannable);
         }
 
 

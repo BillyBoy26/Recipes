@@ -22,19 +22,6 @@
         android:paddingEnd="10dp"
         />
 
-    <TextView
-        android:id="@+id/textViewQuant"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:lines="1"
-        android:text="quantity"
-        android:padding="2dp"
-        android:textColor="#9E9E9E"
-        android:textSize="14sp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-
-        />
 
 
 </LinearLayout>
