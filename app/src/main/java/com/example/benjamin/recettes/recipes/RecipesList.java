@@ -7,6 +7,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,8 @@ import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
 import com.example.benjamin.recettes.recipes.createForm.RecipeCreate;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
+import com.example.benjamin.recettes.utils.CollectionUtils;
+import com.example.benjamin.recettes.utils.Predicate;
 import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 
 import java.util.Comparator;
@@ -30,6 +33,8 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
     private RecipeAdapter adapter;
     private RecipeDao recipeDao;
     private boolean sortByAlpha = true;
+    private SearchView searchView;
+    private List<Recipe> recipes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,11 +79,13 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
 
     @Override
     public void onLoadFinished(Loader<List<Recipe>> loader, List<Recipe> data) {
-        adapter.setDatas(data);
+        this.recipes = data;
+        adapter.setDatas(this.recipes);
     }
 
     @Override
     public void onLoaderReset(Loader loader) {
+        this.recipes = null;
         adapter.setDatas(null);
     }
 
@@ -93,8 +100,36 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar_recipe_list,menu);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!searchView.isIconified()) {
+                    searchView.setIconified(true);
+                }
+                searchItem.collapseActionView();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String searchText) {
+                doSearch(searchText);
+                return false;
+            }
+        });
         return true;
 
+    }
+
+    private void doSearch(final String searchText) {
+        List<Recipe> recipesFiltred = CollectionUtils.filter(recipes, new Predicate<Recipe>() {
+            @Override
+            public boolean apply(Recipe element) {
+                return element.getName() != null && element.getName().toLowerCase().contains(searchText.toLowerCase());
+            }
+        });
+        adapter.setDatas(recipesFiltred);
     }
 
     @Override

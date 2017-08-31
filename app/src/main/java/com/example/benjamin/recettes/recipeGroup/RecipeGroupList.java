@@ -8,6 +8,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,8 @@ import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.RecipeGroup;
 import com.example.benjamin.recettes.db.dao.RecipeGroupDao;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
+import com.example.benjamin.recettes.utils.CollectionUtils;
+import com.example.benjamin.recettes.utils.Predicate;
 import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 
 import java.util.Comparator;
@@ -28,6 +31,7 @@ public class RecipeGroupList extends DrawerActivity implements LoaderManager.Loa
     private List<RecipeGroup> recipeGroups;
     private RecipeGroupAdapter recGroupAdapter;
     private boolean sortByAlpha = true;
+    private SearchView searchView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,7 +82,7 @@ public class RecipeGroupList extends DrawerActivity implements LoaderManager.Loa
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(RecipeGroupList.this, RecipeGroupCreate.class);
-        intent.putExtra(RecipeGroupCreate.CURRENT_GROUP, recipeGroups.get(position));
+        intent.putExtra(RecipeGroupCreate.CURRENT_GROUP, recGroupAdapter.getDatas().get(position));
         startActivity(intent);
     }
 
@@ -104,8 +108,36 @@ public class RecipeGroupList extends DrawerActivity implements LoaderManager.Loa
     @Override
     public boolean onCreateOptionsMenu (Menu menu){
         getMenuInflater().inflate(R.menu.menu_toolbar_recipe_group_list, menu);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!searchView.isIconified()) {
+                    searchView.setIconified(true);
+                }
+                searchItem.collapseActionView();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String searchText) {
+                doSearch(searchText);
+                return false;
+            }
+        });
         return true;
 
+    }
+
+    private void doSearch(final String searchText) {
+        List<RecipeGroup> recipesGrpFiltred = CollectionUtils.filter(recipeGroups, new Predicate<RecipeGroup>() {
+            @Override
+            public boolean apply(RecipeGroup element) {
+                return element.getName() != null && element.getName().toLowerCase().contains(searchText.toLowerCase());
+            }
+        });
+        recGroupAdapter.setDatas(recipesGrpFiltred);
     }
 
     @Override

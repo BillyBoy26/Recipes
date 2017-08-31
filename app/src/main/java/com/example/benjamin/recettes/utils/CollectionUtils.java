@@ -1,5 +1,6 @@
 package com.example.benjamin.recettes.utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -22,5 +23,18 @@ public class CollectionUtils {
             builder.append(str + ",");
         }
         return builder.deleteCharAt(builder.length()-1).toString();
+    }
+
+    public static<T> List<T> filter(Collection<T> collection, Predicate<T> predicate) {
+        if (nullOrEmpty(collection)) {
+            return new ArrayList<>();
+        }
+        List<T> filtredList = new ArrayList<>();
+        for (T elem : collection) {
+            if (predicate.apply(elem)) {
+                filtredList.add(elem);
+            }
+        }
+        return filtredList;
     }
 }
