@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -35,6 +36,8 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
     private boolean sortByAlpha = true;
     private SearchView searchView;
     private List<Recipe> recipes;
+    private boolean layoutGrid = false;
+    private RecyclerView recyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,8 +56,8 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
         getSupportLoaderManager().initLoader(AsyncTaskDataLoader.getNewUniqueLoaderId(), null, this);
 
         adapter = new RecipeAdapter(this);
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.lstRecipes);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView = (RecyclerView) findViewById(R.id.lstRecipes);
+        setLayout();
         recyclerView.setAdapter(adapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -65,6 +68,8 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
             }
         });
     }
+
+
 
 
     @Override
@@ -141,8 +146,29 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
             case R.id.action_sort_alpha:
                 sortByAlpha();
                 break;
+            case R.id.action_change_layout:
+                this.layoutGrid = !layoutGrid;
+                setLayout();
+                swapIcon(item);
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void swapIcon(MenuItem item) {
+        if (layoutGrid) {
+            item.setIcon(getDrawable(R.drawable.ic_view_stream_white_24dp));
+        } else {
+            item.setIcon(getDrawable(R.drawable.ic_view_module_white_24dp));
+        }
+    }
+
+    private void setLayout() {
+        if (layoutGrid) {
+            recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        } else {
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        }
     }
 
     private void sortByAlpha() {
