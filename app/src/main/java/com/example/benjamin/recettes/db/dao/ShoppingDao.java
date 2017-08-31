@@ -37,12 +37,11 @@ public class ShoppingDao extends GenericDao{
             contentValues.put(TShoppingIngredient.C_QUANTITY_UNIT,ingredient.getQuantityUnit());
         }
         fillUpdatedate(contentValues);
-//        if (ingredient.getId() != null) {
-//            contentValues.put(TIngredient._ID, ingredient.getId());
-//            db.update(TIngredient.T_INGREDIENT, contentValues, "_id=" + ingredient.getId(), null);
-//        } else {
-        db.insert(TShoppingIngredient.T_SHOPPING_INGREDIENT, null, contentValues);
-//        }
+        if (ingredient.getId() != null) {
+            db.update(TShoppingIngredient.T_SHOPPING_INGREDIENT, contentValues, TShoppingIngredient.C_ID_ING + "=" + ingredient.getId(), null);
+        } else {
+            db.insert(TShoppingIngredient.T_SHOPPING_INGREDIENT, null, contentValues);
+        }
         return ingredient;
     }
 
@@ -92,9 +91,16 @@ public class ShoppingDao extends GenericDao{
     public boolean addIngredientToShoppingList(List<Ingredient> ingredients) {
         boolean ingAdded = false;
         if (CollectionUtils.notNullOrEmpty(ingredients)) {
+            List<Ingredient> ingrsSaved = getShoppingList();
             for (Ingredient ingredient : ingredients) {
                 if (ingredient.getId() != null) {
-                    createOrUpdate(ingredient);
+                    Ingredient ingredientSaved = ingrsSaved.get(ingrsSaved.indexOf(ingredient));
+                    if (ingredientSaved != null) {
+                        ingredientSaved.mergeIngredient(ingredient);
+                        createOrUpdate(ingredientSaved);
+                    } else {
+                        createOrUpdate(ingredient);
+                    }
                     ingAdded = true;
                 }
             }
