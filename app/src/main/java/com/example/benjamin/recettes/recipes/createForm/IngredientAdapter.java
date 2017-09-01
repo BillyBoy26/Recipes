@@ -33,7 +33,7 @@ public class IngredientAdapter extends BasicListAdapter<Ingredient,IngredientAda
 
     @Override
     public IngredientViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.ingredient_item, parent,false);
+        View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_item, parent,false);
         final IngredientViewHolder viewHolder = new IngredientViewHolder(cardView);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override

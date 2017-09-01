@@ -1,5 +1,6 @@
 package com.example.benjamin.recettes.views;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ public class NameAdapter<T> extends BasicListAdapter<T,NameAdapter.NameViewHolde
 
     @Override
     public NameViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_text, parent, false);
+        View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_item, parent, false);
         return new NameViewHolder(cardView);
     }
 
@@ -41,27 +42,30 @@ public class NameAdapter<T> extends BasicListAdapter<T,NameAdapter.NameViewHolde
         }
     }
 
-    public class NameViewHolder extends ClickableViewHolder{
+    class NameViewHolder extends ClickableViewHolder{
 
         private final TextView txtName;
 
-        public NameViewHolder(View itemView) {
+        NameViewHolder(View itemView) {
             super(itemView,clickListener);
-            txtName = (TextView) itemView.findViewById(R.id.text);
+            txtName = (TextView) itemView.findViewById(R.id.textViewName);
 
         }
 
-        public void bind(HasName hasName, int position) {
+        void bind(HasName hasName, int position) {
             bind(hasName.getName(),position);
         }
 
-        public void bind(String name, int position) {
+        void bind(String name, int position) {
             String text = "";
             if (withPosition) {
                 text += String.valueOf(position) + ". ";
             }
             text += SUtils.capitalize(name);
             txtName.setText(text);
+            if (getLayoutPosition() % 2 == 0) {
+                itemView.setBackgroundColor(Color.parseColor("#EEEEEE"));
+            }
         }
     }
 

@@ -21,6 +21,7 @@ import com.example.benjamin.recettes.data.Step;
 import com.example.benjamin.recettes.utils.SUtils;
 import com.example.benjamin.recettes.views.NameAdapter;
 import com.example.benjamin.recettes.views.RecyclerViewClickListener;
+import com.example.benjamin.recettes.views.SimpleItemDividerDecoration;
 
 import java.util.List;
 
@@ -47,6 +48,7 @@ public class FragmentSteps extends Fragment implements RecyclerViewClickListener
 
         fillView();
         recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new SimpleItemDividerDecoration(getContext()));
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
