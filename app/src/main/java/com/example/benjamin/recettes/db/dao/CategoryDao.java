@@ -109,7 +109,7 @@ public class CategoryDao extends GenericDao{
         }
         Map<String, Long> idsByNames = new HashMap<>();
         do {
-            Category category = getCategoryFromCursor(cursor);
+            Category category = getCategoryFromCursor(cursor,"catId");
             idsByNames.put(category.getName(), category.getId());
         } while (cursor.moveToNext());
         return idsByNames;
@@ -189,5 +189,35 @@ public class CategoryDao extends GenericDao{
             } while (cursor.moveToNext());
         }
         return categories;
+    }
+
+    public Map<Long,List<Category>> fetchCategoriesByRecId(List<String> idsRec) {
+        if (CollectionUtils.nullOrEmpty(idsRec)) {
+            return new HashMap<>();
+        }
+        Cursor cursor = db.rawQuery("select" +
+                        " rec." + TRecipe._ID + " recId, " +
+                        " cat." + TCategory._ID + " catId, " +
+                        " cat." + TCategory.C_NAME +
+                        " FROM " + TRecipe.T_RECIPE + " rec " +
+                        " INNER JOIN " + TJCatRecipe.TJ_CAT_RECIPE + " linkCatRec ON linkCatRec." + TJCatRecipe.C_ID_RECIPE + "= rec." + TRecipe._ID +
+                        " INNER JOIN " + TCategory.T_CATEGORY + " cat ON linkCatRec." + TJCatRecipe.C_ID_CAT + "= cat." + TCategory._ID +
+                        " WHERE rec." + TRecipe._ID + " IN (" + makePlaceholders(idsRec.size()) + ")"
+                , idsRec.toArray(new String[0]));
+        Map<Long, List<Category>> catsByRecId = new HashMap<>();
+        if (cursor.moveToFirst()) {
+            do {
+                Long idRec = cursor.getLong(cursor.getColumnIndex("recId"));
+                Category category = new Category();
+                category.setId(cursor.getLong(cursor.getColumnIndex("catId")));
+                category.setName(cursor.getString(cursor.getColumnIndex(TCategory.C_NAME)));
+                if (catsByRecId.get(idRec) == null) {
+                    catsByRecId.put(idRec, new ArrayList<Category>());
+                }
+                catsByRecId.get(idRec).add(category);
+
+            } while (cursor.moveToNext());
+        }
+        return catsByRecId;
     }
 }

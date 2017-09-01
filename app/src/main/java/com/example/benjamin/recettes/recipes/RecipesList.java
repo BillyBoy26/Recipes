@@ -1,10 +1,13 @@
 package com.example.benjamin.recettes.recipes;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,11 +15,15 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
+import com.example.benjamin.recettes.data.Category;
 import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.db.dao.CategoryDao;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
 import com.example.benjamin.recettes.recipes.createForm.RecipeCreate;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
@@ -24,20 +31,31 @@ import com.example.benjamin.recettes.utils.CollectionUtils;
 import com.example.benjamin.recettes.utils.Predicate;
 import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_CAT;
 
 public class RecipesList extends DrawerActivity implements LoaderManager.LoaderCallbacks<List<Recipe>>,RecyclerViewClickListener{
 
     public static final String NB_RECIPES_IMPORTED = "NB_RECIPES_IMPORTED";
 
-    private RecipeAdapter adapter;
+    private RecipeAdapter recipeAdapter;
     private RecipeDao recipeDao;
+    private CategoryDao categoryDao;
     private boolean sortByAlpha = true;
     private SearchView searchView;
     private List<Recipe> recipes;
     private boolean layoutGrid = false;
     private RecyclerView recyclerView;
+    private List<Category> allCategory;
+    private CategoryFilterAdapter catAdapter;
+    private Set<Category> selectedCategories = new HashSet<>();
+    private AlertDialog dialogFilters;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +64,8 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
         setContent(R.layout.recipes_list_layout);
 
         recipeDao = new RecipeDao(this);
-        initDaos(recipeDao);
+        categoryDao = new CategoryDao(this);
+        initDaos(recipeDao,categoryDao);
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.get(NB_RECIPES_IMPORTED) != null) {
             int nbRecipesImported = (int) extras.get(NB_RECIPES_IMPORTED);
@@ -55,10 +74,10 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
 
         getSupportLoaderManager().initLoader(AsyncTaskDataLoader.getNewUniqueLoaderId(), null, this);
 
-        adapter = new RecipeAdapter(this);
+        recipeAdapter = new RecipeAdapter(this);
         recyclerView = (RecyclerView) findViewById(R.id.lstRecipes);
         setLayout();
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(recipeAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +86,7 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
                 startActivity(new Intent(RecipesList.this, RecipeCreate.class));
             }
         });
+
     }
 
 
@@ -77,7 +97,8 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
         return new AsyncTaskDataLoader<List<Recipe>>(this) {
             @Override
             public List<Recipe> loadInBackground() {
-                return recipeDao.getAllRecipes();
+                allCategory = categoryDao.getAllCategory();
+                return recipeDao.getAllRecipes(EnumSet.of(WITH_CAT));
             }
         };
     }
@@ -85,18 +106,19 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
     @Override
     public void onLoadFinished(Loader<List<Recipe>> loader, List<Recipe> data) {
         this.recipes = data;
-        adapter.setDatas(this.recipes);
+        recipeAdapter.setDatas(this.recipes);
+        dialogFilters = buildDialogBoxFilters();
     }
 
     @Override
     public void onLoaderReset(Loader loader) {
         this.recipes = null;
-        adapter.setDatas(null);
+        recipeAdapter.setDatas(null);
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        Recipe recipe = adapter.getItem(position);
+        Recipe recipe = recipeAdapter.getItem(position);
         Intent intent = new Intent(RecipesList.this, RecipeCreate.class);
         intent.putExtra(RecipeCreate.CURRENT_RECIPE, recipe);
         startActivity(intent);
@@ -134,7 +156,7 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
                 return element.getName() != null && element.getName().toLowerCase().contains(searchText.toLowerCase());
             }
         });
-        adapter.setDatas(recipesFiltred);
+        recipeAdapter.setDatas(recipesFiltred);
     }
 
     @Override
@@ -146,6 +168,9 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
             case R.id.action_sort_alpha:
                 sortByAlpha();
                 break;
+            case R.id.action_filter:
+                showFilterDialog();
+                break;
             case R.id.action_change_layout:
                 this.layoutGrid = !layoutGrid;
                 setLayout();
@@ -153,6 +178,76 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showFilterDialog() {
+        catAdapter.setSelectedCategories(selectedCategories);
+        if (!dialogFilters.isShowing()) {
+            dialogFilters.show();
+        }
+
+    }
+
+    @NonNull
+    private AlertDialog buildDialogBoxFilters() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        View filterView = getLayoutInflater().inflate(R.layout.recipe_filter,null);
+
+        if (CollectionUtils.notNullOrEmpty(allCategory)) {
+            final RecyclerView gridCategory = (RecyclerView) filterView.findViewById(R.id.gridCategory);
+            gridCategory.setLayoutManager(new GridLayoutManager(this,2));
+            catAdapter = new CategoryFilterAdapter(allCategory);
+            catAdapter.setSelectedCategories(selectedCategories);
+            gridCategory.setAdapter(catAdapter);
+            CheckBox cbSelectAll = (CheckBox) filterView.findViewById(R.id.selectAllCat);
+            cbSelectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        selectedCategories.addAll(allCategory);
+                    } else {
+                        selectedCategories.clear();
+                    }
+                    catAdapter.setSelectedCategories(selectedCategories);
+                }
+            });
+
+        }
+        builder.setPositiveButton("OK", new DialogInterface.    OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                selectedCategories = catAdapter.getSelectedCategories();
+                filter();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setView(filterView);
+        builder.setTitle(R.string.filters);
+        return builder.create();
+    }
+
+    private void filter() {
+        if (CollectionUtils.nullOrEmpty(selectedCategories)) {
+            recipeAdapter.setDatas(recipes);
+        } else {
+            List<Recipe> selectedRecipes = new ArrayList<>();
+            for (Recipe recipe : recipes) {
+                for (Category category : selectedCategories) {
+                    if (recipe.getCategories().contains(category)) {
+                        selectedRecipes.add(recipe);
+                        break;
+                    }
+                }
+            }
+            recipeAdapter.setDatas(selectedRecipes);
+        }
     }
 
     private void swapIcon(MenuItem item) {
@@ -172,7 +267,7 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
     }
 
     private void sortByAlpha() {
-        adapter.sort(new Comparator<Recipe>() {
+        recipeAdapter.sort(new Comparator<Recipe>() {
             @Override
             public int compare(Recipe o1, Recipe o2) {
                 if (o1.getName() == null) {
@@ -193,6 +288,6 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
 
     private void deleteAllRecipe() {
         recipeDao.deleteAll();
-        adapter.setDatas(null);
+        recipeAdapter.setDatas(null);
     }
 }

@@ -12,6 +12,13 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_filter"
+        android:orderInCategory="70"
+        android:icon="@drawable/ic_tune_white_24dp"
+        android:title="@string/filter"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_sort_alpha"
         android:orderInCategory="100"
         android:icon="@drawable/ic_sort_by_alpha_white_24dp"

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.benjamin.recettes.data.Category;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.data.Step;
@@ -18,6 +19,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_CAT;
 import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_ING;
 import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_STEPS;
 import static com.example.benjamin.recettes.utils.CursorUtils.getStringColumnOrEmpty;
@@ -68,7 +70,25 @@ public class RecipeDao extends GenericDao{
         if (recipeFillers.contains(WITH_STEPS)) {
             fillStepsInRecipe(recipes);
         }
+        if (recipeFillers.contains(WITH_CAT)) {
+            fillCatsInRecipes(recipes);
+        }
         return recipes;
+    }
+
+    private void fillCatsInRecipes(List<Recipe> recipes) {
+        List<String> ids = new ArrayList<>();
+        for (Recipe recipe : recipes) {
+            ids.add(String.valueOf(recipe.getId()));
+        }
+        Map<Long, List<Category>> catsByRecID = categoryDao.fetchCategoriesByRecId(ids);
+        if (!catsByRecID.isEmpty()) {
+            for (Recipe recipe : recipes) {
+                if (catsByRecID.containsKey(recipe.getId())) {
+                    recipe.setCategories(catsByRecID.get(recipe.getId()));
+                }
+            }
+        }
     }
 
     private void fillIngredientsInRecipe(List<Recipe> recipes) {

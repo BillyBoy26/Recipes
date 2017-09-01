@@ -69,4 +69,7 @@
     <string name="sort_by_alpha">Trier par ordre alphabétique</string>
     <string name="filter">Filtrer</string>
     <string name="change_layout">Changer la disposition</string>
+    <string name="filters">Filtres</string>
+    <string name="filter_by_category">Filtrer par catégorie</string>
+    <string name="select_all">Tout selectionner</string>
 </resources>

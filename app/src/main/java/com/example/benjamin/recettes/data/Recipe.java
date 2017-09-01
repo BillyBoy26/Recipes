@@ -9,7 +9,7 @@ public class Recipe implements Serializable, HasName{
 
 
     public enum RecipeFiller{
-        WITH_STEPS, WITH_ING
+        WITH_STEPS, WITH_ING, WITH_CAT
     }
 
     private String urlImage;
