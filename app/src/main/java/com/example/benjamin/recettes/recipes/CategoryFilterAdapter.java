@@ -13,16 +13,14 @@ import com.example.benjamin.recettes.utils.SUtils;
 import com.example.benjamin.recettes.views.BasicListAdapter;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class CategoryFilterAdapter extends BasicListAdapter<Category,CategoryFilterAdapter.CategoryFilterViewHolder> {
 
     private Set<Category> selectedCategories = new HashSet<>();
 
-    public CategoryFilterAdapter(List<Category> allCategory) {
+    public CategoryFilterAdapter() {
         super();
-        setDatas(allCategory);
     }
 
     @Override

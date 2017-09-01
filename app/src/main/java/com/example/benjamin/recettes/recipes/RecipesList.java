@@ -198,26 +198,25 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
 
         View filterView = getLayoutInflater().inflate(R.layout.recipe_filter,null);
 
-        if (CollectionUtils.notNullOrEmpty(allCategory)) {
-            final RecyclerView gridCategory = (RecyclerView) filterView.findViewById(R.id.gridCategory);
-            gridCategory.setLayoutManager(new GridLayoutManager(this,2));
-            catAdapter = new CategoryFilterAdapter(allCategory);
-            catAdapter.setSelectedCategories(selectedCategories);
-            gridCategory.setAdapter(catAdapter);
-            CheckBox cbSelectAll = (CheckBox) filterView.findViewById(R.id.selectAllCat);
-            cbSelectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        selectedCategories.addAll(allCategory);
-                    } else {
-                        selectedCategories.clear();
-                    }
-                    catAdapter.setSelectedCategories(selectedCategories);
+        final RecyclerView gridCategory = (RecyclerView) filterView.findViewById(R.id.gridCategory);
+        gridCategory.setLayoutManager(new GridLayoutManager(this,2));
+        catAdapter = new CategoryFilterAdapter();
+        catAdapter.setDatas(allCategory);
+        catAdapter.setSelectedCategories(selectedCategories);
+        gridCategory.setAdapter(catAdapter);
+        CheckBox cbSelectAll = (CheckBox) filterView.findViewById(R.id.selectAllCat);
+        cbSelectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked && allCategory != null) {
+                    selectedCategories.addAll(allCategory);
+                } else {
+                    selectedCategories.clear();
                 }
-            });
+                catAdapter.setSelectedCategories(selectedCategories);
+            }
+        });
 
-        }
         builder.setPositiveButton("OK", new DialogInterface.    OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
