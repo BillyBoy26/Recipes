@@ -1,6 +1,5 @@
 package com.example.benjamin.recettes.views;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,16 +7,23 @@ import android.widget.TextView;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.HasName;
+import com.example.benjamin.recettes.utils.SUtils;
 
 public class NameAdapter<T> extends BasicListAdapter<T,NameAdapter.NameViewHolder> {
 
     private final boolean withPosition;
+    private RecyclerViewClickListener clickListener = null;
 
     public NameAdapter() {
         this(false);
     }
     public NameAdapter(boolean withPosition) {
+        this(withPosition, null);
+    }
+
+    public NameAdapter(boolean withPosition, RecyclerViewClickListener clickListener) {
         this.withPosition = withPosition;
+        this.clickListener = clickListener;
     }
 
     @Override
@@ -35,13 +41,14 @@ public class NameAdapter<T> extends BasicListAdapter<T,NameAdapter.NameViewHolde
         }
     }
 
-    public class NameViewHolder extends RecyclerView.ViewHolder{
+    public class NameViewHolder extends ClickableViewHolder{
 
         private final TextView txtName;
 
         public NameViewHolder(View itemView) {
-            super(itemView);
+            super(itemView,clickListener);
             txtName = (TextView) itemView.findViewById(R.id.text);
+
         }
 
         public void bind(HasName hasName, int position) {
@@ -53,7 +60,7 @@ public class NameAdapter<T> extends BasicListAdapter<T,NameAdapter.NameViewHolde
             if (withPosition) {
                 text += String.valueOf(position) + ". ";
             }
-            text += name;
+            text += SUtils.capitalize(name);
             txtName.setText(text);
         }
     }

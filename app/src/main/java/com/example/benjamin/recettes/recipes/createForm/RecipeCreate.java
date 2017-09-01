@@ -24,22 +24,14 @@ import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
 import com.example.benjamin.recettes.utils.SUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCallbacks<Recipe> {
 
 
-
-    public interface RecipeFiller{
-        void setRecipe(Recipe recipe);
-
-        void getRecipe();
-    }
-
     public static final String CURRENT_RECIPE = "NEW_RECIPE";
     private Recipe recipe;
-    private List<RecipeFiller> fragments = new ArrayList<>();
+    private FragmentGeneral fragmentGeneral;
+    private FragmentIngredients fragmentIngredients;
+    private FragmentSteps fragmentSteps;
     private RecipeDao recipeDao;
     private BatchCookingDao batchCookingDao;
 
@@ -78,9 +70,9 @@ public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCa
         if (recipe == null) {
             recipe = new Recipe();
         }
-        for (RecipeFiller fragment : fragments) {
-            fragment.setRecipe(recipe);
-        }
+        fragmentGeneral.setRecipe(recipe);
+        fragmentIngredients.setRecipe(recipe);
+        fragmentSteps.setRecipe(recipe);
     }
 
     @Override
@@ -88,25 +80,22 @@ public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCa
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        FragmentGeneral fragmentGen = new FragmentGeneral();
-        adapter.addFragment(fragmentGen,getString(R.string.general));
-        fragments.add(fragmentGen);
+        fragmentGeneral = new FragmentGeneral();
+        adapter.addFragment(fragmentGeneral,getString(R.string.general));
 
-        FragmentIngredients fragmentIng = new FragmentIngredients();
-        adapter.addFragment(fragmentIng,getString(R.string.ingredients));
-        fragments.add(fragmentIng);
+        fragmentIngredients = new FragmentIngredients();
+        adapter.addFragment(fragmentIngredients,getString(R.string.ingredients));
 
-        FragmentSteps fragmentSteps = new FragmentSteps();
+        fragmentSteps = new FragmentSteps();
         adapter.addFragment(fragmentSteps,getString(R.string.steps));
-        fragments.add(fragmentSteps);
 
         viewPager.setAdapter(adapter);
     }
 
     private boolean createOrUpdateRecipe() {
-        for (RecipeFiller fragment : fragments) {
-            fragment.getRecipe();
-        }
+        fragmentGeneral.getRecipe();
+        fragmentIngredients.getRecipe();
+        fragmentSteps.getRecipe();
         if (SUtils.nullOrEmpty(recipe.getName())) {
             Toast.makeText(this, R.string.your_recipe_has_no_name, Toast.LENGTH_SHORT).show();
             return false;
@@ -182,5 +171,6 @@ public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCa
         recipeDao.delete(recipe);
         startActivity(new Intent(RecipeCreate.this, RecipesList.class));
     }
+
 
 }

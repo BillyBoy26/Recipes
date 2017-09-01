@@ -1,8 +1,10 @@
 package com.example.benjamin.recettes.recipes.createForm;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -18,14 +20,15 @@ import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.data.Step;
 import com.example.benjamin.recettes.utils.SUtils;
 import com.example.benjamin.recettes.views.NameAdapter;
+import com.example.benjamin.recettes.views.RecyclerViewClickListener;
 
 import java.util.List;
 
-public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller{
+public class FragmentSteps extends Fragment implements RecyclerViewClickListener {
 
 
     public static final String CAN_ADD = "CAN_ADD";
-    private NameAdapter adapter;
+    private NameAdapter<Step> adapter;
     private Recipe recipe;
     private List<Step> steps;
 
@@ -82,18 +85,16 @@ public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller
 
     private void fillView() {
         if (adapter == null) {
-            adapter = new NameAdapter(true);
+            adapter = new NameAdapter(true,this);
         }
         adapter.setDatas(steps);
     }
 
-    @Override
     public void setRecipe(Recipe recipe) {
         this.recipe = recipe;
         this.steps = recipe != null ? recipe.getSteps() : null;
     }
 
-    @Override
     public void getRecipe() {
         if (steps != null) {
             for (Step step : steps) {
@@ -110,4 +111,29 @@ public class FragmentSteps extends Fragment implements RecipeCreate.RecipeFiller
         this.steps = steps;
         fillView();
     }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        final Step step = adapter.getItem(position);
+        final EditText textView = new EditText(getContext());
+        textView.setText(step.getName());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.edit_step)
+                .setView(textView);
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                step.setName(textView.getText().toString());
+                adapter.setDatas(steps);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        builder.show();
+    }
+
 }

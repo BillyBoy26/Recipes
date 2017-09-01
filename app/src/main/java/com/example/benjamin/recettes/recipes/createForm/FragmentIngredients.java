@@ -18,7 +18,7 @@ import com.example.benjamin.recettes.views.SimpleItemDividerDecoration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragmentIngredients extends Fragment implements RecipeCreate.RecipeFiller{
+public class FragmentIngredients extends Fragment{
 
 
 
@@ -60,7 +60,6 @@ public class FragmentIngredients extends Fragment implements RecipeCreate.Recipe
 
     }
 
-    @Override
     public void getRecipe() {
         recipe.setIngredients(ingredients);
     }

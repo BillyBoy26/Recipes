@@ -25,7 +25,7 @@ import com.example.benjamin.recettes.utils.SUtils;
 import com.example.benjamin.recettes.views.ImageInputView;
 import com.google.android.flexbox.FlexboxLayout;
 
-public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFiller{
+public class FragmentGeneral  extends Fragment {
 
 
     private EditText txtName;
@@ -164,7 +164,6 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
 
     }
 
-    @Override
     public void getRecipe() {
         recipe.setName( txtName.getText().toString());
         recipe.setUrlImage(imageView.getUrlImage());
@@ -181,7 +180,6 @@ public class FragmentGeneral  extends Fragment implements RecipeCreate.RecipeFil
     }
 
 
-    @Override
     public void setRecipe(Recipe recipe) {
         this.recipe = recipe;
         fillRecipeView();
