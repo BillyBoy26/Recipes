@@ -75,7 +75,9 @@ public class IngredientAdapter extends BasicListAdapter<Ingredient,IngredientAda
                 ingrQuantity += " ";
             }
             Spannable spannable = new SpannableString(ingrQuantity + ingrName);
-            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#9CCC65")),0,ingrQuantity.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (SUtils.notNullOrEmpty(ingrQuantity)) {
+                spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#9CCC65")),0,ingrQuantity.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
             textViewName.setText(spannable);
         }
 
