@@ -3,24 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-
-    <item
-        android:id="@+id/action_change_layout"
-        android:orderInCategory="50"
-        android:icon="@drawable/ic_view_module_white_24dp"
-        android:title="@string/change_layout"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/action_filter"
-        android:orderInCategory="70"
-        android:icon="@drawable/ic_tune_white_24dp"
-        android:title="@string/filter"
-        app:showAsAction="ifRoom" />
-
     <item
         android:id="@+id/action_sort_alpha"
-        android:orderInCategory="100"
+        android:orderInCategory="50"
         android:icon="@drawable/ic_sort_by_alpha_white_24dp"
         android:title="@string/sort_by_alpha"
         app:showAsAction="ifRoom" />
@@ -30,11 +15,25 @@
         android:icon="@android:drawable/ic_menu_search"
         app:showAsAction="always"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        android:orderInCategory="150"
+        android:orderInCategory="70"
         android:title="@string/filter"/>
+
+    <item
+        android:id="@+id/action_add_recipe"
+        android:orderInCategory="150"
+        android:title="@string/create_a_recipe"
+        app:showAsAction="never" />
+
+
+    <item
+        android:id="@+id/action_change_layout"
+        android:orderInCategory="200"
+        android:icon="@drawable/ic_view_module_white_24dp"
+        android:title="@string/change_layout"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_delete"
-        android:orderInCategory="200"
+        android:orderInCategory="500"
         android:title="@string/delete_all_recipes"
         app:showAsAction="never" />
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -80,16 +81,19 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
         recyclerView.setAdapter(recipeAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_tune_white_24dp));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(RecipesList.this, RecipeCreate.class));
+                showFilterDialog();
             }
         });
 
     }
 
-
+    private void goToCreateActivity() {
+        startActivity(new Intent(RecipesList.this, RecipeCreate.class));
+    }
 
 
     @Override
@@ -168,8 +172,8 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
             case R.id.action_sort_alpha:
                 sortByAlpha();
                 break;
-            case R.id.action_filter:
-                showFilterDialog();
+            case R.id.action_add_recipe:
+                goToCreateActivity();
                 break;
             case R.id.action_change_layout:
                 this.layoutGrid = !layoutGrid;
