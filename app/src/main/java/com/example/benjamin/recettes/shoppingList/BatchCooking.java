@@ -24,6 +24,7 @@ import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -186,7 +187,7 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
     public void onIngredientSelected(Ingredient ingredient) {
         if (ingredient != null) {
             ingredientDao.createIngredientsIfNeeded(Collections.singletonList(ingredient));
-            shoppingDao.createOrUpdate(ingredient);
+            shoppingDao.addIngredientToShoppingList(Arrays.asList(ingredient));
         }
     }
 
