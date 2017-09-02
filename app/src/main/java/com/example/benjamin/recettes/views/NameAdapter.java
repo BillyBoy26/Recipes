@@ -63,8 +63,10 @@ public class NameAdapter<T> extends BasicListAdapter<T,NameAdapter.NameViewHolde
             }
             text += SUtils.capitalize(name);
             txtName.setText(text);
-            if (getLayoutPosition() % 2 == 0) {
+            if (position % 2 == 1) {
                 itemView.setBackgroundColor(Color.parseColor("#EEEEEE"));
+            } else {
+                itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
             }
         }
     }
