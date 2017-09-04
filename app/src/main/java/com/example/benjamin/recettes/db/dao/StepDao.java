@@ -100,7 +100,7 @@ public class StepDao extends GenericDao {
         if (CollectionUtils.notNullOrEmpty(notInStepId)) {
             whereClause = " " + TStep._ID + " NOT IN (" + makePlaceholders(notInStepId.size()) + ") AND ";
         }
-        whereClause += TStep._ID + "= ?";
+        whereClause += TStep.C_ID_REC + "= ?";
         notInStepId.add(String.valueOf(idRec));
         db.delete(TStep.T_STEP, whereClause, notInStepId.toArray(new String[0]));
     }

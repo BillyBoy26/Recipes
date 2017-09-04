@@ -87,7 +87,7 @@ public class FragmentSteps extends Fragment implements RecyclerViewClickListener
 
     private void fillView() {
         if (adapter == null) {
-            adapter = new NameAdapter(true,this);
+            adapter = new NameAdapter<>(true, this);
         }
         adapter.setDatas(steps);
     }
@@ -133,6 +133,13 @@ public class FragmentSteps extends Fragment implements RecyclerViewClickListener
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        builder.setNeutralButton(R.string.delete, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                steps.remove(step);
+                adapter.setDatas(steps);
             }
         });
         builder.show();
