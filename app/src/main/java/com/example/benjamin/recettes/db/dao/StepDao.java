@@ -153,7 +153,8 @@ public class StepDao extends GenericDao {
                         TJRegSte.C_RANK  +
                         " FROM " + TJRegSte.TJ_REG_STE +
                         " INNER JOIN " + TStep.T_STEP + " ON " + TStep._ID + " = " + TJRegSte.C_ID_STEP +
-                        " WHERE " + TJRegSte.C_ID_REG +  "= ?"
+                        " WHERE " + TJRegSte.C_ID_REG +  "= ?" +
+                        " ORDER BY " + TJRegSte.C_RANK
                 , new String[]{regIdStr});
 
         List<Step> steps = new ArrayList<>();

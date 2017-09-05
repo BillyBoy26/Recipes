@@ -72,7 +72,7 @@ public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCa
         }
         fragmentGeneral.setRecipe(recipe);
         fragmentIngredients.setRecipe(recipe);
-        fragmentSteps.setRecipe(recipe);
+        fragmentSteps.setData(recipe);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCa
     private boolean createOrUpdateRecipe() {
         fragmentGeneral.getRecipe();
         fragmentIngredients.getRecipe();
-        fragmentSteps.getRecipe();
+        fragmentSteps.getData();
         if (SUtils.nullOrEmpty(recipe.getName())) {
             Toast.makeText(this, R.string.your_recipe_has_no_name, Toast.LENGTH_SHORT).show();
             return false;

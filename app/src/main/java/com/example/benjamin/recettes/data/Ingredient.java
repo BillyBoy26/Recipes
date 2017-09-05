@@ -108,7 +108,12 @@ public class Ingredient implements Serializable, HasName{
      */
     public boolean mergeIngredient(Ingredient ingredient) {
         if (ingredient.getQuantityUnit().equalsIgnoreCase(this.getQuantityUnit())) {
-            this.setQuantity(this.getQuantity() + ingredient.getQuantity());
+            Float otherIngQte = ingredient.getQuantity();
+            if (otherIngQte != null && getQuantity() != null) {
+                setQuantity(getQuantity() + otherIngQte);
+            } else if (otherIngQte != null && getQuantity() == null) {
+                setQuantity(otherIngQte);
+            }
             return true;
         }
         Log.i("INGREDIENT", "Trying to merge two ingredient with different unit " + ingredient.toString() + ", " + this.toString());

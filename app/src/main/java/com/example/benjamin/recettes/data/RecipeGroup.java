@@ -3,7 +3,7 @@ package com.example.benjamin.recettes.data;
 import java.io.Serializable;
 import java.util.List;
 
-public class RecipeGroup implements Serializable, HasName {
+public class RecipeGroup implements Serializable, HasName,HasSteps {
 
     private Long id;
     private String name;

@@ -20,7 +20,7 @@ public class BatchCookingDao extends GenericDao {
 
     private RecipeDao recipeDao;
     private ShoppingDao shoppingDao;
-    private RecipeGroupDao recipeGroupDao;
+    private StepDao stepDao;
     public BatchCookingDao(Context context) {
         super(context);
     }
@@ -33,7 +33,7 @@ public class BatchCookingDao extends GenericDao {
     private void initLinkedDao() {
         recipeDao = new RecipeDao(db);
         shoppingDao = new ShoppingDao(db);
-        recipeGroupDao = new RecipeGroupDao(db);
+        stepDao = new StepDao(db);
     }
 
     public boolean addRecipeToBatchCooking(Recipe recipe) {
@@ -123,7 +123,7 @@ public class BatchCookingDao extends GenericDao {
             } while (cursor.moveToNext());
         }
         for (RecipeGroup recipeGroup : recipeGroups) {
-            recipeDao.fillStepsInRecipe(recipeGroup.getRecipes());
+            recipeGroup.setSteps(stepDao.fetchStepByRegId(String.valueOf(recipeGroup.getId())));
         }
         return recipeGroups;
     }

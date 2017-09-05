@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.benjamin.recettes.R;
-import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.data.HasSteps;
 import com.example.benjamin.recettes.data.Step;
 import com.example.benjamin.recettes.utils.SUtils;
 import com.example.benjamin.recettes.views.NameAdapter;
@@ -30,7 +30,7 @@ public class FragmentSteps extends Fragment implements RecyclerViewClickListener
 
     public static final String CAN_ADD = "CAN_ADD";
     private NameAdapter<Step> adapter;
-    private Recipe recipe;
+    private HasSteps dataWithSteps;
     private List<Step> steps;
 
     @Nullable
@@ -40,11 +40,25 @@ public class FragmentSteps extends Fragment implements RecyclerViewClickListener
         final RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerSteps);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        if (getArguments() != null && getArguments().get(CAN_ADD) != null && !(Boolean)getArguments().get(CAN_ADD)) {
+        //check si on affiche le panel pour ajouter des étapes.
+        if (getArguments() != null && getArguments().get(CAN_ADD) != null && !(Boolean) getArguments().get(CAN_ADD)) {
             LinearLayout searchView = (LinearLayout) layout.findViewById(R.id.pnlSearchAndAdd);
             searchView.setVisibility(View.GONE);
+        } else {
+            final EditText editTxtStep = (EditText) layout.findViewById(R.id.editTxtStep);
+            final ImageView iconAddStep = (ImageView) layout.findViewById(R.id.iconAddStep);
+            iconAddStep.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (SUtils.nullOrEmpty(editTxtStep.getText().toString())) {
+                        return;
+                    }
+                    Step step = new Step();
+                    step.setName(editTxtStep.getText().toString());
+                    adapter.addItem(step);
+                }
+            });
         }
-
 
         fillView();
         recyclerView.setAdapter(adapter);
@@ -69,19 +83,7 @@ public class FragmentSteps extends Fragment implements RecyclerViewClickListener
         });
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        final EditText editTxtStep = (EditText) layout.findViewById(R.id.editTxtStep);
-        final ImageView iconAddStep = (ImageView) layout.findViewById(R.id.iconAddStep);
-        iconAddStep.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (SUtils.nullOrEmpty(editTxtStep.getText().toString())) {
-                    return;
-                }
-                Step step = new Step();
-                step.setName(editTxtStep.getText().toString());
-                adapter.addItem(step);
-            }
-        });
+
         return layout;
     }
 
@@ -92,19 +94,20 @@ public class FragmentSteps extends Fragment implements RecyclerViewClickListener
         adapter.setDatas(steps);
     }
 
-    public void setRecipe(Recipe recipe) {
-        this.recipe = recipe;
-        this.steps = recipe != null ? recipe.getSteps() : null;
+    public void setData(HasSteps data) {
+        this.dataWithSteps = data;
+        this.steps = data != null ? data.getSteps() : null;
+        fillView();
     }
 
-    public void getRecipe() {
+    public void getData() {
         if (steps != null) {
             for (Step step : steps) {
                 step.setRank(steps.indexOf(step) + 1);
             }
         }
-        if (recipe != null) {
-            recipe.setSteps(steps);
+        if (dataWithSteps != null) {
+            dataWithSteps.setSteps(steps);
         }
 
     }

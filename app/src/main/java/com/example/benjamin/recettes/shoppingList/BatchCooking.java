@@ -22,6 +22,7 @@ import com.example.benjamin.recettes.recipes.createForm.FragmentSteps;
 import com.example.benjamin.recettes.recipes.createForm.ViewPagerAdapter;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
+import com.example.benjamin.recettes.utils.FrgArgsBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,10 +66,11 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
         adapter.addFragment(frgShoppingList,getString(R.string.shopping_list));
         frgRecipeList = new FrgRecipeList();
         adapter.addFragment(frgRecipeList,getString(R.string.recipes));
-        frgSteps = new FragmentSteps();
-        Bundle args = new Bundle();
-        args.putBoolean(FragmentSteps.CAN_ADD,false);
-        frgSteps.setArguments(args);
+
+        frgSteps = (FragmentSteps) new FrgArgsBuilder<>
+                (new FragmentSteps())
+                .putBoolean(FragmentSteps.CAN_ADD, false)
+                .create();
         adapter.addFragment(frgSteps,getString(R.string.steps));
 
         viewPager.setAdapter(adapter);
@@ -101,9 +103,11 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
                 if (recipeGroup.getRecipes() != null) {
                     for (Recipe recipe : recipeGroup.getRecipes()) {
                         allRecipe.add(recipe);
-                        for (Step step : recipe.getSteps()) {
-                            allSteps.add(step);
-                        }
+                    }
+                }
+                if (recipeGroup.getSteps() != null) {
+                    for (Step step : recipeGroup.getSteps()) {
+                        allSteps.add(step);
                     }
                 }
             }

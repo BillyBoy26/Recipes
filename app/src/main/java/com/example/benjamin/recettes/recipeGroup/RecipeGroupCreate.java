@@ -21,9 +21,11 @@ import com.example.benjamin.recettes.data.Step;
 import com.example.benjamin.recettes.db.dao.BatchCookingDao;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
 import com.example.benjamin.recettes.db.dao.RecipeGroupDao;
+import com.example.benjamin.recettes.recipes.createForm.FragmentSteps;
 import com.example.benjamin.recettes.recipes.createForm.ViewPagerAdapter;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
+import com.example.benjamin.recettes.utils.FrgArgsBuilder;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -44,7 +46,7 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
     private List<Recipe> allRecipes;
     private FrgGroupGeneral fragmentGen;
     private FrgGroupRecipes fragmentRecipes;
-    private FrgGroupSteps fragmentSteps;
+    private FragmentSteps fragmentSteps;
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +81,10 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
         adapter.addFragment(fragmentGen,getString(R.string.general));
         fragmentRecipes = new FrgGroupRecipes();
         adapter.addFragment(fragmentRecipes,getString(R.string.recipes));
-        fragmentSteps = new FrgGroupSteps();
+        fragmentSteps = (FragmentSteps) new FrgArgsBuilder<>
+                (new FragmentSteps())
+                .putBoolean(FragmentSteps.CAN_ADD, false)
+                .create();
         adapter.addFragment(fragmentSteps,getString(R.string.steps));
         viewPager.setAdapter(adapter);
     }
@@ -95,7 +100,7 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
     private void getRecipeGroup() {
         fragmentGen.getRecipeGroup();
         fragmentRecipes.getRecipeGroup();
-        fragmentSteps.getRecipeGroup();
+        fragmentSteps.getData();
     }
 
     @Override
@@ -123,7 +128,7 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
         }
         fragmentGen.fillView(recipeGroup);
         fragmentRecipes.fillView(recipeGroup,allRecipes);
-        fragmentSteps.fillView(recipeGroup);
+        fragmentSteps.setData(recipeGroup);
 
     }
 
@@ -132,7 +137,7 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
         recipeGroup = new RecipeGroup();
         fragmentGen.fillView(recipeGroup);
         fragmentRecipes.fillView(recipeGroup,allRecipes);
-        fragmentSteps.fillView(recipeGroup);
+        fragmentSteps.setData(recipeGroup);
     }
 
 
@@ -185,6 +190,6 @@ public class RecipeGroupCreate extends TabsActivity implements LoaderManager.Loa
             recipeGroup.setSteps(new ArrayList<Step>());
         }
         recipeGroup.getSteps().addAll(recipe.getSteps());
-        fragmentSteps.fillView(recipeGroup);
+        fragmentSteps.setData(recipeGroup);
     }
 }

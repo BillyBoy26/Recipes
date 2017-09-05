@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Recipe implements Serializable, HasName{
+public class Recipe implements Serializable, HasName, HasSteps{
 
 
 
