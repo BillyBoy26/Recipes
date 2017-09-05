@@ -27,9 +27,14 @@ public class Ingredient implements Serializable, HasName{
     }
 
     public Ingredient(String name, int image, float quantity) {
+        this(name, image, quantity, "");
+    }
+
+    public Ingredient(String name, int image, float quantity, String quantityUnit) {
         this.name = name;
         this.image = image;
         this.quantity = quantity;
+        this.quantityUnit = quantityUnit;
     }
 
     public String getName() {

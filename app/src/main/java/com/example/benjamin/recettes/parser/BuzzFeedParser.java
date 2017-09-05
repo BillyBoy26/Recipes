@@ -1,6 +1,7 @@
 package com.example.benjamin.recettes.parser;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.benjamin.recettes.data.Ingredient;
@@ -9,6 +10,7 @@ import com.example.benjamin.recettes.data.Step;
 import com.example.benjamin.recettes.utils.CollectionUtils;
 import com.example.benjamin.recettes.utils.SUtils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,6 +23,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BuzzFeedParser {
+
+    private static final String[][] unitsQte= new String[][]{
+            {"Cup","Cups"},
+            {"Teaspoon","Teaspoons"},
+            {"Tablespoon","Tablespoons"},
+            {"Ounce","Ounces"},
+            {"Pound","Pounds"},
+    };
 
 
     public  final String BF_PARSER = "BF_PARSER";
@@ -50,11 +60,11 @@ public class BuzzFeedParser {
             //article with one recipe and h3 formating
             Recipe recipe = new Recipe();
 
-            parseName(document, recipe);
+            parseName(recipe);
             recipe.setUrlVideo(urlVideo);
             recipe.setUrlImage(mainUrlImage);
-            parseIngredients(document, recipe);
-            parseSteps(document, recipe);
+            parseIngredients(recipe,ingredientsElem);
+            parseSteps(recipe);
             addRecipe(recipes, recipe);
         }
 
@@ -142,7 +152,7 @@ public class BuzzFeedParser {
         }
     }
 
-    private  void parseSteps(Document document, Recipe recipe) {
+    private  void parseSteps( Recipe recipe) {
         Elements h3s = document.body().select("h3.subbuzz__title");
         Element h3Steps = null;
         for (Element h3 : h3s) {
@@ -191,28 +201,33 @@ public class BuzzFeedParser {
 
     }
 
-    private  void parseName(Document document, Recipe recipe) {
+    private  void parseName(Recipe recipe) {
         Element h1Element = document.body().select("h1.buzz-title").first();
         String name = h1Element.text();
         recipe.setName(name);
     }
 
-    private  void parseIngredients(Document document, Recipe recipe) {
-        Elements h3s = document.body().select("h3.subbuzz__title");
-        Element h3Ingredients = null;
-        for (Element h3 : h3s) {
-            if (h3.children().is("span")) {
-                for (Element el : h3.children()) {
-                    String text= el.text().trim();
-                    if (text.equalsIgnoreCase("INGREDIENTS") || text.contains("Here's what you will need") || text.contains("Here's what you'll need")) {
-                        h3Ingredients = h3;
-                        break;
+    private  void parseIngredients(Recipe recipe, Elements ingredientsElem) {
+        Element elemIngr = null;
+        if (ingredientsElem.isEmpty()) {
+            Elements h3s = document.body().select("h3.subbuzz__title");
+            for (Element h3 : h3s) {
+                if (h3.children().is("span")) {
+                    for (Element el : h3.children()) {
+                        String text = el.text().trim();
+                        if (text.equalsIgnoreCase("INGREDIENTS") || text.contains("Here's what you will need") || text.contains("Here's what you'll need")) {
+                            elemIngr = h3;
+                            break;
+                        }
                     }
                 }
             }
+        } else {
+            elemIngr = ingredientsElem.get(0);
         }
 
-        proceedIngredientElement(recipe, h3Ingredients);
+
+        proceedIngredientElement(recipe, elemIngr);
     }
 
     private  Element proceedIngredientElement(Recipe recipe, Element ingElementTitle) {
@@ -258,6 +273,8 @@ public class BuzzFeedParser {
         return false;
     }
 
+
+
     @NonNull
     private  Ingredient extractIngredient(String text) {
 
@@ -269,6 +286,8 @@ public class BuzzFeedParser {
         text = text.replace("*", "");
         text = text.replace("#", "");
 
+
+        //search Quantity
         float quantity = -1;
         //get decimal number
         Pattern regex = Pattern.compile("(\\d+(?:\\.\\d+)?)");
@@ -278,8 +297,33 @@ public class BuzzFeedParser {
             quantity = Float.valueOf(qteStr);
             text = text.replace(qteStr, "");
         }
+
+        //search Quantity unit
+        String quantityUnit = "";
+        StringBuilder builderUnit = new StringBuilder();
+        for (String[] unitQte : unitsQte) {
+            text = parseQuantityUnit(text, quantity, builderUnit, unitQte[0], unitQte[1]);
+            if (SUtils.notNullOrEmpty(builderUnit.toString())) {
+                quantityUnit = builderUnit.toString();
+                break;
+            }
+        }
         String nameIngr = text.trim();
-        return new Ingredient(nameIngr, -1, quantity);
+        return new Ingredient(nameIngr, -1, quantity,quantityUnit);
+    }
+
+    @Nullable
+    private String parseQuantityUnit(String text, float quantity, StringBuilder builderUnit, String unit, String unitPlurial) {
+        if (StringUtils.containsIgnoreCase(text, unit) || StringUtils.containsIgnoreCase(text, unitPlurial)) {
+            if (quantity > 1 && SUtils.notNullOrEmpty(unitPlurial)) {
+                builderUnit.append(unitPlurial);
+                text = StringUtils.removeIgnoreCase(text, unitPlurial);
+            } else {
+                builderUnit.append(unit);
+            }
+            text = StringUtils.removeIgnoreCase(text, unit);
+        }
+        return text;
     }
 
     private  String replaceSpecialNumberChar(String text, String specialChar, double specialCharValue) {
