@@ -1,5 +1,6 @@
 package com.example.benjamin.recettes.recipes.createForm;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,11 @@ import java.util.List;
 public class FragmentIngredients extends Fragment{
 
 
+    public interface OnIngredientListEditedListener {
+        void onIngredientSelected(Ingredient ingredient);
+        void onIngredientClicked(Ingredient ingredient);
+    }
+    private OnIngredientListEditedListener listener;
 
     private List<Ingredient> ingredients = new ArrayList<>();
     private IngredientAdapter adapter;
@@ -31,7 +37,7 @@ public class FragmentIngredients extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.recipe_create_ingredients, container, false);
+        View layout = inflater.inflate(R.layout.ingredients_list, container, false);
         final RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerIngredient);
         fillView();
         recyclerView.setAdapter(adapter);
@@ -42,12 +48,14 @@ public class FragmentIngredients extends Fragment{
         View dialogView = inflater.inflate(R.layout.ingredient_dialog_quantity, null);
         IngredientWidgetBuilder ingBuilder = new IngredientWidgetBuilder(searchView,dialogView,adapter);
         searchView.setOnQueryTextListener(ingBuilder.createQueryTextListener());
+        fillView();
+
         return layout;
     }
 
     private void fillView() {
         if (adapter == null) {
-            adapter = new IngredientAdapter();
+            adapter = new IngredientAdapter(listener);
         }
         adapter.setDatas(ingredients);
     }
@@ -57,10 +65,26 @@ public class FragmentIngredients extends Fragment{
         this.recipe = recipe;
         this.ingredients = recipe != null ? recipe.getIngredients() : null;
         fillView();
+    }
 
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+        fillView();
     }
 
     public void getRecipe() {
         recipe.setIngredients(ingredients);
     }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnIngredientListEditedListener) {
+            listener = (OnIngredientListEditedListener) context;
+        } else {
+            listener = null;
+        }
+    }
+
 }

@@ -9,7 +9,6 @@ import android.widget.EditText;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Ingredient;
-import com.example.benjamin.recettes.shoppingList.FrgShoppingList;
 import com.example.benjamin.recettes.utils.SUtils;
 
 public class IngredientWidgetBuilder {
@@ -17,13 +16,13 @@ public class IngredientWidgetBuilder {
     private final AlertDialog alertDialog;
     private final IngredientAdapter adapter;
     private String currentIngName;
-    private FrgShoppingList.OnIngredientListEditedListener listener;
+    private FragmentIngredients.OnIngredientListEditedListener listener;
 
     public IngredientWidgetBuilder(SearchView searchView, View dialogView,IngredientAdapter adapter) {
         this(searchView, dialogView, adapter, null);
     }
 
-    public IngredientWidgetBuilder(SearchView searchView, View dialogView, IngredientAdapter adapter, FrgShoppingList.OnIngredientListEditedListener listener) {
+    public IngredientWidgetBuilder(SearchView searchView, View dialogView, IngredientAdapter adapter, FragmentIngredients.OnIngredientListEditedListener listener) {
         alertDialog = createDialogBox(searchView, dialogView);
         this.adapter = adapter;
         this.listener = listener;

@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Ingredient;
-import com.example.benjamin.recettes.shoppingList.FrgShoppingList;
 import com.example.benjamin.recettes.utils.SUtils;
 import com.example.benjamin.recettes.views.BasicListAdapter;
 
@@ -20,14 +19,14 @@ import java.text.NumberFormat;
 
 public class IngredientAdapter extends BasicListAdapter<Ingredient,IngredientAdapter.IngredientViewHolder> {
 
-    private FrgShoppingList.OnIngredientListEditedListener listener;
+    private FragmentIngredients.OnIngredientListEditedListener listener;
 
 
     public IngredientAdapter() {
         this(null);
     }
 
-    public IngredientAdapter(FrgShoppingList.OnIngredientListEditedListener listener) {
+    public IngredientAdapter(FragmentIngredients.OnIngredientListEditedListener listener) {
         this.listener = listener;
     }
 

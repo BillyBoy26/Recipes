@@ -18,6 +18,7 @@ import com.example.benjamin.recettes.data.Step;
 import com.example.benjamin.recettes.db.dao.BatchCookingDao;
 import com.example.benjamin.recettes.db.dao.IngredientDao;
 import com.example.benjamin.recettes.db.dao.ShoppingDao;
+import com.example.benjamin.recettes.recipes.createForm.FragmentIngredients;
 import com.example.benjamin.recettes.recipes.createForm.FragmentSteps;
 import com.example.benjamin.recettes.recipes.createForm.ViewPagerAdapter;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
@@ -31,7 +32,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCallbacks<BatchCooking.BatchCookingBundle>
-        ,FrgShoppingList.OnIngredientListEditedListener{
+        ,FragmentIngredients.OnIngredientListEditedListener{
 
 
 
@@ -39,7 +40,7 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
     private IngredientDao ingredientDao;
     private ShoppingDao shoppingDao;
 
-    private FrgShoppingList frgShoppingList;
+    private FragmentIngredients frgShoppingList;
     private FrgRecipeList frgRecipeList;
     private FragmentSteps frgSteps;
     private List<Recipe> recipes;
@@ -62,7 +63,7 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
     protected void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        frgShoppingList = new FrgShoppingList();
+        frgShoppingList = new FragmentIngredients();
         adapter.addFragment(frgShoppingList,getString(R.string.shopping_list));
         frgRecipeList = new FrgRecipeList();
         adapter.addFragment(frgRecipeList,getString(R.string.recipes));
@@ -129,7 +130,7 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
         });
 
 
-        frgShoppingList.fillView(ingredients);
+        frgShoppingList.setIngredients(ingredients);
         frgRecipeList.fillView(allRecipe);
         frgSteps.setSteps(allSteps);
 
@@ -183,7 +184,7 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
         }
         shoppingDao.deleteAll();
         ingredients.clear();
-        frgShoppingList.fillView(ingredients);
+        frgShoppingList.setIngredients(ingredients);
         Toast.makeText(this, R.string.shopping_list_cleared, Toast.LENGTH_SHORT).show();
     }
 
