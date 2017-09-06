@@ -73,4 +73,5 @@
     <string name="filter_by_category">Filtrer par catégorie</string>
     <string name="select_all">Tout selectionner</string>
     <string name="edit_step">Modifier l\'étape</string>
+    <string name="later">Plus tard</string>
 </resources>

@@ -145,7 +145,7 @@ public class FragmentIngredients extends Fragment implements RecyclerViewClickLi
             }
         };
         builder.setPositiveButton(R.string.ok, clicklistener);
-        builder.setNegativeButton(R.string.notNow, clicklistener);
+        builder.setNegativeButton(R.string.later, clicklistener);
         builder.setNeutralButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
