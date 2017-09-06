@@ -84,7 +84,7 @@ public class NameAdapter<T> extends BasicListAdapter<T,NameAdapter.NameViewHolde
             if (canSelect && positionsSelected.contains(position - 1)) {
                 itemView.setBackgroundColor(Color.parseColor("#F8BBD0"));
             }else if (position % 2 == 1) {
-                itemView.setBackgroundColor(Color.parseColor("#EEEEEE"));
+                itemView.setBackgroundResource(R.color.listColorSecondary);
             } else {
                 itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
             }

@@ -189,7 +189,7 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onIngredientSelected(Ingredient ingredient) {
+    public void onIngredientCreated(Ingredient ingredient) {
         if (ingredient != null) {
             ingredientDao.createIngredientsIfNeeded(Collections.singletonList(ingredient));
             shoppingDao.addIngredientToShoppingList(Arrays.asList(ingredient));
@@ -197,7 +197,14 @@ public class BatchCooking extends TabsActivity implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onIngredientClicked(Ingredient ingredient) {
+    public void onIngredientModified(Ingredient ingredient) {
+        if (ingredient != null) {
+            shoppingDao.createOrUpdate(ingredient,true);
+        }
+    }
+
+    @Override
+    public void onIngredientDeleted(Ingredient ingredient) {
         if (ingredient != null) {
             shoppingDao.delete(ingredient);
         }

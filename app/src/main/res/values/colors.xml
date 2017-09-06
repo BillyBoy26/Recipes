@@ -6,4 +6,5 @@
     <color name="colorPrimaryLight">#7986CB</color>
     <color name="darkGrey">#E0E0E0</color>
     <color name="textColorPrimary">#FFFFFF</color>
+    <color name="listColorSecondary">#EEEEEE</color>
 </resources>
