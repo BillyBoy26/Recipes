@@ -13,13 +13,13 @@
     android:paddingStart="10dp"
     android:paddingEnd="10dp"
     android:focusableInTouchMode="true"
-    android:background="#E0E0E0">
+    >
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
-        android:background="#FFFFFF"
+        
         >
         <EditText
             android:layout_width="match_parent"
@@ -45,38 +45,50 @@
                 android:id="@+id/image1"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:layout_marginTop="1dp" />
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="1dp"
+                />
 
             <GridLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:columnCount="2"
-                android:useDefaultMargins="false">
+                >
 
                 <com.example.benjamin.recettes.views.ImageInputView
                     android:id="@+id/image2"
                     android:layout_width="100dp"
                     android:layout_height="99dp"
-                    android:layout_margin="1dp" />
+                    android:layout_margin="1dp"
+                    android:layout_marginEnd="0dp"
+                    />
 
                 <com.example.benjamin.recettes.views.ImageInputView
                     android:id="@+id/image3"
                     android:layout_width="100dp"
                     android:layout_height="99dp"
-                    android:layout_margin="1dp" />
+                    android:layout_margin="1dp"
+                    android:layout_marginStart="0dp"
+
+                    />
 
                 <com.example.benjamin.recettes.views.ImageInputView
                     android:id="@+id/image4"
                     android:layout_width="100dp"
                     android:layout_height="99dp"
                     android:layout_margin="1dp"
-                    android:layout_marginBottom="0dp"/>
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginEnd="0dp"
+                    />
 
                 <com.example.benjamin.recettes.views.ImageInputView
                     android:id="@+id/image5"
                     android:layout_width="100dp"
                     android:layout_height="99dp"
-                    android:layout_margin="1dp" />
+                    android:layout_margin="1dp"
+                    android:layout_marginStart="0dp"
+
+                    />
 
             </GridLayout>
         </LinearLayout>
@@ -99,7 +111,7 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
+            
             android:layout_weight="0.92"
             android:layout_gravity="center_vertical"
             >
@@ -122,7 +134,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_layout"
-        android:background="#FFFFFF">
+        >
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -143,12 +155,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
-            android:background="#FFFFFF">
+            >
             <EditText
                 android:id="@+id/time_prepare"
                 android:layout_width="175dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textSize="12sp"
                 android:hint="@string/preparation_time"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -157,7 +170,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="end"
-            android:background="#FFFFFF">
+            >
             <EditText
                 android:id="@+id/time_cook"
                 android:layout_width="175dp"
@@ -170,7 +183,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
-            android:background="#FFFFFF">
+            >
 
             <EditText
                 android:id="@+id/time_total"
@@ -183,7 +196,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:background="#FFFFFF">
+            >
             <EditText
                 android:id="@+id/nb_covers"
                 android:layout_width="175dp"
@@ -202,7 +215,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_layout"
-        android:background="#FFFFFF"
+        
         >
         <EditText
             android:layout_width="match_parent"
