@@ -9,12 +9,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Ingredient;
@@ -30,7 +30,7 @@ public class FragmentIngredients extends Fragment implements RecyclerViewClickLi
 
 
     private OnIngredientListEditedListener listenerActivity;
-    private SearchView searchView;
+    private EditText txtAddIngr;
     private EditText txtQteDialog;
     private EditText txtQteUnitDialog;
     private AlertDialog dialogIngredient;
@@ -58,23 +58,18 @@ public class FragmentIngredients extends Fragment implements RecyclerViewClickLi
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.addItemDecoration(new SimpleItemDividerDecoration(getContext()));
 
-        searchView = (SearchView) layout.findViewById(R.id.searchView);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        txtAddIngr = (EditText) layout.findViewById(R.id.txtIngredient);
+        ImageView btnAddIng = (ImageView) layout.findViewById(R.id.btnAddIngredient);
+        btnAddIng.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onQueryTextSubmit(final String query) {
-                if (query.isEmpty()) {
-                    return false;
+            public void onClick(View v) {
+                if (SUtils.nullOrEmpty(txtAddIngr.getText().toString())) {
+                    return;
                 }
                 if (!dialogIngredient.isShowing()) {
                     dialogIngredient.show();
                 }
                 fillDialogView();
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
             }
         });
 
@@ -132,7 +127,7 @@ public class FragmentIngredients extends Fragment implements RecyclerViewClickLi
 
 
     public AlertDialog createDialogBox(View dialogView) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(searchView.getContext())
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setView(dialogView)
                 .setTitle(R.string.enterQuantity);
         DialogInterface.OnClickListener clicklistener = new DialogInterface.OnClickListener() {
@@ -141,7 +136,7 @@ public class FragmentIngredients extends Fragment implements RecyclerViewClickLi
                 createOrUpdateIngredient();
                 txtQteDialog.setText("");
                 txtQteUnitDialog.setText("");
-                searchView.setQuery("", false);
+                txtAddIngr.setText("");
             }
         };
         builder.setPositiveButton(R.string.ok, clicklistener);
@@ -192,7 +187,7 @@ public class FragmentIngredients extends Fragment implements RecyclerViewClickLi
         }
         boolean create = currentIngredient == null;
         if (create) {
-            currentIngredient = new Ingredient(searchView.getQuery().toString());
+            currentIngredient = new Ingredient(txtAddIngr.getText().toString());
             ingredients.add(currentIngredient);
         }
         currentIngredient.setQuantity(quantity);
