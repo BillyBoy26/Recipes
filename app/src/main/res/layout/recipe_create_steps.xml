@@ -9,20 +9,26 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:id="@+id/pnlSearchAndAdd"
-        android:weightSum="1">
+        >
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            >
             <EditText
-                android:layout_width="318dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editTxtStep"
                 android:hint="@string/addStep"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.92" />
+                 />
+        </android.support.design.widget.TextInputLayout>
 
         <ImageView
             android:id="@+id/iconAddStep"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_circle_pink_24dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_add_grey_48dp"
             />
     </LinearLayout>
 

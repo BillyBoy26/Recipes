@@ -5,12 +5,33 @@
     android:layout_height="wrap_content"
     android:paddingTop="58dp">
 
-    <android.support.v7.widget.SearchView
-        android:id="@+id/searchView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:queryHint="Entrez un nom d'ingrédient"
-        app:iconifiedByDefault="false"/>
+        android:orientation="horizontal">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            >
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtIngredient"
+                android:textSize="15sp"
+                android:hint="@string/enter_ingredient_name"
+
+                />
+        </android.support.design.widget.TextInputLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/btnAddIngredient"
+            android:src="@drawable/ic_add_grey_48dp"
+            />
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"

@@ -80,7 +80,7 @@ public class IngredientAdapter extends BasicListAdapter<Ingredient,IngredientAda
             }
             textViewName.setText(spannable);
 
-            if (position % 2 == 1) {
+             if (position % 2 == 0) {
                 itemView.setBackgroundResource(R.color.listColorSecondary);
             } else {
                 itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
