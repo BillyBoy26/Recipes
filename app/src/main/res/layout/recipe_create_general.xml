@@ -129,7 +129,7 @@
                 android:id="@+id/category"
                 android:textSize="15sp"
                 android:focusable="false"
-                android:hint="@string/category"/>
+                android:hint="@string/categories"/>
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
@@ -179,6 +179,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:inputType="time"
             android:textSize="15sp"
             android:hint="@string/preparation_time"/>
     </android.support.design.widget.TextInputLayout>
@@ -268,10 +269,11 @@
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lblUrlVideo"/>
+        android:text="@string/see_video"
+        android:id="@+id/btnUrlVideo"/>
 
     <LinearLayout
         android:layout_width="match_parent"

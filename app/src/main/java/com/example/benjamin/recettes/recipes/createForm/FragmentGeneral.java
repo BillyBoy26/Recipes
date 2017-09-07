@@ -2,7 +2,6 @@ package com.example.benjamin.recettes.recipes.createForm;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,7 +19,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Category;
@@ -54,7 +52,7 @@ public class FragmentGeneral  extends Fragment {
     private ImageInputView imageView3;
     private ImageInputView imageView4;
     private ImageInputView imageView5;
-    private TextView lblUrlVideo;
+    private Button btnUrlVideo;
     private List<Category> allCategories;
     private Set<Category> selectCategories;
     private CategoryFilterAdapter adapterCategories;
@@ -75,7 +73,7 @@ public class FragmentGeneral  extends Fragment {
         txtUrlVideo = (EditText) generalView.findViewById(R.id.url_video);
         txtTimePrepare = (EditText) generalView.findViewById(R.id.time_prepare);
         txtTotalTime = (EditText) generalView.findViewById(R.id.time_total);
-        lblUrlVideo = (TextView) generalView.findViewById(R.id.lblUrlVideo);
+        btnUrlVideo = (Button) generalView.findViewById(R.id.btnUrlVideo);
         pnlCategories = (FlexboxLayout) generalView.findViewById(R.id.pnlCategories);
 
 
@@ -106,11 +104,10 @@ public class FragmentGeneral  extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String url = txtUrlVideo.getText().toString();
-                lblUrlVideo.setText(url);
                 if (URLUtil.isValidUrl(url)) {
-                    lblUrlVideo.setTextColor(Color.MAGENTA);
+                    btnUrlVideo.setVisibility(View.VISIBLE);
                 } else {
-                    lblUrlVideo.setTextColor(Color.BLACK);
+                    btnUrlVideo.setVisibility(View.GONE);
                 }
             }
 
@@ -120,10 +117,10 @@ public class FragmentGeneral  extends Fragment {
             }
         });
 
-        lblUrlVideo.setOnClickListener(new View.OnClickListener() {
+        btnUrlVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = lblUrlVideo.getText().toString();
+                String url = btnUrlVideo.getText().toString();
                 if (SUtils.notNullOrEmpty(url) && URLUtil.isValidUrl(url)) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(browserIntent);
@@ -159,7 +156,7 @@ public class FragmentGeneral  extends Fragment {
             txtTotalTime.setText(recipe.getTotalTime());
             txtTimePrepare.setText(recipe.getPrepareTime());
             txtUrlVideo.setText(recipe.getUrlVideo());
-            lblUrlVideo.setText(recipe.getUrlVideo());
+            btnUrlVideo.setVisibility(URLUtil.isValidUrl(recipe.getUrlImage()) ? View.VISIBLE:View.GONE);
             if (recipe.getUrlImage() != null) {
                 new DownloadImageTask(imageView).execute(recipe.getUrlImage());
             }
