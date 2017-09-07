@@ -157,19 +157,19 @@ public class FragmentGeneral  extends Fragment {
             txtTimePrepare.setText(recipe.getPrepareTime());
             txtUrlVideo.setText(recipe.getUrlVideo());
             btnUrlVideo.setVisibility(URLUtil.isValidUrl(recipe.getUrlImage()) ? View.VISIBLE:View.GONE);
-            if (recipe.getUrlImage() != null) {
+            if (SUtils.notNullOrEmpty(recipe.getUrlImage())){
                 new DownloadImageTask(imageView).execute(recipe.getUrlImage());
             }
-            if (recipe.getUrlImage2() != null) {
+            if (SUtils.notNullOrEmpty(recipe.getUrlImage2())) {
                 new DownloadImageTask(imageView2).execute(recipe.getUrlImage2());
             }
-            if (recipe.getUrlImage3() != null) {
+            if (SUtils.notNullOrEmpty(recipe.getUrlImage3())) {
                 new DownloadImageTask(imageView3).execute(recipe.getUrlImage3());
             }
-            if (recipe.getUrlImage4() != null) {
+            if (SUtils.notNullOrEmpty(recipe.getUrlImage4())) {
                 new DownloadImageTask(imageView4).execute(recipe.getUrlImage4());
             }
-            if (recipe.getUrlImage5() != null) {
+            if (SUtils.notNullOrEmpty(recipe.getUrlImage5())) {
                 new DownloadImageTask(imageView5).execute(recipe.getUrlImage5());
             }
 

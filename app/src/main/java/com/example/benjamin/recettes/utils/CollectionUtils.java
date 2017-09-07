@@ -37,4 +37,12 @@ public class CollectionUtils {
         }
         return filtredList;
     }
+
+    public static <T> ArrayList<T> asArrayList(T... args) {
+        ArrayList<T> list = new ArrayList<>();
+        for (T arg : args) {
+            list.add(arg);
+        }
+        return list;
+    }
 }
