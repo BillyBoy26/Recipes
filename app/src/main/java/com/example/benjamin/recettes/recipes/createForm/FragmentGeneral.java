@@ -1,11 +1,15 @@
 package com.example.benjamin.recettes.recipes.createForm;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -13,17 +17,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Category;
 import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.recipes.CategoryFilterAdapter;
 import com.example.benjamin.recettes.task.DownloadImageTask;
+import com.example.benjamin.recettes.utils.CollectionUtils;
 import com.example.benjamin.recettes.utils.SUtils;
 import com.example.benjamin.recettes.views.ImageInputView;
 import com.google.android.flexbox.FlexboxLayout;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class FragmentGeneral  extends Fragment {
 
@@ -43,6 +55,9 @@ public class FragmentGeneral  extends Fragment {
     private ImageInputView imageView4;
     private ImageInputView imageView5;
     private TextView lblUrlVideo;
+    private List<Category> allCategories;
+    private Set<Category> selectCategories;
+    private CategoryFilterAdapter adapterCategories;
 
     @Nullable
     @Override
@@ -62,17 +77,22 @@ public class FragmentGeneral  extends Fragment {
         txtTotalTime = (EditText) generalView.findViewById(R.id.time_total);
         lblUrlVideo = (TextView) generalView.findViewById(R.id.lblUrlVideo);
         pnlCategories = (FlexboxLayout) generalView.findViewById(R.id.pnlCategories);
-        ImageView btnAddCat = (ImageView) generalView.findViewById(R.id.iconAddCat);
-        btnAddCat.setOnClickListener(new View.OnClickListener() {
+
+
+        adapterCategories = new CategoryFilterAdapter();
+        View dialogSelectCatView = inflater.inflate(R.layout.recipe__create_category_select, null, false);
+        final AlertDialog dialogCat = createDialogCategories(dialogSelectCatView);
+        txtCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String catName = txtCategory.getText().toString();
-                if (SUtils.nullOrEmpty(catName)) {
-                    return;
+                adapterCategories.setDatas(allCategories);
+                if (recipe != null && recipe.getCategories() != null) {
+                    adapterCategories.setSelectedCategories(new HashSet<>(recipe.getCategories()));
                 }
-                addCatToView(catName, inflater);
-                txtCategory.setText("");
-                recipe.getCategories().add(new Category(catName));
+
+                if (!dialogCat.isShowing()) {
+                    dialogCat.show();
+                }
             }
         });
         fillRecipeView();
@@ -157,10 +177,19 @@ public class FragmentGeneral  extends Fragment {
             }
 
 
+            fillCategoriesView();
+        }
+
+    }
+
+    private void fillCategoriesView() {
+        pnlCategories.removeAllViews();
+        if (CollectionUtils.notNullOrEmpty(recipe.getCategories())) {
             for (Category category : recipe.getCategories()) {
-                addCatToView(category.getName(),getActivity().getLayoutInflater());
+                addCatToView(category.getName(), getActivity().getLayoutInflater());
             }
         }
+
 
     }
 
@@ -180,8 +209,64 @@ public class FragmentGeneral  extends Fragment {
     }
 
 
-    public void setRecipe(Recipe recipe) {
+    public void setDatas(Recipe recipe,List<Category> categories) {
         this.recipe = recipe;
+        this.allCategories = categories;
         fillRecipeView();
+    }
+
+
+    private AlertDialog createDialogCategories(View dialogView) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.categories)
+                .setView(dialogView);
+
+        RecyclerView gridCats = (RecyclerView) dialogView.findViewById(R.id.gridCategory);
+        gridCats.setAdapter(adapterCategories);
+        gridCats.setLayoutManager(new GridLayoutManager(getContext(),2));
+
+
+        final CheckBox cbAllCat = (CheckBox) dialogView.findViewById(R.id.selectAllCat);
+        final CheckBox cbNewCat = (CheckBox) dialogView.findViewById(R.id.cbNewCat);
+        final EditText txtNewCat = (EditText) dialogView.findViewById(R.id.txtNewCat);
+        cbAllCat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    adapterCategories.setSelectedCategories(new HashSet<>(allCategories));
+                } else {
+                    adapterCategories.setSelectedCategories(null);
+                }
+            }
+        });
+        txtNewCat.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    cbNewCat.setChecked(true);
+                }
+            }
+        });
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Set<Category> selectedCategories = adapterCategories.getSelectedCategories();
+                String newCatName = txtNewCat.getText().toString();
+                if (cbNewCat.isChecked() && SUtils.notNullOrEmpty(newCatName)) {
+                    selectedCategories.add(new Category(newCatName));
+                }
+                recipe.setCategories(new ArrayList<>(selectedCategories));
+                fillCategoriesView();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        return builder.create();
     }
 }

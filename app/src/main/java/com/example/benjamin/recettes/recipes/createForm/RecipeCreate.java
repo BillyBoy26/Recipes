@@ -15,14 +15,18 @@ import android.widget.Toast;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.TabsActivity;
+import com.example.benjamin.recettes.data.Category;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.db.dao.BatchCookingDao;
+import com.example.benjamin.recettes.db.dao.CategoryDao;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
 import com.example.benjamin.recettes.recipes.RecipesList;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
 import com.example.benjamin.recettes.utils.SUtils;
+
+import java.util.List;
 
 public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCallbacks<Recipe> {
 
@@ -33,7 +37,9 @@ public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCa
     private FragmentIngredients fragmentIngredients;
     private FragmentSteps fragmentSteps;
     private RecipeDao recipeDao;
+    private CategoryDao categoryDao;
     private BatchCookingDao batchCookingDao;
+    private List<Category> allCategory;
 
 
     @Override
@@ -41,8 +47,9 @@ public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCa
         super.onCreate(savedInstanceState);
 
         recipeDao = new RecipeDao(this);
+        categoryDao = new CategoryDao(this);
         batchCookingDao = new BatchCookingDao(this);
-        initDaos(recipeDao,batchCookingDao);
+        initDaos(recipeDao,batchCookingDao,categoryDao);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.get(CURRENT_RECIPE) != null) {
@@ -70,7 +77,7 @@ public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCa
         if (recipe == null) {
             recipe = new Recipe();
         }
-        fragmentGeneral.setRecipe(recipe);
+        fragmentGeneral.setDatas(recipe,allCategory);
         fragmentIngredients.setRecipe(recipe);
         fragmentSteps.setData(recipe);
     }
@@ -110,6 +117,7 @@ public class RecipeCreate extends TabsActivity implements LoaderManager.LoaderCa
         return new AsyncTaskDataLoader<Recipe>(this) {
             @Override
             public Recipe loadInBackground() {
+                allCategory = categoryDao.getAllCategory();
                 return recipeDao.findById(recipe.getId());
             }
         };

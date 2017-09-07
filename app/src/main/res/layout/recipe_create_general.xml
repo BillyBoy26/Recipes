@@ -128,16 +128,9 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/category"
                 android:textSize="15sp"
+                android:focusable="false"
                 android:hint="@string/category"/>
         </android.support.design.widget.TextInputLayout>
-
-        <ImageView
-            android:id="@+id/iconAddCat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_add_circle_pink_24dp"
-            />
     </LinearLayout>
 
     <LinearLayout

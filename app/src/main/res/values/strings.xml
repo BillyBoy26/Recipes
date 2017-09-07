@@ -74,4 +74,7 @@
     <string name="select_all">Tout selectionner</string>
     <string name="edit_step">Modifier l\'étape</string>
     <string name="later">Plus tard</string>
+    <string name="others">Autres</string>
+    <string name="categories">Catégories</string>
+    <string name="new_category">Nouvelle catégorie</string>
 </resources>
