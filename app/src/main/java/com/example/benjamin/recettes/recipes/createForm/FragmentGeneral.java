@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RatingBar;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Category;
@@ -58,6 +59,7 @@ public class FragmentGeneral  extends Fragment {
     private Set<Category> selectCategories;
     private CategoryFilterAdapter adapterCategories;
     private SimpleImageActionListener imgActionListner;
+    private RatingBar ratingBar;
 
     @Nullable
     @Override
@@ -80,6 +82,7 @@ public class FragmentGeneral  extends Fragment {
         txtTotalTime = (EditText) generalView.findViewById(R.id.time_total);
         btnUrlVideo = (Button) generalView.findViewById(R.id.btnUrlVideo);
         pnlCategories = (FlexboxLayout) generalView.findViewById(R.id.pnlCategories);
+        ratingBar = (RatingBar) generalView.findViewById(R.id.ratingBar);
 
 
         adapterCategories = new CategoryFilterAdapter();
@@ -162,6 +165,7 @@ public class FragmentGeneral  extends Fragment {
             txtTimePrepare.setText(recipe.getPrepareTime());
             txtUrlVideo.setText(recipe.getUrlVideo());
             btnUrlVideo.setVisibility(URLUtil.isValidUrl(recipe.getUrlVideo()) ? View.VISIBLE:View.GONE);
+            ratingBar.setRating(recipe.getRating() != null ? recipe.getRating():0);
 
             ImageUtils.loadImage(recipe.getMainImage(), imageView, null);
             ImageUtils.loadImage(recipe.getImage2(), imageView2, null);
@@ -196,6 +200,7 @@ public class FragmentGeneral  extends Fragment {
         recipe.setTotalTime(txtTotalTime.getText().toString());
         recipe.setNbCovers(txtNbCovers.getText().toString());
         recipe.setUrlVideo(txtUrlVideo.getText().toString());
+        recipe.setRating(ratingBar.getRating());
         //les catégories sont gérés automatiquement
     }
 

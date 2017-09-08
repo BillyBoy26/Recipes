@@ -22,6 +22,7 @@ import java.util.Map;
 import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_CAT;
 import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_ING;
 import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_STEPS;
+import static com.example.benjamin.recettes.utils.CursorUtils.getFloatColumnOrNull;
 import static com.example.benjamin.recettes.utils.CursorUtils.getStringColumnOrEmpty;
 
 public class RecipeDao extends GenericDao{
@@ -124,6 +125,7 @@ public class RecipeDao extends GenericDao{
         contentValues.put(TRecipe.C_PREPARE_TIME,recipe.getPrepareTime());
         contentValues.put(TRecipe.C_IS_BATCH,recipe.isBatchCooking());
         contentValues.put(TRecipe.C_URL_VIDEO,recipe.getUrlVideo());
+        contentValues.put(TRecipe.C_RATING,recipe.getRating());
         fillUpdatedate(contentValues);
 
 
@@ -193,6 +195,7 @@ public class RecipeDao extends GenericDao{
         recipe.setPrepareTime(getStringColumnOrEmpty(cursor, TRecipe.C_PREPARE_TIME));
         recipe.setTotalTime(getStringColumnOrEmpty(cursor, TRecipe.C_TOTAL_TIME));
         recipe.setUrlVideo(getStringColumnOrEmpty(cursor, TRecipe.C_URL_VIDEO));
+        recipe.setRating(getFloatColumnOrNull(cursor, TRecipe.C_RATING));
         recipe.getImage2().parseStorableData(getStringColumnOrEmpty(cursor,TRecipe.C_URL_IMAGE_2));
         recipe.getImage3().parseStorableData(getStringColumnOrEmpty(cursor,TRecipe.C_URL_IMAGE_3));
         recipe.getImage4().parseStorableData(getStringColumnOrEmpty(cursor,TRecipe.C_URL_IMAGE_4));

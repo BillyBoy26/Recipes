@@ -33,7 +33,7 @@ public class Recipe implements Serializable, HasName, HasSteps{
     private ImageData image3 = new ImageData();
     private ImageData image4 = new ImageData();
     private ImageData image5 = new ImageData();
-
+    private Float rating;
 
     public Recipe() {
     }
@@ -197,6 +197,14 @@ public class Recipe implements Serializable, HasName, HasSteps{
 
     public void setImage5(ImageData image5) {
         this.image5 = image5;
+    }
+
+    public Float getRating() {
+        return rating;
+    }
+
+    public void setRating(Float rating) {
+        this.rating = rating;
     }
 
     public void addIngredient(Ingredient ingredient) {

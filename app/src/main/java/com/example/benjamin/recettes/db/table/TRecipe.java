@@ -19,6 +19,7 @@ public final class TRecipe implements TCommon{
     public static final String C_NB_COVERS = "REC_NB_COVERS";
     public static final String C_IS_BATCH = "REC_IS_BATCH";
     public static final String C_URL_VIDEO = "REC_URL_VIDEO";
+    public static final String C_RATING = "REC_RATING";
 
 
     private static final String CREATE_TABLE_RECIPE =
@@ -38,6 +39,7 @@ public final class TRecipe implements TCommon{
                     C_NB_COVERS + " TEXT, " +
                     C_IS_BATCH + " INTEGER, " +
                     C_URL_VIDEO + " TEXT, " +
+                    C_RATING + " REAL, " +
                     C_UPDATE_DATE + " DATE " +
                     ")";
 

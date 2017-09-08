@@ -80,4 +80,5 @@
     <string name="see_video">Voir la vidéo</string>
     <string name="delete_image">Supprimer l\'image</string>
     <string name="url">Url</string>
+    <string name="rating">Note</string>
 </resources>
