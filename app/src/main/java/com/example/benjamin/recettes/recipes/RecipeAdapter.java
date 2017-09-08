@@ -8,11 +8,11 @@ import android.widget.TextView;
 
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.utils.ImageUtils;
 import com.example.benjamin.recettes.utils.SUtils;
 import com.example.benjamin.recettes.views.BasicListAdapter;
 import com.example.benjamin.recettes.views.ClickableViewHolder;
 import com.example.benjamin.recettes.views.RecyclerViewClickListener;
-import com.squareup.picasso.Picasso;
 
 public class RecipeAdapter extends BasicListAdapter<Recipe,RecipeAdapter.RecipeViewHolder> {
 
@@ -49,11 +49,7 @@ public class RecipeAdapter extends BasicListAdapter<Recipe,RecipeAdapter.RecipeV
 
         public void bind(Recipe recipe) {
             textView.setText(SUtils.capitalize(recipe.getName()));
-            if (SUtils.notNullOrEmpty(recipe.getUrlImage())) {
-                Picasso.with(imageView.getContext()).load(recipe.getUrlImage()).centerCrop().fit().into(imageView);
-            } else {
-                imageView.setImageResource(R.drawable.defaut_recipe);
-            }
+            ImageUtils.loadImage(recipe.getMainImage(),imageView,R.drawable.defaut_recipe);
         }
     }
 }

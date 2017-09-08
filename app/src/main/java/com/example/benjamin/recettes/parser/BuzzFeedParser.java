@@ -62,7 +62,7 @@ public class BuzzFeedParser {
 
             parseName(recipe);
             recipe.setUrlVideo(urlVideo);
-            recipe.setUrlImage(mainUrlImage);
+            recipe.getMainImage().setUrlImage(mainUrlImage);
             parseIngredients(recipe,ingredientsElem);
             parseSteps(recipe);
             addRecipe(recipes, recipe);
@@ -95,7 +95,7 @@ public class BuzzFeedParser {
                     }
                     Elements img = currentElem.select("img[data-src]");
                     if (!img.isEmpty()) {
-                        recipe.setUrlImage(img.first().attr("data-src"));
+                        recipe.getMainImage().setUrlImage(img.first().attr("data-src"));
                         Elements h3 = currentElem.select("h3");
                         if (!h3.isEmpty()) {
                             currentElem = h3.first();
@@ -108,8 +108,8 @@ public class BuzzFeedParser {
                 recipe.setName(currentElem.text());
             }
             recipe.setUrlVideo(urlVideo);
-            if (SUtils.nullOrEmpty(recipe.getUrlImage())) {
-                recipe.setUrlImage(mainUrlImage);
+            if (SUtils.nullOrEmpty(recipe.getMainImage().getUrlImage())) {
+                recipe.getMainImage().setUrlImage(mainUrlImage);
             }
 
             //steps
@@ -138,7 +138,7 @@ public class BuzzFeedParser {
             Log.w(BF_PARSER, "No name for the recipe from" + url.toString());
             recipe.setName("");
         }
-        if (SUtils.nullOrEmpty(recipe.getUrlImage())) {
+        if (SUtils.nullOrEmpty(recipe.getMainImage().getUrlImage())) {
             Log.w(BF_PARSER, "No image for the recipe " + recipe.getName() + " from " + url.toString());
         }
         if (SUtils.nullOrEmpty(recipe.getUrlVideo())) {

@@ -10,11 +10,11 @@ import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.data.RecipeGroup;
 import com.example.benjamin.recettes.utils.CollectionUtils;
+import com.example.benjamin.recettes.utils.ImageUtils;
 import com.example.benjamin.recettes.utils.SUtils;
 import com.example.benjamin.recettes.views.BasicListAdapter;
 import com.example.benjamin.recettes.views.ClickableViewHolder;
 import com.example.benjamin.recettes.views.RecyclerViewClickListener;
-import com.squareup.picasso.Picasso;
 
 public class RecipeGroupAdapter extends BasicListAdapter<RecipeGroup,RecipeGroupAdapter.RecipeGroupViewHolder> {
     private final RecyclerViewClickListener clickListener;
@@ -53,8 +53,7 @@ public class RecipeGroupAdapter extends BasicListAdapter<RecipeGroup,RecipeGroup
                 image.setImageResource(R.drawable.defaut_recipe);
             } else {
                 for (Recipe recipe : recipeGroup.getRecipes()) {
-                    //TODO
-                    Picasso.with(image.getContext()).load(recipe.getUrlImage()).centerCrop().fit().into(image);
+                    ImageUtils.loadImage(recipe.getMainImage(),image,R.drawable.defaut_recipe);
                 }
             }
         }

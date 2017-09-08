@@ -79,4 +79,5 @@
     <string name="new_category">Nouvelle catégorie</string>
     <string name="see_video">Voir la vidéo</string>
     <string name="delete_image">Supprimer l\'image</string>
+    <string name="url">Url</string>
 </resources>

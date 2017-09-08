@@ -24,10 +24,11 @@ import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Category;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.recipes.CategoryFilterAdapter;
-import com.example.benjamin.recettes.task.DownloadImageTask;
 import com.example.benjamin.recettes.utils.CollectionUtils;
+import com.example.benjamin.recettes.utils.ImageUtils;
 import com.example.benjamin.recettes.utils.SUtils;
 import com.example.benjamin.recettes.views.ImageInputView;
+import com.example.benjamin.recettes.views.SimpleImageActionListener;
 import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.ArrayList;
@@ -56,13 +57,17 @@ public class FragmentGeneral  extends Fragment {
     private List<Category> allCategories;
     private Set<Category> selectCategories;
     private CategoryFilterAdapter adapterCategories;
+    private SimpleImageActionListener imgActionListner;
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View generalView = inflater.inflate(R.layout.recipe_create_general, container, false);
+
+
         txtName = (EditText) generalView.findViewById(R.id.name);
         imageView = (ImageInputView) generalView.findViewById(R.id.image1);
+        imageView.setActionListener(imgActionListner);
         imageView2 = (ImageInputView) generalView.findViewById(R.id.image2);
         imageView3 = (ImageInputView) generalView.findViewById(R.id.image3);
         imageView4 = (ImageInputView) generalView.findViewById(R.id.image4);
@@ -156,24 +161,13 @@ public class FragmentGeneral  extends Fragment {
             txtTotalTime.setText(recipe.getTotalTime());
             txtTimePrepare.setText(recipe.getPrepareTime());
             txtUrlVideo.setText(recipe.getUrlVideo());
-            btnUrlVideo.setVisibility(URLUtil.isValidUrl(recipe.getUrlImage()) ? View.VISIBLE:View.GONE);
-            if (SUtils.notNullOrEmpty(recipe.getUrlImage())){
-                new DownloadImageTask(imageView).execute(recipe.getUrlImage());
-            }
-            if (SUtils.notNullOrEmpty(recipe.getUrlImage2())) {
-                new DownloadImageTask(imageView2).execute(recipe.getUrlImage2());
-            }
-            if (SUtils.notNullOrEmpty(recipe.getUrlImage3())) {
-                new DownloadImageTask(imageView3).execute(recipe.getUrlImage3());
-            }
-            if (SUtils.notNullOrEmpty(recipe.getUrlImage4())) {
-                new DownloadImageTask(imageView4).execute(recipe.getUrlImage4());
-            }
-            if (SUtils.notNullOrEmpty(recipe.getUrlImage5())) {
-                new DownloadImageTask(imageView5).execute(recipe.getUrlImage5());
-            }
+            btnUrlVideo.setVisibility(URLUtil.isValidUrl(recipe.getUrlVideo()) ? View.VISIBLE:View.GONE);
 
-
+            ImageUtils.loadImage(recipe.getMainImage(), imageView, null);
+            ImageUtils.loadImage(recipe.getImage2(), imageView2, null);
+            ImageUtils.loadImage(recipe.getImage3(), imageView3, null);
+            ImageUtils.loadImage(recipe.getImage4(), imageView4, null);
+            ImageUtils.loadImage(recipe.getImage5(), imageView5, null);
             fillCategoriesView();
         }
 
@@ -192,11 +186,11 @@ public class FragmentGeneral  extends Fragment {
 
     public void getRecipe() {
         recipe.setName( txtName.getText().toString());
-        recipe.setUrlImage(imageView.getUrlImage());
-        recipe.setUrlImage2(imageView2.getUrlImage());
-        recipe.setUrlImage3(imageView3.getUrlImage());
-        recipe.setUrlImage4(imageView4.getUrlImage());
-        recipe.setUrlImage5(imageView5.getUrlImage());
+        imageView.fill(recipe.getMainImage());
+        imageView2.fill(recipe.getImage2());
+        imageView3.fill(recipe.getImage3());
+        imageView4.fill(recipe.getImage4());
+        imageView5.fill(recipe.getImage5());
         recipe.setPrepareTime(txtTimePrepare.getText().toString());
         recipe.setCookTime(txtTimeCook.getText().toString());
         recipe.setTotalTime(txtTotalTime.getText().toString());
@@ -265,5 +259,9 @@ public class FragmentGeneral  extends Fragment {
         });
 
         return builder.create();
+    }
+
+    public void setImgActionListner(SimpleImageActionListener imgActionListner) {
+        this.imgActionListner = imgActionListner;
     }
 }

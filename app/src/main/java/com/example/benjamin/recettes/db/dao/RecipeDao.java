@@ -113,11 +113,11 @@ public class RecipeDao extends GenericDao{
         }
         ContentValues contentValues = new ContentValues();
         contentValues.put(TRecipe.C_NAME,recipe.getName());
-        contentValues.put(TRecipe.C_URL_IMAGE,recipe.getUrlImage());
-        contentValues.put(TRecipe.C_URL_IMAGE_2,recipe.getUrlImage2());
-        contentValues.put(TRecipe.C_URL_IMAGE_3,recipe.getUrlImage3());
-        contentValues.put(TRecipe.C_URL_IMAGE_4,recipe.getUrlImage4());
-        contentValues.put(TRecipe.C_URL_IMAGE_5,recipe.getUrlImage5());
+        contentValues.put(TRecipe.C_URL_IMAGE,recipe.getMainImage().asStorableString());
+        contentValues.put(TRecipe.C_URL_IMAGE_2,recipe.getImage2().asStorableString());
+        contentValues.put(TRecipe.C_URL_IMAGE_3,recipe.getImage3().asStorableString());
+        contentValues.put(TRecipe.C_URL_IMAGE_4,recipe.getImage4().asStorableString());
+        contentValues.put(TRecipe.C_URL_IMAGE_5,recipe.getImage5().asStorableString());
         contentValues.put(TRecipe.C_NB_COVERS,recipe.getNbCovers());
         contentValues.put(TRecipe.C_COOK_TIME,recipe.getCookTime());
         contentValues.put(TRecipe.C_TOTAL_TIME,recipe.getTotalTime());
@@ -186,17 +186,17 @@ public class RecipeDao extends GenericDao{
     public static Recipe getRecipeFromCursor(Cursor cursor, String nameColumnId) {
         Recipe recipe = new Recipe();
         recipe.setId(cursor.getLong(cursor.getColumnIndex(nameColumnId)));
-        recipe.setUrlImage(getStringColumnOrEmpty(cursor,TRecipe.C_URL_IMAGE));
+        recipe.getMainImage().parseStorableData(getStringColumnOrEmpty(cursor,TRecipe.C_URL_IMAGE));
         recipe.setName(cursor.getString(cursor.getColumnIndex(TRecipe.C_NAME)));
         recipe.setCookTime(getStringColumnOrEmpty(cursor, TRecipe.C_COOK_TIME));
         recipe.setNbCovers(getStringColumnOrEmpty(cursor, TRecipe.C_NB_COVERS));
         recipe.setPrepareTime(getStringColumnOrEmpty(cursor, TRecipe.C_PREPARE_TIME));
         recipe.setTotalTime(getStringColumnOrEmpty(cursor, TRecipe.C_TOTAL_TIME));
         recipe.setUrlVideo(getStringColumnOrEmpty(cursor, TRecipe.C_URL_VIDEO));
-        recipe.setUrlImage2(getStringColumnOrEmpty(cursor,TRecipe.C_URL_IMAGE_2));
-        recipe.setUrlImage3(getStringColumnOrEmpty(cursor,TRecipe.C_URL_IMAGE_3));
-        recipe.setUrlImage4(getStringColumnOrEmpty(cursor,TRecipe.C_URL_IMAGE_4));
-        recipe.setUrlImage5(getStringColumnOrEmpty(cursor,TRecipe.C_URL_IMAGE_5));
+        recipe.getImage2().parseStorableData(getStringColumnOrEmpty(cursor,TRecipe.C_URL_IMAGE_2));
+        recipe.getImage3().parseStorableData(getStringColumnOrEmpty(cursor,TRecipe.C_URL_IMAGE_3));
+        recipe.getImage4().parseStorableData(getStringColumnOrEmpty(cursor,TRecipe.C_URL_IMAGE_4));
+        recipe.getImage5().parseStorableData(getStringColumnOrEmpty(cursor,TRecipe.C_URL_IMAGE_5));
 
         return recipe;
     }

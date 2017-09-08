@@ -1,5 +1,7 @@
 package com.example.benjamin.recettes.data;
 
+import com.example.benjamin.recettes.utils.SUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +14,9 @@ public class Recipe implements Serializable, HasName, HasSteps{
         WITH_STEPS, WITH_ING, WITH_CAT
     }
 
-    private String urlImage;
+
+
+    private ImageData mainImage = new ImageData();
     private String description;
     private String name;
     private List<Ingredient> ingredients = new ArrayList<>();
@@ -25,10 +29,10 @@ public class Recipe implements Serializable, HasName, HasSteps{
     private String nbCovers;
     private boolean batchCooking;
     private String urlVideo;
-    private String urlImage2;
-    private String urlImage3;
-    private String urlImage4;
-    private String urlImage5;
+    private ImageData image2 = new ImageData();
+    private ImageData image3 = new ImageData();
+    private ImageData image4 = new ImageData();
+    private ImageData image5 = new ImageData();
 
 
     public Recipe() {
@@ -36,16 +40,12 @@ public class Recipe implements Serializable, HasName, HasSteps{
 
     public Recipe(String name, String urlImage) {
         this.name = name;
-        this.urlImage = urlImage;
+        mainImage.setUrlImage(urlImage);
     }
 
 
-    public String getUrlImage() {
-        return urlImage;
-    }
-
-    public void setUrlImage(String urlImage) {
-        this.urlImage = urlImage;
+    public ImageData getMainImage() {
+        return mainImage;
     }
 
     public String getDescription() {
@@ -167,36 +167,36 @@ public class Recipe implements Serializable, HasName, HasSteps{
         this.urlVideo = urlVideo;
     }
 
-    public String getUrlImage2() {
-        return urlImage2;
+    public ImageData getImage2() {
+        return image2;
     }
 
-    public void setUrlImage2(String urlImage2) {
-        this.urlImage2 = urlImage2;
+    public void setImage2(ImageData image2) {
+        this.image2 = image2;
     }
 
-    public String getUrlImage3() {
-        return urlImage3;
+    public ImageData getImage3() {
+        return image3;
     }
 
-    public void setUrlImage3(String urlImage3) {
-        this.urlImage3 = urlImage3;
+    public void setImage3(ImageData image3) {
+        this.image3 = image3;
     }
 
-    public String getUrlImage4() {
-        return urlImage4;
+    public ImageData getImage4() {
+        return image4;
     }
 
-    public void setUrlImage4(String urlImage4) {
-        this.urlImage4 = urlImage4;
+    public void setImage4(ImageData image4) {
+        this.image4 = image4;
     }
 
-    public String getUrlImage5() {
-        return urlImage5;
+    public ImageData getImage5() {
+        return image5;
     }
 
-    public void setUrlImage5(String urlImage5) {
-        this.urlImage5 = urlImage5;
+    public void setImage5(ImageData image5) {
+        this.image5 = image5;
     }
 
     public void addIngredient(Ingredient ingredient) {
@@ -211,5 +211,59 @@ public class Recipe implements Serializable, HasName, HasSteps{
         }
     }
 
+
+    public class ImageData implements Serializable{
+        public static final String PATH = "PATH";
+        public static final String URL = "URL";
+        private String urlImage;
+        private String pathToImage;
+
+        public String getUrlImage() {
+            return urlImage;
+        }
+
+        public void setUrlImage(String urlImage) {
+            this.urlImage = urlImage;
+        }
+
+        public String getPathToImage() {
+            return pathToImage;
+        }
+
+        public void setPathToImage(String pathToImage) {
+            this.pathToImage = pathToImage;
+        }
+
+        public String asStorableString() {
+            StringBuilder builder = new StringBuilder();
+            if (SUtils.notNullOrEmpty(urlImage)) {
+                builder.append(URL);
+                builder.append(urlImage);
+            } else if (SUtils.notNullOrEmpty(pathToImage)) {
+                builder.append(PATH);
+                builder.append(pathToImage);
+            }
+
+            return builder.toString();
+        }
+
+        public void parseStorableData(String storeImageUrl) {
+            if (SUtils.nullOrEmpty(storeImageUrl)) {
+                return;
+            }
+            if (storeImageUrl.startsWith(URL)) {
+                urlImage = storeImageUrl.replace(URL, "");
+            } else if (storeImageUrl.startsWith(PATH)) {
+                pathToImage = storeImageUrl.replace(PATH, "");
+            } else {
+                urlImage = storeImageUrl;
+            }
+        }
+
+        public void clear() {
+            urlImage = "";
+            pathToImage = "";
+        }
+    }
 
 }
