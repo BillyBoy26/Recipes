@@ -26,4 +26,18 @@
         android:id="@+id/gridCategory"
         />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/filter_by_rating"
+        />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:stepSize="1"
+        android:numStars="5"
+        android:id="@+id/ratingBar"
+        />
+
 </LinearLayout>

@@ -48,7 +48,7 @@ public class RecipeDao extends GenericDao{
 
     public Cursor getAllRecipesAsCursor() {
         String[] columns = new String[]{TRecipe.C_NAME, TRecipe._ID,
-                TRecipe.C_URL_IMAGE, TRecipe.C_STEPS, TRecipe.C_UPDATE_DATE};
+                TRecipe.C_URL_IMAGE, TRecipe.C_STEPS, TRecipe.C_UPDATE_DATE,TRecipe.C_RATING};
         return db.query(TRecipe.T_RECIPE, columns, null, null, null, null, TRecipe.C_UPDATE_DATE + " DESC");
     }
 

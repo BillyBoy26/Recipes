@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.example.benjamin.recettes.DrawerActivity;
@@ -37,6 +38,7 @@ import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_CAT;
@@ -57,6 +59,9 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
     private CategoryFilterAdapter catAdapter;
     private Set<Category> selectedCategories = new HashSet<>();
     private AlertDialog dialogFilters;
+    private Float ratingSelected;
+    private RatingBar ratingBar;
+    private CheckBox cbSelectAll;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -185,7 +190,9 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
     }
 
     private void showFilterDialog() {
+        cbSelectAll.setChecked(selectedCategories.size() == allCategory.size());
         catAdapter.setSelectedCategories(selectedCategories);
+        ratingBar.setRating(ratingSelected != null ? ratingSelected : 0);
         if (!dialogFilters.isShowing()) {
             dialogFilters.show();
         }
@@ -196,7 +203,7 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
     private AlertDialog buildDialogBoxFilters() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        View filterView = getLayoutInflater().inflate(R.layout.recipe_filter,null);
+        final View filterView = getLayoutInflater().inflate(R.layout.recipe_filter,null);
 
         final RecyclerView gridCategory = (RecyclerView) filterView.findViewById(R.id.gridCategory);
         gridCategory.setLayoutManager(new GridLayoutManager(this,2));
@@ -204,7 +211,7 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
         catAdapter.setDatas(allCategory);
         catAdapter.setSelectedCategories(selectedCategories);
         gridCategory.setAdapter(catAdapter);
-        CheckBox cbSelectAll = (CheckBox) filterView.findViewById(R.id.selectAllCat);
+        cbSelectAll = (CheckBox) filterView.findViewById(R.id.selectAllCat);
         cbSelectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -217,18 +224,22 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
             }
         });
 
+        ratingBar = (RatingBar) filterView.findViewById(R.id.ratingBar);
+
         builder.setPositiveButton("OK", new DialogInterface.    OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 selectedCategories = catAdapter.getSelectedCategories();
+                ratingSelected = ratingBar.getRating();
                 filter();
-                dialog.dismiss();
             }
         });
-        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        builder.setNeutralButton("RAZ", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+                selectedCategories = new HashSet<Category>();
+                ratingSelected = null;
+                filter();
             }
         });
         builder.setView(filterView);
@@ -237,19 +248,37 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
     }
 
     private void filter() {
-        if (CollectionUtils.nullOrEmpty(selectedCategories)) {
-            recipeAdapter.setDatas(recipes);
-        } else {
-            List<Recipe> selectedRecipes = new ArrayList<>();
-            for (Recipe recipe : recipes) {
+        List<Recipe> filtredRecipes = new ArrayList<>(recipes);
+        filterByCategories(filtredRecipes);
+        filterByRating(filtredRecipes);
+        recipeAdapter.setDatas(filtredRecipes);
+    }
+
+    private void filterByRating(List<Recipe> filtredRecipes) {
+
+        if (ratingSelected != null && ratingSelected > 1) {
+            ListIterator<Recipe> iterator = filtredRecipes.listIterator();
+            while (iterator.hasNext()) {
+                Recipe recipe = iterator.next();
+                if (recipe.getRating() == null || recipe.getRating() < ratingSelected) {
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
+    private void filterByCategories(List<Recipe> filtredRecipes) {
+        if (CollectionUtils.notNullOrEmpty(selectedCategories)) {
+            ListIterator<Recipe> iterator = filtredRecipes.listIterator();
+            while (iterator.hasNext()) {
+                Recipe recipe = iterator.next();
                 for (Category category : selectedCategories) {
-                    if (recipe.getCategories().contains(category)) {
-                        selectedRecipes.add(recipe);
+                    if (!recipe.getCategories().contains(category)) {
+                        iterator.remove();
                         break;
                     }
                 }
             }
-            recipeAdapter.setDatas(selectedRecipes);
         }
     }
 
