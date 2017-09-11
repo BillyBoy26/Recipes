@@ -82,4 +82,6 @@
     <string name="url">Url</string>
     <string name="rating">Note</string>
     <string name="filter_by_rating">Filtrer par notes</string>
+    <string name="import_from_url">Importer à partir d\'une url</string>
+    <string name="choose_file">Choisir le fichier</string>
 </resources>
