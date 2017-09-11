@@ -90,6 +90,7 @@ public class BatchCookingDao extends GenericDao {
         Cursor cursor = db.rawQuery("Select " +
                         TRecipe._ID + ", " +
                         TRecipe.C_NAME + ", " +
+                        TRecipe.C_RATING + ", " +
                         TRecipe.C_URL_IMAGE +
                         " FROM " + TRecipe.T_RECIPE +
                         " WHERE " + TRecipe.C_IS_BATCH + "=1" +

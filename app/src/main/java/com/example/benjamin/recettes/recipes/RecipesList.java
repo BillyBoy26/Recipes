@@ -25,6 +25,7 @@ import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Category;
 import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.db.dao.BatchCookingDao;
 import com.example.benjamin.recettes.db.dao.CategoryDao;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
 import com.example.benjamin.recettes.recipes.createForm.RecipeCreate;
@@ -43,13 +44,14 @@ import java.util.Set;
 
 import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_CAT;
 
-public class RecipesList extends DrawerActivity implements LoaderManager.LoaderCallbacks<List<Recipe>>,RecyclerViewClickListener{
+public class RecipesList extends DrawerActivity implements LoaderManager.LoaderCallbacks<List<Recipe>>,RecyclerViewClickListener,RecipeAdapter.ActionRecipeListener{
 
     public static final String NB_RECIPES_IMPORTED = "NB_RECIPES_IMPORTED";
 
     private RecipeAdapter recipeAdapter;
     private RecipeDao recipeDao;
     private CategoryDao categoryDao;
+    private BatchCookingDao batchCookingDao;
     private boolean sortByAlpha = true;
     private SearchView searchView;
     private List<Recipe> recipes;
@@ -71,7 +73,8 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
 
         recipeDao = new RecipeDao(this);
         categoryDao = new CategoryDao(this);
-        initDaos(recipeDao,categoryDao);
+        batchCookingDao = new BatchCookingDao(this);
+        initDaos(recipeDao,categoryDao,batchCookingDao);
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.get(NB_RECIPES_IMPORTED) != null) {
             int nbRecipesImported = (int) extras.get(NB_RECIPES_IMPORTED);
@@ -80,7 +83,7 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
 
         getSupportLoaderManager().initLoader(AsyncTaskDataLoader.getNewUniqueLoaderId(), null, this);
 
-        recipeAdapter = new RecipeAdapter(this);
+        recipeAdapter = new RecipeAdapter(this,this);
         recyclerView = (RecyclerView) findViewById(R.id.lstRecipes);
         setLayout();
         recyclerView.setAdapter(recipeAdapter);
@@ -321,5 +324,16 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
     private void deleteAllRecipe() {
         recipeDao.deleteAll();
         recipeAdapter.setDatas(null);
+    }
+
+    @Override
+    public void onIconBatchClicked(Recipe recipe) {
+        addToBatchCooking(recipe);
+    }
+
+    private void addToBatchCooking(Recipe recipe) {
+        recipe = recipeDao.findById(recipe.getId());
+        batchCookingDao.addRecipeToBatchCooking(recipe);
+        Toast.makeText(this, "La recette a été ajouté au batch cooking", Toast.LENGTH_SHORT).show();
     }
 }
