@@ -64,6 +64,7 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
     private Float ratingSelected;
     private RatingBar ratingBar;
     private CheckBox cbSelectAll;
+    private FloatingActionButton fab;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,12 +89,15 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
         setLayout();
         recyclerView.setAdapter(recipeAdapter);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_tune_white_24dp));
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showFilterDialog();
+                if (CollectionUtils.nullOrEmpty(recipes)) {
+                    goToCreateActivity();
+                } else {
+                    showFilterDialog();
+                }
             }
         });
 
@@ -120,6 +124,9 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
         this.recipes = data;
         recipeAdapter.setDatas(this.recipes);
         dialogFilters = buildDialogBoxFilters();
+        if (CollectionUtils.notNullOrEmpty(recipes)) {
+            fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_tune_white_24dp));
+        }
     }
 
     @Override
