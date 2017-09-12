@@ -9,6 +9,7 @@ import com.example.benjamin.recettes.data.Category;
 import com.example.benjamin.recettes.data.Ingredient;
 import com.example.benjamin.recettes.data.Recipe;
 import com.example.benjamin.recettes.data.Step;
+import com.example.benjamin.recettes.data.Tags;
 import com.example.benjamin.recettes.db.table.TJGroupRecipe;
 import com.example.benjamin.recettes.db.table.TRecipe;
 import com.example.benjamin.recettes.utils.CollectionUtils;
@@ -22,6 +23,7 @@ import java.util.Map;
 import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_CAT;
 import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_ING;
 import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_STEPS;
+import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_TAGS;
 import static com.example.benjamin.recettes.utils.CursorUtils.getFloatColumnOrNull;
 import static com.example.benjamin.recettes.utils.CursorUtils.getStringColumnOrEmpty;
 
@@ -76,7 +78,25 @@ public class RecipeDao extends GenericDao{
         if (recipeFillers.contains(WITH_CAT)) {
             fillCatsInRecipes(recipes);
         }
+        if (recipeFillers.contains(WITH_TAGS)) {
+            fillTagsInRecipes(recipes);
+        }
         return recipes;
+    }
+
+    private void fillTagsInRecipes(List<Recipe> recipes) {
+        List<String> ids = new ArrayList<>();
+        for (Recipe recipe : recipes) {
+            ids.add(String.valueOf(recipe.getId()));
+        }
+        Map<Long, List<Tags>> tagsByRecID = tagDao.fetchTagsByRecId(ids);
+        if (!tagsByRecID.isEmpty()) {
+            for (Recipe recipe : recipes) {
+                if (tagsByRecID.containsKey(recipe.getId())) {
+                    recipe.setTags(tagsByRecID.get(recipe.getId()));
+                }
+            }
+        }
     }
 
     private void fillCatsInRecipes(List<Recipe> recipes) {

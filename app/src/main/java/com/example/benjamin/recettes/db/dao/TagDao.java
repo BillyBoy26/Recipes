@@ -180,4 +180,34 @@ public class TagDao extends GenericDao {
         }
         return tags;
     }
+
+    public Map<Long, List<Tags>> fetchTagsByRecId(List<String> idsRec) {
+        if (CollectionUtils.nullOrEmpty(idsRec)) {
+            return new HashMap<>();
+        }
+        Cursor cursor = db.rawQuery("select" +
+                        " rec." + TRecipe._ID + " recId, " +
+                        " tag." + TTags._ID + " tagId, " +
+                        " tag." + TTags.C_NAME +
+                        " FROM " + TRecipe.T_RECIPE + " rec " +
+                        " INNER JOIN " + TJTagRecipe.TJ_TAG_REC + " linkTagRec ON linkTagRec." + TJTagRecipe.C_ID_REC + "= rec." + TRecipe._ID +
+                        " INNER JOIN " + TTags.T_TAGS + " tag ON linkTagRec." + TJTagRecipe.C_ID_TAG + "= tag." + TTags._ID +
+                        " WHERE rec." + TRecipe._ID + " IN (" + makePlaceholders(idsRec.size()) + ")"
+                , idsRec.toArray(new String[0]));
+        Map<Long, List<Tags>> tagsByRecId = new HashMap<>();
+        if (cursor.moveToFirst()) {
+            do {
+                Long idRec = cursor.getLong(cursor.getColumnIndex("recId"));
+                Tags tag = new Tags();
+                tag.setId(cursor.getLong(cursor.getColumnIndex("tagId")));
+                tag.setName(cursor.getString(cursor.getColumnIndex(TTags.C_NAME)));
+                if (tagsByRecId.get(idRec) == null) {
+                    tagsByRecId.put(idRec, new ArrayList<Tags>());
+                }
+                tagsByRecId.get(idRec).add(tag);
+
+            } while (cursor.moveToNext());
+        }
+        return tagsByRecId;
+    }
 }

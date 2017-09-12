@@ -87,4 +87,5 @@
     <string name="new_tags">Nouveau tag</string>
     <string name="no_tags_selected">Aucun tag n\'est selectionné</string>
     <string name="delete_selected_elements">Supprimer les éléments selectionnés</string>
+    <string name="filter_by_tags">Filtrer par tags</string>
 </resources>

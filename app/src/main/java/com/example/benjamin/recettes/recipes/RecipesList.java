@@ -25,9 +25,11 @@ import com.example.benjamin.recettes.DrawerActivity;
 import com.example.benjamin.recettes.R;
 import com.example.benjamin.recettes.data.Category;
 import com.example.benjamin.recettes.data.Recipe;
+import com.example.benjamin.recettes.data.Tags;
 import com.example.benjamin.recettes.db.dao.BatchCookingDao;
 import com.example.benjamin.recettes.db.dao.CategoryDao;
 import com.example.benjamin.recettes.db.dao.RecipeDao;
+import com.example.benjamin.recettes.db.dao.TagDao;
 import com.example.benjamin.recettes.recipes.createForm.RecipeCreate;
 import com.example.benjamin.recettes.task.AsyncTaskDataLoader;
 import com.example.benjamin.recettes.utils.CollectionUtils;
@@ -43,6 +45,7 @@ import java.util.ListIterator;
 import java.util.Set;
 
 import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_CAT;
+import static com.example.benjamin.recettes.data.Recipe.RecipeFiller.WITH_TAGS;
 
 public class RecipesList extends DrawerActivity implements LoaderManager.LoaderCallbacks<List<Recipe>>,RecyclerViewClickListener,RecipeAdapter.ActionRecipeListener{
 
@@ -51,6 +54,7 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
     private RecipeAdapter recipeAdapter;
     private RecipeDao recipeDao;
     private CategoryDao categoryDao;
+    private TagDao tagDao;
     private BatchCookingDao batchCookingDao;
     private boolean sortByAlpha = true;
     private SearchView searchView;
@@ -63,8 +67,12 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
     private AlertDialog dialogFilters;
     private Float ratingSelected;
     private RatingBar ratingBar;
-    private CheckBox cbSelectAll;
+    private CheckBox cbSelectAllCats;
     private FloatingActionButton fab;
+    private FilterSelectAdapter tagAdapter;
+    private CheckBox cbSelectAllTags;
+    private Set<Tags> selectedTags = new HashSet<>();
+    private List<Tags> allTags;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,8 +82,9 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
 
         recipeDao = new RecipeDao(this);
         categoryDao = new CategoryDao(this);
+        tagDao = new TagDao(this);
         batchCookingDao = new BatchCookingDao(this);
-        initDaos(recipeDao,categoryDao,batchCookingDao);
+        initDaos(recipeDao,categoryDao,batchCookingDao,tagDao);
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.get(NB_RECIPES_IMPORTED) != null) {
             int nbRecipesImported = (int) extras.get(NB_RECIPES_IMPORTED);
@@ -114,7 +123,8 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
             @Override
             public List<Recipe> loadInBackground() {
                 allCategory = categoryDao.getAllCategory();
-                return recipeDao.getAllRecipes(EnumSet.of(WITH_CAT));
+                allTags = tagDao.getAllTags();
+                return recipeDao.getAllRecipes(EnumSet.of(WITH_CAT, WITH_TAGS));
             }
         };
     }
@@ -200,7 +210,7 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
     }
 
     private void showFilterDialog() {
-        cbSelectAll.setChecked(selectedCategories.size() == allCategory.size());
+        cbSelectAllCats.setChecked(selectedCategories.size() == allCategory.size());
         catAdapter.setSelectedElements(selectedCategories);
         ratingBar.setRating(ratingSelected != null ? ratingSelected : 0);
         if (!dialogFilters.isShowing()) {
@@ -221,8 +231,8 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
         catAdapter.setDatas(allCategory);
         catAdapter.setSelectedElements(selectedCategories);
         gridCategory.setAdapter(catAdapter);
-        cbSelectAll = (CheckBox) filterView.findViewById(R.id.selectAllCat);
-        cbSelectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        cbSelectAllCats = (CheckBox) filterView.findViewById(R.id.selectAllCat);
+        cbSelectAllCats.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked && allCategory != null) {
@@ -234,12 +244,34 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
             }
         });
 
+        final RecyclerView gridCats = (RecyclerView) filterView.findViewById(R.id.gridTags);
+        gridCats.setLayoutManager(new GridLayoutManager(this,2));
+        tagAdapter = new FilterSelectAdapter();
+        tagAdapter.setDatas(allTags);
+        tagAdapter.setSelectedElements(selectedTags);
+        gridCats.setAdapter(tagAdapter);
+        cbSelectAllTags = (CheckBox) filterView.findViewById(R.id.selectAllTags);
+        cbSelectAllTags.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked && allTags != null) {
+                    selectedTags.addAll(allTags);
+                } else {
+                    selectedTags.clear();
+                }
+                tagAdapter.setSelectedElements(selectedTags);
+            }
+        });
+
+
+
         ratingBar = (RatingBar) filterView.findViewById(R.id.ratingBar);
 
         builder.setPositiveButton("OK", new DialogInterface.    OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 selectedCategories = catAdapter.getSelectedElements();
+                selectedTags = tagAdapter.getSelectedElements();
                 ratingSelected = ratingBar.getRating();
                 filter();
             }
@@ -247,7 +279,8 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
         builder.setNeutralButton("RAZ", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                selectedCategories = new HashSet<Category>();
+                selectedCategories = new HashSet<>();
+                selectedTags = new HashSet<>();
                 ratingSelected = null;
                 filter();
             }
@@ -261,7 +294,23 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
         List<Recipe> filtredRecipes = new ArrayList<>(recipes);
         filterByCategories(filtredRecipes);
         filterByRating(filtredRecipes);
+        filterByTags(filtredRecipes);
         recipeAdapter.setDatas(filtredRecipes);
+    }
+
+    private void filterByTags(List<Recipe> filtredRecipes) {
+        if (CollectionUtils.notNullOrEmpty(selectedTags)) {
+            ListIterator<Recipe> iterator = filtredRecipes.listIterator();
+            while (iterator.hasNext()) {
+                Recipe recipe = iterator.next();
+                for (Tags tag : selectedTags) {
+                    if (!recipe.getTags().contains(tag)) {
+                        iterator.remove();
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     private void filterByRating(List<Recipe> filtredRecipes) {

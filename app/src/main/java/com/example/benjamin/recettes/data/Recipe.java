@@ -11,7 +11,7 @@ public class Recipe implements Serializable, HasName, HasSteps{
 
 
     public enum RecipeFiller{
-        WITH_STEPS, WITH_ING, WITH_CAT
+        WITH_STEPS, WITH_ING, WITH_CAT, WITH_TAGS
     }
 
 
