@@ -58,7 +58,7 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
     private boolean layoutGrid = false;
     private RecyclerView recyclerView;
     private List<Category> allCategory;
-    private CategoryFilterAdapter catAdapter;
+    private FilterSelectAdapter catAdapter;
     private Set<Category> selectedCategories = new HashSet<>();
     private AlertDialog dialogFilters;
     private Float ratingSelected;
@@ -201,7 +201,7 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
 
     private void showFilterDialog() {
         cbSelectAll.setChecked(selectedCategories.size() == allCategory.size());
-        catAdapter.setSelectedCategories(selectedCategories);
+        catAdapter.setSelectedElements(selectedCategories);
         ratingBar.setRating(ratingSelected != null ? ratingSelected : 0);
         if (!dialogFilters.isShowing()) {
             dialogFilters.show();
@@ -217,9 +217,9 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
 
         final RecyclerView gridCategory = (RecyclerView) filterView.findViewById(R.id.gridCategory);
         gridCategory.setLayoutManager(new GridLayoutManager(this,2));
-        catAdapter = new CategoryFilterAdapter();
+        catAdapter = new FilterSelectAdapter();
         catAdapter.setDatas(allCategory);
-        catAdapter.setSelectedCategories(selectedCategories);
+        catAdapter.setSelectedElements(selectedCategories);
         gridCategory.setAdapter(catAdapter);
         cbSelectAll = (CheckBox) filterView.findViewById(R.id.selectAllCat);
         cbSelectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -230,7 +230,7 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
                 } else {
                     selectedCategories.clear();
                 }
-                catAdapter.setSelectedCategories(selectedCategories);
+                catAdapter.setSelectedElements(selectedCategories);
             }
         });
 
@@ -239,7 +239,7 @@ public class RecipesList extends DrawerActivity implements LoaderManager.LoaderC
         builder.setPositiveButton("OK", new DialogInterface.    OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                selectedCategories = catAdapter.getSelectedCategories();
+                selectedCategories = catAdapter.getSelectedElements();
                 ratingSelected = ratingBar.getRating();
                 filter();
             }

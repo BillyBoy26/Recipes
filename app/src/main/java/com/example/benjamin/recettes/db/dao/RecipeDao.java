@@ -28,6 +28,7 @@ import static com.example.benjamin.recettes.utils.CursorUtils.getStringColumnOrE
 public class RecipeDao extends GenericDao{
 
     private CategoryDao categoryDao;
+    private TagDao tagDao;
     private IngredientDao ingredientDao;
     private StepDao stepDao;
 
@@ -44,6 +45,7 @@ public class RecipeDao extends GenericDao{
         categoryDao = new CategoryDao(db);
         ingredientDao = new IngredientDao(db);
         stepDao = new StepDao(db);
+        tagDao = new TagDao(db);
     }
 
     public Cursor getAllRecipesAsCursor() {
@@ -139,9 +141,16 @@ public class RecipeDao extends GenericDao{
 
 
         linkRecipeToCategories(recipe);
+        linkRecipeToTags(recipe);
         linkRecipeToIngredients(recipe);
         linkRecipeToSteps(recipe);
         return recipe;
+    }
+
+    private void linkRecipeToTags(Recipe recipe) {
+        recipe.setTags(tagDao.createTagsIfNeeded(recipe.getTags()));
+        tagDao.deleteLinkRecipeTag(recipe);
+        tagDao.createLinkRecipeTag(recipe);
     }
 
     private void linkRecipeToSteps(Recipe recipe) {
@@ -226,6 +235,7 @@ public class RecipeDao extends GenericDao{
             return null;
         }
         recipe.setCategories(categoryDao.fetchCategoriesByRecId(recIdStr));
+        recipe.setTags(tagDao.fetchTagsByRecId(recIdStr));
         recipe.setIngredients(ingredientDao.fetchIngredientsByRecId(recIdStr));
         recipe.setSteps(stepDao.fetchStepsByRecId(recIdStr));
         return recipe;

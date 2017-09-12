@@ -23,6 +23,7 @@ public class Recipe implements Serializable, HasName, HasSteps{
     private List<Step> steps = new ArrayList<>();
     private Long id;
     private List<Category> categories = new ArrayList<>();
+    private List<Tags> tags = new ArrayList<>();
     private String prepareTime;
     private String cookTime;
     private String totalTime;
@@ -219,6 +220,13 @@ public class Recipe implements Serializable, HasName, HasSteps{
         }
     }
 
+    public List<Tags> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tags> tags) {
+        this.tags = tags;
+    }
 
     public class ImageData implements Serializable{
         public static final String PATH = "PATH";
