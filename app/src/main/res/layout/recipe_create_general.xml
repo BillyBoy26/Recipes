@@ -181,6 +181,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:id="@+id/tags"
+                android:focusable="false"
                 android:hint="@string/tags"/>
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
