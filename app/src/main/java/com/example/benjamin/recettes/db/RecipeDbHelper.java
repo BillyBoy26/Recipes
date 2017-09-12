@@ -10,16 +10,18 @@ import com.example.benjamin.recettes.db.table.TJCatRecipe;
 import com.example.benjamin.recettes.db.table.TJGroupRecipe;
 import com.example.benjamin.recettes.db.table.TJIngRecipe;
 import com.example.benjamin.recettes.db.table.TJRegSte;
+import com.example.benjamin.recettes.db.table.TJTagRecipe;
 import com.example.benjamin.recettes.db.table.TRecipe;
 import com.example.benjamin.recettes.db.table.TRecipeGroup;
 import com.example.benjamin.recettes.db.table.TShoppingIngredient;
 import com.example.benjamin.recettes.db.table.TStep;
+import com.example.benjamin.recettes.db.table.TTags;
 
 public class RecipeDbHelper  extends SQLiteOpenHelper{
 
 
     public static final String RECIPE_DB_NAME = "recipe.db";
-    public static final int RECIPE_DB_VERSION = 26;
+    public static final int RECIPE_DB_VERSION = 28;
 
 
 
@@ -35,12 +37,14 @@ public class RecipeDbHelper  extends SQLiteOpenHelper{
         TIngredient.onCreate(db);
         TRecipeGroup.onCreate(db);
         TStep.onCreate(db);
+        TTags.onCreate(db);
 
         TJCatRecipe.onCreate(db);
         TJIngRecipe.onCreate(db);
         TJGroupRecipe.onCreate(db);
         TJRegSte.onCreate(db);
         TShoppingIngredient.onCreate(db);
+        TJTagRecipe.onCreate(db);
     }
 
     @Override
@@ -50,12 +54,14 @@ public class RecipeDbHelper  extends SQLiteOpenHelper{
         TIngredient.onUpgrade(db,oldVersion,newVersion);
         TRecipeGroup.onUpgrade(db,oldVersion,newVersion);
         TStep.onUpgrade(db,oldVersion,newVersion);
+        TTags.onUpgrade(db,oldVersion,newVersion);
 
         TJCatRecipe.onUpgrade(db,oldVersion,newVersion);
         TJIngRecipe.onUpgrade(db,oldVersion,newVersion);
         TJGroupRecipe.onUpgrade(db,oldVersion,newVersion);
         TJRegSte.onUpgrade(db,oldVersion,newVersion);
         TShoppingIngredient.onUpgrade(db,oldVersion,newVersion);
+        TJTagRecipe.onUpgrade(db,oldVersion,newVersion);
     }
 
 

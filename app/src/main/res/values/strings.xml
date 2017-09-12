@@ -84,4 +84,7 @@
     <string name="filter_by_rating">Filtrer par notes</string>
     <string name="import_from_url">Importer à partir d\'une url</string>
     <string name="choose_file">Choisir le fichier</string>
+    <string name="new_tags">Nouveau tag</string>
+    <string name="no_tags_selected">Aucun tag n\'est selectionné</string>
+    <string name="delete_selected_elements">Supprimer les éléments selectionnés</string>
 </resources>

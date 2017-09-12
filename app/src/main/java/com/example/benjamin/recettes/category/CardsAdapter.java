@@ -8,20 +8,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.benjamin.recettes.R;
-import com.example.benjamin.recettes.data.Category;
+import com.example.benjamin.recettes.data.HasName;
 import com.example.benjamin.recettes.views.BasicListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryAdapter extends BasicListAdapter<Category,CategoryAdapter.CategoryViewHolder> {
+public class CardsAdapter<T extends HasName> extends BasicListAdapter<T,CardsAdapter.CardsViewHolder> {
 
     private List<Integer> selectedPos = new ArrayList<>();
 
     @Override
-    public CategoryViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
+    public CardsViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
         View cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_text, parent, false);
-        final CategoryViewHolder viewHolder = new CategoryViewHolder(cardView);
+        final CardsViewHolder viewHolder = new CardsViewHolder(cardView);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,14 +41,13 @@ public class CategoryAdapter extends BasicListAdapter<Category,CategoryAdapter.C
     }
 
     @Override
-    public void onBindViewHolder(CategoryViewHolder holder, Category category, int position) {
-        holder.bind(category,selectedPos.contains(position));
+    public void onBindViewHolder(CardsAdapter.CardsViewHolder holder, T data, int position) {
+        holder.bind(data,selectedPos.contains(position));
     }
 
 
-
-    public List<Category> getSelectedCategories() {
-        List<Category> selectedCat = new ArrayList<>();
+    public List<T> getSelectedDatas() {
+        List<T> selectedCat = new ArrayList<>();
         for (Integer pos : selectedPos) {
             selectedCat.add(datas.get(pos));
         }
@@ -56,18 +55,18 @@ public class CategoryAdapter extends BasicListAdapter<Category,CategoryAdapter.C
     }
 
 
-    class CategoryViewHolder extends RecyclerView.ViewHolder {
+    class CardsViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView txtName;
 
-        public CategoryViewHolder(View itemView) {
+        CardsViewHolder(View itemView) {
             super(itemView);
             txtName = (TextView) itemView.findViewById(R.id.text);
         }
 
-        public void bind(Category category, boolean isSelected) {
+        void bind(T hasName, boolean isSelected) {
             itemView.setBackgroundColor(isSelected ? itemView.getContext().getResources().getColor(R.color.colorPrimaryLight,null): Color.WHITE);
-            txtName.setText(category.getName());
+            txtName.setText(hasName.getName());
         }
 
     }
